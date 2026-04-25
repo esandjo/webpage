@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encomenda - Esandjo Atelier de Mimos</title>
+  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
+  <style>
+    :root {
+      --fundo: #1A2A40;
+      --contraste: #FFFFFF;
+      --dourado: #C9A646;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--fundo);
+      color: var(--contraste);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Navbar */
+    .navbar { position: fixed; top:0; width:100%; display:flex; justify-content:center; background:var(--fundo); padding:10px; z-index:1000; }
+    .navbar a { color:var(--contraste); font-weight:600; margin:0 12px; text-decoration:none; }
+    .navbar a:hover { color:var(--dourado); }
+    .lang-selector { margin-left:20px; }
+    .lang-selector button { background:var(--dourado); border:none; color:var(--fundo); font-weight:bold; margin:0 3px; padding:6px 14px; border-radius:20px; cursor:pointer; }
+
+    /* Header */
+    header { text-align:center; padding:80px 20px 20px; margin-top:50px; }
+    .logo-header { height:70px; margin-bottom:10px; }
+
+    /* Carrinho Premium */
+    .cart { padding:20px; max-width:900px; margin:auto; }
+    .cart-table {
+      width:100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.6);
+      border-radius: 12px;
+      overflow: hidden;
+      font-size: 0.95em;
+    }
+    .cart-table th {
+      background: linear-gradient(135deg, #1A2A40, #2a3b55);
+      color: var(--dourado);
+      font-weight: bold;
+      padding: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .cart-table td {
+      background: #1f2f4d;
+      color: var(--contraste);
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid var(--dourado);
+    }
+    .cart-table tr:hover td { background: #243b61; transition: 0.3s; }
+
+    /* Botões */
+    .cart-table button {
+      background: var(--dourado);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--fundo);
+      margin: 0 4px;
+      transition: 0.3s;
+    }
+    .cart-table button:hover { background: var(--contraste); }
+
+    /* Botão remover em vermelho */
+    .cart-table button.remove {
+      background: #e74c3c;
+      color: #fff;
+    }
+    .cart-table button.remove:hover { background: #c0392b; }
+
+    /* Linha do total geral */
+    .total-row td {
+      font-weight: bold;
+      background: #2a3b55;
+      color: var(--dourado);
+      text-align: right;
+      font-size: 1.1em;
+      padding: 14px;
+    }
+
+    /* Botão finalizar no WhatsApp */
+    .finalizar {
+      display:block;
+      margin:20px auto;
+      background:#25D366; /* verde WhatsApp */
+      color:#fff;
+      padding:10px 22px;
+      border-radius:30px;
+      text-decoration:none;
+      font-weight:bold;
+      text-align:center;
+      max-width:250px;
+    }
+    .finalizar:hover { background:#1ebe57; }
+
+    /* Footer */
+    footer { background:var(--fundo); color:var(--contraste); text-align:center; padding:20px; }
+    footer a { color:var(--dourado); margin:0 10px; text-decoration:none; }
+    footer a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html">Início</a>
+    <a href="cestas.html">Cestas & Mimos</a>
+    <a href="pedidos.html">Pedidos</a>
+    <a href="encomendas.html">Encomenda</a>
+    <a href="catering.html">Catering Infantil</a>
+    <a href="contactos.html">Contactos</a>
+  </nav>
+
+  <!-- Header -->
+  <header>
+    <img src="imagens/esandjo.logo.jpg" alt="Esandjo Atelier de Mimos" class="logo-header">
+    <h2>Carrinho de Encomendas</h2>
+  </header>
+
+  <!-- Carrinho -->
+  <section class="cart">
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Preço Unitário</th>
+          <th>Subtotal</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="cart-body">
+        <!-- Linhas dos itens serão inseridas dinamicamente -->
+      </tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="3">Total Geral</td>
+          <td colspan="2" id="cart-total">0 KZ</td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <a href="#" class="finalizar" id="finalizar-btn">Finalizar no WhatsApp</a>
+
+  <!-- Footer -->
+  <footer>
+    <p>📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
+    <p>
+      <a href="https://www.instagram.com/esandjoatelierdemimos/" target="_blank">Instagram</a> | 
+      <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank">Facebook</a>
+    </p>
+    <p>Aberto todos os dias das 8h às 22h</p>
+  </footer>
+
+<script>
+  function renderCart(){
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const tbody = document.getElementById("cart-body");
+    tbody.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item,index)=>{
+      let subtotal = item.price * item.qty;
+      total += subtotal;
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.qty}</td>
+          <td>${item.price.toLocaleString()} KZ</td>
+          <td>${subtotal.toLocaleString()} KZ</td>
+          <td>
+            <button onclick="changeQty(${index},1)">+</button>
+            <button onclick="changeQty(${index},-1)">-</button>
+            <button class="remove" onclick="removeItem(${index})">Remover</button>
+          </td>
+        </tr>`;
+    });
+
+    document.getElementById("cart-total").textContent = total.toLocaleString()+" KZ";
+  }
+
+  function changeQty(index,delta){
+    let cart=JSON.parse(localStorage.getItem("cart"))||[];
+    cart[index].qty+=delta;
+    if(cart[index].qty<=0) cart.splice(index,1);
+    localStorage.setItem("cart",JSON.stringify(cart));
+    renderCart();
+  }
+
+  function removeItem(index){
+    let cart=JSON.parse(localStorage.getItem("cart"))||[];
+    cart.splice(index,1);
+    localStorage.setItem("cart",JSON.stringify(cart));
+    renderCart();
+  }
+
+  // Finalizar no WhatsApp
+  document.getElementById("finalizar-btn").addEventListener("click",function(){
+    let cart=JSON.parse(localStorage.getItem("cart"))||[];
+    if(cart.length===0) return;
+    let message="Pedido Esandjo Atelier de Mimos:%0A";
+    cart.forEach(item=>{
+      let subtotal=item.price*item.qty;
+      message+=`${item.qty} x ${item.name} - ${subtotal.toLocaleString()} KZ%0A`;
+    });
+    message+="Total: "+cart.reduce((sum,i)=>sum+i.price*i.qty,0).toLocaleString()+" KZ";
+    window.open("https://wa.me/244924015087?text="+message,"_blank");
+    localStorage.removeItem("cart");
+    renderCart();
+  });
+
+  window.onload = renderCart;
+</script>
+</body>
+</html>
