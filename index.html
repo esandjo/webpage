@@ -14,14 +14,15 @@
 }
 
 body {
-  margin: 0;
   font-family: 'Montserrat', sans-serif;
-  background-color: var(--fundo);
+  background: var(--fundo);
   color: var(--contraste);
+  margin: 0;
+  padding: 0;
   padding-top: 80px; /* reserva espaço para a navbar fixa */
 }
 
-/* Navbar fixa */
+/* Navbar fixa premium */
 .navbar {
   position: fixed;
   top: 0;
@@ -35,8 +36,6 @@ body {
   z-index: 1000;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-
-/* Links da navbar como botões */
 .navbar a {
   background: var(--dourado);
   color: var(--branco);
@@ -127,6 +126,78 @@ header {
 }
 .galeria img:hover { transform: scale(1.05); }
 
+/* Carrinho Premium */
+.cart { padding:20px; max-width:900px; margin:auto; }
+.cart-table {
+  width:100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 0.95em;
+}
+.cart-table th {
+  background: linear-gradient(135deg, var(--contraste), #2a3b55);
+  color: var(--dourado);
+  font-weight: bold;
+  padding: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.cart-table td {
+  background: var(--branco);
+  color: var(--contraste);
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--dourado);
+}
+.cart-table tr:hover td { background: #f0f0f0; transition: 0.3s; }
+
+/* Botões do carrinho */
+.cart-table button {
+  background: var(--dourado);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--branco);
+  margin: 0 4px;
+  transition: 0.3s;
+}
+.cart-table button:hover { background: var(--contraste); }
+.cart-table button.remove {
+  background: #e74c3c;
+  color: #fff;
+}
+.cart-table button.remove:hover { background: #c0392b; }
+
+/* Linha do total geral */
+.total-row td {
+  font-weight: bold;
+  background: #eaeaea;
+  color: var(--contraste);
+  text-align: right;
+  font-size: 1.1em;
+  padding: 14px;
+}
+
+/* Botão finalizar no WhatsApp */
+.finalizar {
+  display:block;
+  margin:20px auto;
+  background:#25D366;
+  color:#fff;
+  padding:10px 22px;
+  border-radius:30px;
+  text-decoration:none;
+  font-weight:bold;
+  text-align:center;
+  max-width:250px;
+}
+.finalizar:hover { background:#1ebe57; }
+
 /* Lightbox */
 .lightbox {
   display: none;
@@ -166,17 +237,16 @@ header {
 footer {
   background: var(--branco);
   color: var(--contraste);
-  text-align: center;
-  padding: 20px 15px;
+  text-align:center;
+  padding:20px;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
 }
 footer a {
   color: var(--dourado);
-  text-decoration: none;
-  margin: 0 10px;
-  font-weight: bold;
+  margin:0 10px;
+  text-decoration:none;
 }
-footer a:hover { text-decoration: underline; }
+footer a:hover { text-decoration:underline; }
 
 /* Responsividade */
 @media (min-width: 600px) {
@@ -191,6 +261,7 @@ footer a:hover { text-decoration: underline; }
   .lang-selector { margin-top: 10px; }
   .cta { width: 100%; max-width: none; }
 }
+
 
   </style>
 </head>
