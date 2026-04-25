@@ -19,6 +19,7 @@ body {
   color: var(--contraste);
   margin: 0;
   padding: 0;
+  padding-top: 80px; /* reserva espaço para a navbar fixa */
 }
 
 /* Navbar fixa */
@@ -35,6 +36,8 @@ body {
   z-index: 1000;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
+/* Links da navbar como botões */
 .navbar a {
   background: var(--dourado);
   color: var(--branco);
@@ -72,9 +75,8 @@ body {
 /* Header */
 header {
   text-align: center;
-  padding: 80px 20px 20px;
+  padding: 40px 20px 20px; /* reduzido porque já temos padding-top no body */
   background: var(--fundo);
-  margin-top: 50px;
 }
 .logo-header {
   height: 70px;
@@ -146,6 +148,7 @@ footer a:hover { text-decoration: underline; }
 @media (min-width: 900px) {
   .galeria { grid-template-columns: repeat(3, 1fr); }
 }
+
 
 
   </style>
