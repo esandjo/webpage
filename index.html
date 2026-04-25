@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esandjo Atelier de Mimos</title>
+  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
+  <style>
 :root {
   --fundo: #f5f5f5;          /* fundo claro inspirado no mármore */
   --contraste: #1A2A40;      /* texto escuro para contraste */
@@ -183,3 +191,150 @@ footer a:hover { text-decoration: underline; }
   .lang-selector { margin-top: 10px; }
   .cta { width: 100%; max-width: none; }
 }
+
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-link" data-key="home">Início</a>
+    <a href="cestas.html" class="nav-link" data-key="cestas">Cestas & Mimos</a>
+    <a href="pedidos.html" class="nav-link" data-key="pedidos">Pedidos</a>
+    <a href="encomendas.html" class="nav-link" data-key="encomenda">Encomenda</a>
+    <a href="catering.html" class="nav-link" data-key="catering">Catering Infantil</a>
+    <a href="contactos.html" class="nav-link" data-key="contactos">Contactos</a>
+    <div class="lang-selector">
+      <button onclick="setLang('pt')">PT</button>
+      <button onclick="setLang('en')">EN</button>
+      <button onclick="setLang('zh')">中文</button>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header>
+    <img src="imagens/esandjo.logo.jpg" alt="Esandjo Atelier de Mimos" class="logo-header">
+    <a href="https://wa.me/244924015087" target="_blank" class="cta" id="cta-btn">Fale Conosco</a>
+  </header>
+
+  <!-- Galeria -->
+  <section class="galeria">
+    <img src="imagens/cesta1.jpg" alt="Cesta gourmet" onclick="openLightbox('cesta1',0)">
+    <img src="imagens/cesta2.jpg" alt="Cesta artesanal" onclick="openLightbox('cesta2',0)">
+    <img src="imagens/cesta3.jpg" alt="Cesta premium" onclick="openLightbox('cesta3',0)">
+    <img src="imagens/cesta4.jpg" alt="Cesta temática" onclick="openLightbox('cesta4',0)">
+    <img src="imagens/cesta5.jpg" alt="Cesta de luxo" onclick="openLightbox('cesta5',0)">
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <span class="prev" onclick="changeImage(-1)">&#10094;</span>
+    <div id="lightbox-content"></div>
+    <span class="next" onclick="changeImage(1)">&#10095;</span>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
+    <p>
+      <a href="https://www.instagram.com/esandjoatelierdemimos/" target="_blank">Instagram</a> | 
+      <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank">Facebook</a>
+    </p>
+    <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
+  </footer>
+
+<script>
+  const gallerySets = {
+    cesta1: ["imagens/cesta1.jpg","imagens/cesta1a.jpg","imagens/cesta1b.mp4","imagens/cesta1c.jpg","imagens/cesta1d.jpg"],
+    cesta2: ["imagens/cesta2.jpg","imagens/cesta2a.jpg","imagens/cesta2b.jpg","imagens/cesta2c.jpg","imagens/cesta2d.jpg"],
+    cesta3: ["imagens/cesta3.jpg"],
+    cesta4: ["imagens/cesta4.jpg"],
+    cesta5: ["imagens/cesta5.jpg"]
+  };
+
+  let currentSet = [];
+  let currentIndex = 0;
+
+  function openLightbox(setName, index) {
+    currentSet = gallerySets[setName];
+    currentIndex = index;
+    document.getElementById('lightbox').style.display = 'flex';
+    showMedia();
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+  }
+
+  function changeImage(direction) {
+    currentIndex += direction;
+    if (currentIndex < 0) currentIndex = currentSet.length - 1;
+    if (currentIndex >= currentSet.length) currentIndex = 0;
+    showMedia();
+  }
+
+  function showMedia() {
+    const container = document.getElementById('lightbox-content');
+    const file = currentSet[currentIndex];
+    const ext = file.split('.').pop().toLowerCase();
+
+    if (ext === 'mp4') {
+      container.innerHTML = `<video src="${file}" controls autoplay style="max-width:90%;max-height:80%;border-radius:12px;"></video>`;
+    } else {
+      container.innerHTML = `<img src="${file}" style="max-width:90%;max-height:80%;border-radius:12px;">`;
+    }
+  }
+
+  // Navegação por teclado
+  document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") changeImage(-1);
+    if (e.key === "ArrowRight") changeImage(1);
+  });
+
+  // Fechar ao clicar fora
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target.id === 'lightbox') closeLightbox();
+  });
+
+  // Traduções multilíngue
+  const translations = {
+    pt: { 
+      contact: "Fale Conosco", 
+      openHours: "Aberto todos os dias das 8h às 22h",
+      navbar: { home:"Início", cestas:"Cestas & Mimos", pedidos:"Pedidos", catering:"Catering Infantil", contactos:"Contactos" }
+    },
+    en: { 
+      contact: "Contact Us", 
+      openHours: "Open daily from 8am to 10pm",
+      navbar: { home:"Home", cestas:"Baskets & Gifts", pedidos:"Orders", catering:"Kids Catering", contactos:"Contacts" }
+    },
+    zh: { 
+      contact: "联系我们", 
+      openHours: "每天营业，早上8点到晚上10点",
+      navbar: { home:"首页", cestas:"礼篮与礼品", pedidos:"订单", catering:"儿童餐饮", contactos:"联系方式" }
+    }
+  };
+
+  function setLang(lang) {
+    localStorage.setItem("siteLang", lang);
+    applyLang(lang);
+  }
+
+  function applyLang(lang) {
+    document.getElementById('cta-btn').textContent = translations[lang].contact;
+    document.getElementById('open-hours').textContent = translations[lang].openHours;
+    document.querySelectorAll('.nav-link').forEach(link => {
+      const key = link.getAttribute("data-key");
+      link.textContent = translations[lang].navbar[key];
+    });
+  }
+
+  window.onload = function() {
+    const lang = localStorage.getItem("siteLang") || "pt";
+    applyLang(lang);
+  };
+</script>
+</body>
+</html>
