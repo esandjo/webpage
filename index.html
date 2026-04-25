@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Esandjo Atelier de Mimos</title>
-   <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
+  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
   <style>
     :root {
       --fundo: #1A2A40;
       --contraste: #FFFFFF;
       --dourado: #C9A646;
     }
+
     body {
       margin: 0;
       font-family: 'Montserrat', sans-serif;
@@ -24,6 +25,7 @@
       top: 0;
       width: 100%;
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       align-items: center;
       background: var(--fundo);
@@ -39,7 +41,7 @@
     }
     .navbar a:hover { color: var(--dourado); }
 
-    /* Botões de idioma dentro da navbar */
+    /* Botões de idioma */
     .lang-selector {
       margin-left: 20px;
     }
@@ -58,7 +60,7 @@
       color: var(--fundo);
     }
 
-    /* Header ajustado */
+    /* Header */
     header {
       text-align: center;
       padding: 30px 20px 15px;
@@ -89,14 +91,15 @@
     /* Galeria */
     .galeria {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr;
       gap: 18px;
       padding: 20px 15px;
     }
     .galeria img {
       width: 100%;
-      height: 230px;
-      object-fit: contain;
+      height: auto;
+      max-height: 300px;
+      object-fit: cover;
       background-color: var(--fundo);
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -107,31 +110,28 @@
 
     /* Lightbox */
     .lightbox {
-  display: none;
-  position: fixed;
-  z-index: 2000;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.9);
-  justify-content: center;   /* centraliza horizontal */
-  align-items: center;       /* centraliza vertical */
-  flex-direction: column;
-}
-
-#lightbox-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;              /* ocupa toda a altura */
-}
-
-#lightbox-content img,
-#lightbox-content video {
-  max-width: 90%;
-  max-height: 80%;           /* aumenta altura para centralizar melhor */
-  border-radius: 12px;
-}
-
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    #lightbox-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    #lightbox-content img,
+    #lightbox-content video {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 12px;
+    }
     .close, .prev, .next {
       position: absolute;
       color: var(--contraste);
@@ -142,11 +142,6 @@
     .close { top: 20px; right: 30px; }
     .prev { left: 30px; top: 50%; transform: translateY(-50%); }
     .next { right: 30px; top: 50%; transform: translateY(-50%); }
-    #lightbox-content video, #lightbox-content img {
-      max-width: 90%;
-      max-height: 70%;
-      border-radius: 12px;
-    }
 
     /* Footer */
     footer {
@@ -162,17 +157,32 @@
       font-weight: bold;
     }
     footer a:hover { text-decoration: underline; }
+
+    /* Responsividade */
+    @media (min-width: 600px) {
+      .galeria { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 900px) {
+      .galeria { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .navbar { flex-direction: column; padding: 12px; }
+      .navbar a { margin: 6px 0; display: block; }
+      .lang-selector { margin-top: 10px; }
+      .cta { width: 100%; max-width: none; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Navbar com idiomas -->
+  <!-- Navbar -->
   <nav class="navbar">
-    <a href="index.html">Início</a>
-    <a href="cestas.html">Cestas & Mimos</a>
-    <a href="pedidos.html">Pedidos</a>
-    <a href="catering.html">Catering Infantil</a>
-    <a href="contactos.html">Contactos</a>
+    <a href="index.html" class="nav-link" data-key="home">Início</a>
+    <a href="cestas.html" class="nav-link" data-key="cestas">Cestas & Mimos</a>
+    <a href="pedidos.html" class="nav-link" data-key="pedidos">Pedidos</a>
+	<a href="encomendas.html" class="nav-link" data-key="encomenda">Encomenda</a>
+    <a href="catering.html" class="nav-link" data-key="catering">Catering Infantil</a>
+    <a href="contactos.html" class="nav-link" data-key="contactos">Contactos</a>
     <div class="lang-selector">
       <button onclick="setLang('pt')">PT</button>
       <button onclick="setLang('en')">EN</button>
@@ -182,9 +192,7 @@
 
   <!-- Header -->
   <header>
-    <a href="index.html">
-      <img src="imagens/esandjo.logo.jpg" alt="Esandjo Atelier de Mimos" class="logo-header">
-    </a>
+    <img src="imagens/esandjo.logo.jpg" alt="Esandjo Atelier de Mimos" class="logo-header">
     <a href="https://wa.me/244924015087" target="_blank" class="cta" id="cta-btn">Fale Conosco</a>
   </header>
 
@@ -215,96 +223,97 @@
     <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
   </footer>
 
-  <script>
-    const gallerySets = {
-      cesta1: [
-        "imagens/cesta1.jpg",
-        "imagens/cesta1a.jpg",
-        "imagens/cesta1b.mp4", // vídeo
-        "imagens/cesta1c.jpg",
-        "imagens/cesta1d.jpg"
-      ],
-      cesta2: [
-        "imagens/cesta2.jpg",
-        "imagens/cesta2a.jpg",
-        "imagens/cesta2b.jpg",
-        "imagens/cesta2c.jpg",
-        "imagens/cesta2d.jpg"
-      ],
-      cesta3: ["imagens/cesta3.jpg"],
-      cesta4: ["imagens/cesta4.jpg"],
-      cesta5: ["imagens/cesta5.jpg"]
-    };
-
-    let currentSet = [];
-    let currentIndex = 0;
-
-    function openLightbox(setName, index) {
-      currentSet = gallerySets[setName];
-      currentIndex = index;
-      document.getElementById('lightbox').style.display = 'flex';
-      showMedia();
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightbox').style.display = 'none';
-    }
-
-    function changeImage(direction) {
-      currentIndex += direction;
-      if (currentIndex < 0) currentIndex = currentSet.length - 1;
-      if (currentIndex >= currentSet.length) currentIndex = 0;
-      showMedia();
-    }
-
-        function showMedia() {
-      const container = document.getElementById('lightbox-content');
-      const file = currentSet[currentIndex];
-      const ext = file.split('.').pop().toLowerCase();
-
-      if (ext === 'mp4') {
-        container.innerHTML = `<video src="${file}" controls autoplay style="max-width:90%;max-height:70%;border-radius:12px;"></video>`;
-      } else {
-        container.innerHTML = `<img src="${file}" style="max-width:90%;max-height:70%;border-radius:12px;">`;
-      }
-    }
-
-    // Navegação por teclado
-    document.addEventListener('keydown', function(e) {
-      if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowLeft") changeImage(-1);
-      if (e.key === "ArrowRight") changeImage(1);
-    });
-
-    // Fechar ao clicar fora (mobile)
-    document.getElementById('lightbox').addEventListener('click', function(e) {
-      if (e.target.id === 'lightbox') closeLightbox();
-    });
-
-     // Traduções
-  const translations = {
-    pt: { contact: "Fale Conosco", openHours: "Aberto todos os dias das 8h às 22h" },
-    en: { contact: "Contact Us", openHours: "Open daily from 8am to 10pm" },
-    zh: { contact: "联系我们", openHours: "每天营业，早上8点到晚上10点" }
+<script>
+  const gallerySets = {
+    cesta1: ["imagens/cesta1.jpg","imagens/cesta1a.jpg","imagens/cesta1b.mp4","imagens/cesta1c.jpg","imagens/cesta1d.jpg"],
+    cesta2: ["imagens/cesta2.jpg","imagens/cesta2a.jpg","imagens/cesta2b.jpg","imagens/cesta2c.jpg","imagens/cesta2d.jpg"],
+    cesta3: ["imagens/cesta3.jpg"],
+    cesta4: ["imagens/cesta4.jpg"],
+    cesta5: ["imagens/cesta5.jpg"]
   };
 
-  // Função para definir idioma e guardar no storage
+  let currentSet = [];
+  let currentIndex = 0;
+
+  function openLightbox(setName, index) {
+    currentSet = gallerySets[setName];
+    currentIndex = index;
+    document.getElementById('lightbox').style.display = 'flex';
+    showMedia();
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+  }
+
+  function changeImage(direction) {
+    currentIndex += direction;
+    if (currentIndex < 0) currentIndex = currentSet.length - 1;
+    if (currentIndex >= currentSet.length) currentIndex = 0;
+    showMedia();
+  }
+
+  function showMedia() {
+    const container = document.getElementById('lightbox-content');
+    const file = currentSet[currentIndex];
+    const ext = file.split('.').pop().toLowerCase();
+
+    if (ext === 'mp4') {
+      container.innerHTML = `<video src="${file}" controls autoplay style="max-width:90%;max-height:80%;border-radius:12px;"></video>`;
+    } else {
+      container.innerHTML = `<img src="${file}" style="max-width:90%;max-height:80%;border-radius:12px;">`;
+    }
+  }
+
+  // Navegação por teclado
+  document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") changeImage(-1);
+    if (e.key === "ArrowRight") changeImage(1);
+  });
+
+  // Fechar ao clicar fora
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target.id === 'lightbox') closeLightbox();
+  });
+
+  // Traduções multilíngue
+  const translations = {
+    pt: { 
+      contact: "Fale Conosco", 
+      openHours: "Aberto todos os dias das 8h às 22h",
+      navbar: { home:"Início", cestas:"Cestas & Mimos", pedidos:"Pedidos", catering:"Catering Infantil", contactos:"Contactos" }
+    },
+    en: { 
+      contact: "Contact Us", 
+      openHours: "Open daily from 8am to 10pm",
+      navbar: { home:"Home", cestas:"Baskets & Gifts", pedidos:"Orders", catering:"Kids Catering", contactos:"Contacts" }
+    },
+    zh: { 
+      contact: "联系我们", 
+      openHours: "每天营业，早上8点到晚上10点",
+      navbar: { home:"首页", cestas:"礼篮与礼品", pedidos:"订单", catering:"儿童餐饮", contactos:"联系方式" }
+    }
+  };
+
   function setLang(lang) {
-    localStorage.setItem("siteLang", lang); // guarda idioma selecionado
+    localStorage.setItem("siteLang", lang);
     applyLang(lang);
   }
 
-  // Aplica traduções
   function applyLang(lang) {
     document.getElementById('cta-btn').textContent = translations[lang].contact;
     document.getElementById('open-hours').textContent = translations[lang].openHours;
+    document.querySelectorAll('.nav-link').forEach(link => {
+      const key = link.getAttribute("data-key");
+      link.textContent = translations[lang].navbar[key];
+    });
   }
 
-  // Ao carregar a página, aplica automaticamente o idioma guardado
   window.onload = function() {
-    const lang = localStorage.getItem("siteLang") || "pt"; // se não houver, default PT
+    const lang = localStorage.getItem("siteLang") || "pt";
     applyLang(lang);
   };
-  </script>
+</script>
 </body>
 </html>
