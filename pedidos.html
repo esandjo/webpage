@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos - Esandjo Atelier de Mimos</title>
+  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
+  <style>
+:root {
+  --fundo: #1A2A40;
+  --contraste: #FFFFFF;
+  --dourado: #C9A646;
+  --remover: #FF3B3B; /* vermelho para botão remover */
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--fundo);
+  color: var(--contraste);
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar fixa */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background: var(--fundo);
+  padding: 10px;
+  z-index: 1000;
+}
+.navbar a {
+  color: var(--contraste);
+  font-weight: 600;
+  text-decoration: none;
+  margin: 0 12px;
+  transition: color 0.3s ease;
+}
+.navbar a:hover { color: var(--dourado); }
+
+/* Idiomas */
+.lang-selector {
+  margin-left: 20px;
+}
+.lang-selector button {
+  background: var(--dourado);
+  border: none;
+  color: var(--fundo);
+  font-weight: bold;
+  margin: 0 3px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.lang-selector button:hover {
+  background: var(--contraste);
+  color: var(--fundo);
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: 80px 20px 20px;
+  background: var(--fundo);
+  margin-top: 50px;
+}
+.logo-header {
+  height: 70px;
+  margin-bottom: 10px;
+}
+
+/* Layout principal */
+.container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 20px;
+  margin-right: 370px; /* reserva espaço para o carrinho fixo */
+}
+
+/* Coluna de produtos */
+.produtos {
+  flex: 1;
+  min-width: 60%;
+}
+.produto {
+  display: flex; justify-content: space-between;
+  background: #2a3b55; padding: 10px; margin-bottom: 10px;
+  border-radius: 8px;
+}
+.produto button {
+  background: var(--dourado); border: none; padding: 6px 12px;
+  border-radius: 6px; cursor: pointer; font-weight: bold;
+}
+
+/* Carrinho premium fixo (desktop) */
+.carrinho {
+  position: fixed;
+  right: 0;
+  top: 80px; /* abaixo da navbar */
+  width: 350px;
+  background: #2a3b55;
+  padding: 15px;
+  border-radius: 8px 0 0 8px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+.carrinho table {
+  width: 100%; border-collapse: collapse;
+}
+.carrinho th, .carrinho td {
+  padding: 6px; text-align: center;
+}
+.carrinho td button {
+  background: var(--dourado); border: none; padding: 4px 8px;
+  border-radius: 4px; cursor: pointer;
+}
+/* Botão remover em vermelho */
+.carrinho td button:last-child {
+  background: var(--remover);
+  color: var(--contraste);
+}
+.finalizar {
+  display: block; margin: 15px auto; padding: 10px 20px;
+  background: var(--dourado); color: var(--fundo); font-weight: bold;
+  border-radius: 8px; text-align: center; text-decoration: none;
+}
+
+/* Footer */
+footer {
+  background: var(--fundo);
+  color: var(--contraste);
+  text-align: center;
+  padding: 20px 15px;
+}
+footer a {
+  color: var(--dourado);
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
+}
+footer a:hover { text-decoration: underline; }
+
+/* Ajustes para mobile */
+@media (max-width: 768px) {
+  .container {
+    margin-right: 0; /* remove espaço lateral */
+    flex-direction: column;
+  }
+
+  .carrinho {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    right: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+    max-height: 40vh; /* ocupa parte inferior da tela */
+    overflow-y: auto;
+  }
+
+  .produtos {
+    min-width: 100%;
+    margin-bottom: 45vh; /* espaço para carrinho inferior */
+  }
+}
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html">Início</a>
+    <a href="cestas.html">Cestas & Mimos</a>
+    <a href="pedidos.html">Pedidos</a>
+    <a href="catering.html">Catering Infantil</a>
+    <a href="contactos.html">Contactos</a>
+    <div class="lang-selector">
+      <button onclick="setLang('pt')">PT</button>
+      <button onclick="setLang('en')">EN</button>
+      <button onclick="setLang('zh')">中文</button>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header>
+    <a href="index.html">
+      <img src="imagens/esandjo.logo.jpg" alt="Esandjo Atelier de Mimos" class="logo-header">
+    </a>
+  </header>
+
+  <!-- Layout principal -->
+  <div class="container">
+    <!-- Produtos -->
+    <div class="produtos">
+      <div class="produto">
+        <span>Cesta Gourmet</span>
+        <span>15.000,00 KZ</span>
+        <button onclick="addToCart('Cesta Gourmet', 15000)">Adicionar</button>
+      </div>
+      <div class="produto">
+        <span>Cesta Artesanal</span>
+        <span>12.500,00 KZ</span>
+        <button onclick="addToCart('Cesta Artesanal', 12500)">Adicionar</button>
+      </div>
+      <div class="produto">
+        <span>Cesta Premium</span>
+        <span>20.000,00 KZ</span>
+        <button onclick="addToCart('Cesta Premium', 20000)">Adicionar</button>
+      </div>
+    </div>
+
+    <!-- Carrinho -->
+    <div class="carrinho">
+      <h2 id="cart-title">Carrinho</h2>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qtd</th>
+            <th>Preço</th>
+            <th>Total</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="cart-body"></tbody>
+      </table>
+      <h3 id="cart-total">Total: 0,00 KZ</h3>
+      <a href="#" class="finalizar" id="finalize-btn" onclick="finalizarCompra()">Finalizar no WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
+    <p>
+      <a href="https://www.instagram.com/esandjoatelierdemimos/" target="_blank">Instagram</a> | 
+      <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank">Facebook</a>
+    </p>
+    <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
+  </footer>
+
+  <script>
+    let cart = [];
+
+    // Traduções
+    const translations = {
+      pt: { openHours: "Aberto todos os dias das 8h às 22h", cartTitle: "Carrinho", finalize: "Finalizar no WhatsApp" },
+      en: { openHours: "Open daily from 8am to 10pm", cartTitle: "Cart", finalize: "Checkout on WhatsApp" },
+      zh: { openHours: "每天营业，早上8点到晚上10点", cartTitle: "购物车", finalize: "在 WhatsApp 上结账" }
+    };
+
+    function setLang(lang) {
+      localStorage.setItem("siteLang", lang);
+      applyLang(lang);
+    }
+
+    function applyLang(lang) {
+      document.getElementById('open-hours').textContent = translations[lang].openHours;
+      document.getElementById('cart-title').textContent = translations[lang].cartTitle;
+      document.getElementById('finalize-btn').textContent = translations[lang].finalize;
+    }
+
+      // Carregar carrinho e idioma ao abrir
+  window.onload = function() {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      cart = JSON.parse(savedCart);
+      renderCart();
+    }
+    const lang = localStorage.getItem("siteLang") || "pt";
+    applyLang(lang);
+  };
+
+  function addToCart(name, price) {
+    const item = cart.find(i => i.name === name);
+    if (item) {
+      item.qty++;
+    } else {
+      cart.push({ name, price, qty: 1 });
+    }
+    saveCart();
+    renderCart();
+  }
+
+  function changeQty(name, delta) {
+    const item = cart.find(i => i.name === name);
+    if (item) {
+      item.qty += delta;
+      if (item.qty <= 0) {
+        removeItem(name);
+      }
+    }
+    saveCart();
+    renderCart();
+  }
+
+  function removeItem(name) {
+    cart = cart.filter(i => i.name !== name);
+    saveCart();
+    renderCart();
+  }
+
+  function renderCart() {
+    const tbody = document.getElementById('cart-body');
+    tbody.innerHTML = '';
+    let total = 0;
+
+    cart.forEach(item => {
+      const lineTotal = item.price * item.qty;
+      total += lineTotal;
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.qty}</td>
+          <td>${item.price.toLocaleString('pt-AO')} KZ</td>
+          <td>${lineTotal.toLocaleString('pt-AO')} KZ</td>
+          <td>
+            <button onclick="changeQty('${item.name}',1)">+</button>
+            <button onclick="changeQty('${item.name}',-1)">-</button>
+            <button onclick="removeItem('${item.name}')">Remover</button>
+          </td>
+        </tr>`;
+    });
+
+    document.getElementById('cart-total').textContent =
+      "Total: " + total.toLocaleString('pt-AO') + " KZ";
+  }
+
+  function finalizarCompra() {
+    if (cart.length === 0) {
+      alert("Carrinho vazio!");
+      return;
+    }
+    let mensagem = "Olá, gostaria de encomendar:\n";
+    cart.forEach(item => {
+      mensagem += `${item.qty}x ${item.name} - ${(item.price * item.qty).toLocaleString('pt-AO')} KZ\n`;
+    });
+    mensagem += document.getElementById('cart-total').textContent;
+
+    const url = "https://wa.me/244924015087?text=" + encodeURIComponent(mensagem);
+    window.open(url, "_blank");
+
+    // Reset carrinho apenas ao finalizar
+    cart = [];
+    saveCart();
+    renderCart();
+  }
+
+  // Guardar carrinho no localStorage
+  function saveCart() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
+</script>
+</body>
+</html>
