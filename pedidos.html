@@ -83,6 +83,13 @@ header {
   margin-bottom: 10px;
 }
 
+/* Ajuste específico para mobile: move o logo 2cm para baixo */
+@media (max-width: 600px) {
+  .logo-header {
+    margin-top: 2cm;
+  }
+}
+
 /* Galeria de produtos */
 .galeria {
   display: grid;
@@ -148,6 +155,7 @@ footer a:hover { text-decoration: underline; }
 @media (min-width: 900px) {
   .galeria { grid-template-columns: repeat(3, 1fr); }
 }
+
 
 
 
