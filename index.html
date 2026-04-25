@@ -60,12 +60,12 @@
     /* Header ajustado */
     header {
       text-align: center;
-      padding: 30px 20px 15px; /* reduzido ~1cm */
+      padding: 30px 20px 15px;
       background: var(--fundo);
       margin-top: 60px; /* compensa navbar fixa */
     }
     .logo-header {
-      height: 70px; /* reduzido */
+      height: 70px;
       margin-bottom: 8px;
     }
     .cta {
@@ -85,12 +85,12 @@
       color: var(--fundo);
     }
 
-    /* Galeria ajustada para cima */
+    /* Galeria */
     .galeria {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 18px;
-      padding: 20px 15px; /* reduzido */
+      padding: 20px 15px;
     }
     .galeria img {
       width: 100%;
@@ -106,21 +106,31 @@
 
     /* Lightbox */
     .lightbox {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9);
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    .lightbox img {
-      max-width: 90%;
-      max-height: 70%;
-      border-radius: 12px;
-    }
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9);
+  justify-content: center;   /* centraliza horizontal */
+  align-items: center;       /* centraliza vertical */
+  flex-direction: column;
+}
+
+#lightbox-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;              /* ocupa toda a altura */
+}
+
+#lightbox-content img,
+#lightbox-content video {
+  max-width: 90%;
+  max-height: 80%;           /* aumenta altura para centralizar melhor */
+  border-radius: 12px;
+}
+
     .close, .prev, .next {
       position: absolute;
       color: var(--contraste);
@@ -131,6 +141,11 @@
     .close { top: 20px; right: 30px; }
     .prev { left: 30px; top: 50%; transform: translateY(-50%); }
     .next { right: 30px; top: 50%; transform: translateY(-50%); }
+    #lightbox-content video, #lightbox-content img {
+      max-width: 90%;
+      max-height: 70%;
+      border-radius: 12px;
+    }
 
     /* Footer */
     footer {
@@ -185,7 +200,7 @@
   <div class="lightbox" id="lightbox">
     <span class="close" onclick="closeLightbox()">&times;</span>
     <span class="prev" onclick="changeImage(-1)">&#10094;</span>
-    <img id="lightbox-img" src="" alt="">
+    <div id="lightbox-content"></div>
     <span class="next" onclick="changeImage(1)">&#10095;</span>
   </div>
 
@@ -201,30 +216,24 @@
 
   <script>
     const gallerySets = {
-  cesta1: [
-    "imagens/cesta1.jpg",
-    "imagens/cesta1a.jpg",
-    "imagens/cesta1b.jpg",
-    "imagens/cesta1c.jpg",
-    "imagens/cesta1d.jpg"
-  ],
-  cesta2: [
-    "imagens/cesta2.jpg",
-    "imagens/cesta2a.jpg",
-    "imagens/cesta2b.jpg",
-    "imagens/cesta2c.jpg",
-    "imagens/cesta2d.jpg"
-  ],
-  cesta3: [
-    "imagens/cesta3.jpg"
-  ],
-  cesta4: [
-    "imagens/cesta4.jpg"
-  ],
-  cesta5: [
-    "imagens/cesta5.jpg"
-  ]
-};
+      cesta1: [
+        "imagens/cesta1.jpg",
+        "imagens/cesta1a.jpg",
+        "imagens/cesta1b.mp4", // vídeo
+        "imagens/cesta1c.jpg",
+        "imagens/cesta1d.jpg"
+      ],
+      cesta2: [
+        "imagens/cesta2.jpg",
+        "imagens/cesta2a.jpg",
+        "imagens/cesta2b.jpg",
+        "imagens/cesta2c.jpg",
+        "imagens/cesta2d.jpg"
+      ],
+      cesta3: ["imagens/cesta3.jpg"],
+      cesta4: ["imagens/cesta4.jpg"],
+      cesta5: ["imagens/cesta5.jpg"]
+    };
 
     let currentSet = [];
     let currentIndex = 0;
@@ -233,7 +242,7 @@
       currentSet = gallerySets[setName];
       currentIndex = index;
       document.getElementById('lightbox').style.display = 'flex';
-      document.getElementById('lightbox-img').src = currentSet[currentIndex];
+      showMedia();
     }
 
     function closeLightbox() {
@@ -244,10 +253,22 @@
       currentIndex += direction;
       if (currentIndex < 0) currentIndex = currentSet.length - 1;
       if (currentIndex >= currentSet.length) currentIndex = 0;
-      document.getElementById('lightbox-img').src = currentSet[currentIndex];
+      showMedia();
     }
 
-    // Fechar e navegar com teclado
+        function showMedia() {
+      const container = document.getElementById('lightbox-content');
+      const file = currentSet[currentIndex];
+      const ext = file.split('.').pop().toLowerCase();
+
+      if (ext === 'mp4') {
+        container.innerHTML = `<video src="${file}" controls autoplay style="max-width:90%;max-height:70%;border-radius:12px;"></video>`;
+      } else {
+        container.innerHTML = `<img src="${file}" style="max-width:90%;max-height:70%;border-radius:12px;">`;
+      }
+    }
+
+    // Navegação por teclado
     document.addEventListener('keydown', function(e) {
       if (e.key === "Escape") closeLightbox();
       if (e.key === "ArrowLeft") changeImage(-1);
