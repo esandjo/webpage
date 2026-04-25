@@ -4,265 +4,166 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Esandjo Atelier de Mimos</title>
-  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
   <style>
-:root {
-  --fundo: #f5f5f5;          /* fundo claro inspirado no mármore */
-  --contraste: #1A2A40;      /* texto escuro para contraste */
-  --dourado: #C9A646;        /* dourado elegante do logo */
-  --branco: #ffffff;
-}
+    :root {
+      --fundo: #f5f5f5;       /* fundo claro premium */
+      --contraste: #1A2A40;   /* azul escuro elegante */
+      --dourado: #C9A646;     /* dourado institucional */
+      --branco: #ffffff;
+    }
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: var(--fundo);
-  color: var(--contraste);
-  margin: 0;
-  padding: 0;
-  padding-top: 80px; /* reserva espaço para a navbar fixa */
-}
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--fundo);
+      color: var(--contraste);
+      padding-top: 80px;
+    }
 
-/* Navbar fixa premium */
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  background: var(--branco);
-  padding: 10px;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-.navbar a {
-  background: var(--dourado);
-  color: var(--branco);
-  font-weight: 600;
-  text-decoration: none;
-  margin: 5px 8px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  transition: all 0.3s ease;
-}
-.navbar a:hover {
-  background: var(--contraste);
-  color: var(--branco);
-}
+    /* Navbar fixa */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--branco);
+      padding: 10px;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .navbar a {
+      background: var(--dourado);
+      color: var(--branco);
+      font-weight: 600;
+      text-decoration: none;
+      margin: 5px 8px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+    .navbar a:hover { background: var(--contraste); }
 
-/* Idiomas */
-.lang-selector {
-  margin-left: 20px;
-}
-.lang-selector button {
-  background: var(--contraste);
-  border: none;
-  color: var(--branco);
-  font-weight: bold;
-  margin: 0 3px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-}
-.lang-selector button:hover {
-  background: var(--dourado);
-  color: var(--contraste);
-}
+    /* Idiomas */
+    .lang-selector { margin-left: 20px; }
+    .lang-selector button {
+      background: var(--contraste);
+      border: none;
+      color: var(--branco);
+      font-weight: bold;
+      margin: 0 3px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    .lang-selector button:hover {
+      background: var(--dourado);
+      color: var(--contraste);
+    }
 
-/* Header */
-header {
-  text-align: center;
-  padding: 40px 20px 20px;
-  background: var(--fundo);
-}
-.logo-header {
-  height: 70px;
-  margin-bottom: 10px;
-}
+    /* Header */
+    header {
+      text-align: center;
+      padding: 40px 20px 20px;
+      background: var(--fundo);
+    }
+    .logo-header { height: 70px; margin-bottom: 10px; }
+    @media (max-width: 600px) { .logo-header { margin-top: 2cm; } }
 
-/* Ajuste específico para mobile: move o logo 2cm para baixo */
-@media (max-width: 600px) {
-  .logo-header {
-    margin-top: 2cm;
-  }
-}
+    .cta {
+      display: block;
+      margin: 20px auto;
+      background: var(--dourado);
+      color: var(--branco);
+      padding: 10px 22px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+      max-width: 200px;
+    }
+    .cta:hover { background: var(--contraste); }
 
-/* Botão CTA */
-.cta {
-  display: block;
-  margin: 0 auto;
-  background: var(--dourado);
-  color: var(--branco);
-  padding: 10px 22px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background 0.3s ease;
-  max-width: 190px;
-}
-.cta:hover {
-  background: var(--contraste);
-  color: var(--branco);
-}
+    /* Galeria */
+    .galeria {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding: 20px 15px;
+    }
+    .galeria img {
+      width: 100%;
+      height: 230px;
+      object-fit: contain;
+      background-color: var(--fundo);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .galeria img:hover { transform: scale(1.05); }
 
-/* Galeria */
-.galeria {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
-  padding: 20px 15px;
-}
-.galeria img {
-  width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: cover;
-  background-color: var(--fundo);
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-.galeria img:hover { transform: scale(1.05); }
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    #lightbox-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    #lightbox-content img,
+    #lightbox-content video {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 12px;
+    }
+    .close, .prev, .next {
+      position: absolute;
+      color: var(--branco);
+      font-size: 40px;
+      cursor: pointer;
+      padding: 10px;
+    }
+    .close { top: 20px; right: 30px; }
+    .prev { left: 30px; top: 50%; transform: translateY(-50%); }
+    .next { right: 30px; top: 50%; transform: translateY(-50%); }
 
-/* Carrinho Premium */
-.cart { padding:20px; max-width:900px; margin:auto; }
-.cart-table {
-  width:100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-  border-radius: 12px;
-  overflow: hidden;
-  font-size: 0.95em;
-}
-.cart-table th {
-  background: linear-gradient(135deg, var(--contraste), #2a3b55);
-  color: var(--dourado);
-  font-weight: bold;
-  padding: 14px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.cart-table td {
-  background: var(--branco);
-  color: var(--contraste);
-  padding: 12px;
-  text-align: center;
-  border-bottom: 1px solid var(--dourado);
-}
-.cart-table tr:hover td { background: #f0f0f0; transition: 0.3s; }
+    /* Footer */
+    footer {
+      background: var(--branco);
+      color: var(--contraste);
+      text-align: center;
+      padding: 20px 15px;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    }
+    footer a {
+      color: var(--dourado);
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+    footer a:hover { text-decoration: underline; }
 
-/* Botões do carrinho */
-.cart-table button {
-  background: var(--dourado);
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  color: var(--branco);
-  margin: 0 4px;
-  transition: 0.3s;
-}
-.cart-table button:hover { background: var(--contraste); }
-.cart-table button.remove {
-  background: #e74c3c;
-  color: #fff;
-}
-.cart-table button.remove:hover { background: #c0392b; }
-
-/* Linha do total geral */
-.total-row td {
-  font-weight: bold;
-  background: #eaeaea;
-  color: var(--contraste);
-  text-align: right;
-  font-size: 1.1em;
-  padding: 14px;
-}
-
-/* Botão finalizar no WhatsApp */
-.finalizar {
-  display:block;
-  margin:20px auto;
-  background:#25D366;
-  color:#fff;
-  padding:10px 22px;
-  border-radius:30px;
-  text-decoration:none;
-  font-weight:bold;
-  text-align:center;
-  max-width:250px;
-}
-.finalizar:hover { background:#1ebe57; }
-
-/* Lightbox */
-.lightbox {
-  display: none;
-  position: fixed;
-  z-index: 2000;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.9);
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-#lightbox-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-#lightbox-content img,
-#lightbox-content video {
-  max-width: 90%;
-  max-height: 80%;
-  border-radius: 12px;
-}
-.close, .prev, .next {
-  position: absolute;
-  color: var(--contraste);
-  font-size: 40px;
-  cursor: pointer;
-  padding: 10px;
-}
-.close { top: 20px; right: 30px; }
-.prev { left: 30px; top: 50%; transform: translateY(-50%); }
-.next { right: 30px; top: 50%; transform: translateY(-50%); }
-
-/* Footer */
-footer {
-  background: var(--branco);
-  color: var(--contraste);
-  text-align:center;
-  padding:20px;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-}
-footer a {
-  color: var(--dourado);
-  margin:0 10px;
-  text-decoration:none;
-}
-footer a:hover { text-decoration:underline; }
-
-/* Responsividade */
-@media (min-width: 600px) {
-  .galeria { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 900px) {
-  .galeria { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 768px) {
-  .navbar { flex-direction: column; padding: 12px; }
-  .navbar a { margin: 6px 0; display: block; }
-  .lang-selector { margin-top: 10px; }
-  .cta { width: 100%; max-width: none; }
-}
-
-
+    /* Responsividade */
+    @media (min-width: 600px) { .galeria { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 900px) { .galeria { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px) {
+      .navbar { flex-direction: column; padding: 12px; }
+      .navbar a { margin: 6px 0; display: block; }
+      .lang-selector { margin-top: 10px; }
+      .cta { width: 100%; max-width: none; }
+    }
   </style>
 </head>
 <body>
@@ -290,11 +191,11 @@ footer a:hover { text-decoration:underline; }
 
   <!-- Galeria -->
   <section class="galeria">
-    <img src="imagens/cesta1.jpg" alt="Cesta gourmet" onclick="openLightbox('cesta1',0)">
-    <img src="imagens/cesta2.jpg" alt="Cesta artesanal" onclick="openLightbox('cesta2',0)">
-    <img src="imagens/cesta3.jpg" alt="Cesta premium" onclick="openLightbox('cesta3',0)">
-    <img src="imagens/cesta4.jpg" alt="Cesta temática" onclick="openLightbox('cesta4',0)">
-    <img src="imagens/cesta5.jpg" alt="Cesta de luxo" onclick="openLightbox('cesta5',0)">
+    <img src="imagens/cesta1.jpg" class="item-name" data-key="gourmet" alt="Cesta Gourmet" onclick="openLightbox('cesta1',0)">
+    <img src="imagens/cesta2.jpg" class="item-name" data-key="artesanal" alt="Cesta Artesanal" onclick="openLightbox('cesta2',0)">
+    <img src="imagens/cesta3.jpg" class="item-name" data-key="premium" alt="Cesta Premium" onclick="openLightbox('cesta3',0)">
+    <img src="imagens/cesta4.jpg" class="item-name" data-key="tematica" alt="Cesta Temática" onclick="openLightbox('cesta4',0)">
+    <img src="imagens/cesta5.jpg" class="item-name" data-key="luxo" alt="Cesta de Luxo" onclick="openLightbox('cesta5',0)">
   </section>
 
   <!-- Lightbox -->
@@ -305,7 +206,7 @@ footer a:hover { text-decoration:underline; }
     <span class="next" onclick="changeImage(1)">&#10095;</span>
   </div>
 
-  <!-- Footer -->
+    <!-- Footer -->
   <footer>
     <p>📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
     <p>
@@ -315,97 +216,99 @@ footer a:hover { text-decoration:underline; }
     <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
   </footer>
 
-<script>
-  const gallerySets = {
-    cesta1: ["imagens/cesta1.jpg","imagens/cesta1a.jpg","imagens/cesta1b.mp4","imagens/cesta1c.jpg","imagens/cesta1d.jpg"],
-    cesta2: ["imagens/cesta2.jpg","imagens/cesta2a.jpg","imagens/cesta2b.jpg","imagens/cesta2c.jpg","imagens/cesta2d.jpg"],
-    cesta3: ["imagens/cesta3.jpg"],
-    cesta4: ["imagens/cesta4.jpg"],
-    cesta5: ["imagens/cesta5.jpg"]
-  };
+  <script>
+    const gallerySets = {
+      cesta1: ["imagens/cesta1.jpg","imagens/cesta1a.jpg","imagens/cesta1b.mp4","imagens/cesta1c.jpg"],
+      cesta2: ["imagens/cesta2.jpg","imagens/cesta2a.jpg","imagens/cesta2b.jpg"],
+      cesta3: ["imagens/cesta3.jpg"],
+      cesta4: ["imagens/cesta4.jpg"],
+      cesta5: ["imagens/cesta5.jpg"]
+    };
 
-  let currentSet = [];
-  let currentIndex = 0;
+    let currentSet = [];
+    let currentIndex = 0;
 
-  function openLightbox(setName, index) {
-    currentSet = gallerySets[setName];
-    currentIndex = index;
-    document.getElementById('lightbox').style.display = 'flex';
-    showMedia();
-  }
-
-  function closeLightbox() {
-    document.getElementById('lightbox').style.display = 'none';
-  }
-
-  function changeImage(direction) {
-    currentIndex += direction;
-    if (currentIndex < 0) currentIndex = currentSet.length - 1;
-    if (currentIndex >= currentSet.length) currentIndex = 0;
-    showMedia();
-  }
-
-  function showMedia() {
-    const container = document.getElementById('lightbox-content');
-    const file = currentSet[currentIndex];
-    const ext = file.split('.').pop().toLowerCase();
-
-    if (ext === 'mp4') {
-      container.innerHTML = `<video src="${file}" controls autoplay style="max-width:90%;max-height:80%;border-radius:12px;"></video>`;
-    } else {
-      container.innerHTML = `<img src="${file}" style="max-width:90%;max-height:80%;border-radius:12px;">`;
+    function openLightbox(setName, index) {
+      currentSet = gallerySets[setName];
+      currentIndex = index;
+      document.getElementById('lightbox').style.display = 'flex';
+      showMedia();
     }
-  }
 
-  // Navegação por teclado
-  document.addEventListener('keydown', function(e) {
-    if (e.key === "Escape") closeLightbox();
-    if (e.key === "ArrowLeft") changeImage(-1);
-    if (e.key === "ArrowRight") changeImage(1);
-  });
-
-  // Fechar ao clicar fora
-  document.getElementById('lightbox').addEventListener('click', function(e) {
-    if (e.target.id === 'lightbox') closeLightbox();
-  });
-
-  // Traduções multilíngue
-  const translations = {
-    pt: { 
-      contact: "Fale Conosco", 
-      openHours: "Aberto todos os dias das 8h às 22h",
-      navbar: { home:"Início", cestas:"Cestas & Mimos", pedidos:"Pedidos", catering:"Catering Infantil", contactos:"Contactos" }
-    },
-    en: { 
-      contact: "Contact Us", 
-      openHours: "Open daily from 8am to 10pm",
-      navbar: { home:"Home", cestas:"Baskets & Gifts", pedidos:"Orders", catering:"Kids Catering", contactos:"Contacts" }
-    },
-    zh: { 
-      contact: "联系我们", 
-      openHours: "每天营业，早上8点到晚上10点",
-      navbar: { home:"首页", cestas:"礼篮与礼品", pedidos:"订单", catering:"儿童餐饮", contactos:"联系方式" }
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
     }
-  };
 
-  function setLang(lang) {
-    localStorage.setItem("siteLang", lang);
-    applyLang(lang);
-  }
+    function changeImage(direction) {
+      currentIndex += direction;
+      if (currentIndex < 0) currentIndex = currentSet.length - 1;
+      if (currentIndex >= currentSet.length) currentIndex = 0;
+      showMedia();
+    }
 
-  function applyLang(lang) {
-    document.getElementById('cta-btn').textContent = translations[lang].contact;
-    document.getElementById('open-hours').textContent = translations[lang].openHours;
-    document.querySelectorAll('.nav-link').forEach(link => {
-      const key = link.getAttribute("data-key");
-      link.textContent = translations[lang].navbar[key];
+    function showMedia() {
+      const container = document.getElementById('lightbox-content');
+      const file = currentSet[currentIndex];
+      const ext = file.split('.').pop().toLowerCase();
+
+      if (ext === 'mp4') {
+        container.innerHTML = `<video src="${file}" controls autoplay style="max-width:90%;max-height:80%;border-radius:12px;"></video>`;
+      } else {
+        container.innerHTML = `<img src="${file}" style="max-width:90%;max-height:80%;border-radius:12px;">`;
+      }
+    }
+
+    // Navegação por teclado
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") changeImage(-1);
+      if (e.key === "ArrowRight") changeImage(1);
     });
-  }
 
-  window.onload = function() {
-    const lang = localStorage.getItem("siteLang") || "pt";
-    applyLang(lang);
-  };
-</script>
+    // Fechar ao clicar fora
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target.id === 'lightbox') closeLightbox();
+    });
+
+    // Traduções multilíngues
+    const translations = {
+      pt: { 
+        contact:"Fale Conosco", 
+        openHours:"Aberto todos os dias das 8h às 22h",
+        navbar:{home:"Início",cestas:"Cestas & Mimos",pedidos:"Pedidos",encomenda:"Encomenda",catering:"Catering Infantil",contactos:"Contactos"},
+        items:{gourmet:"Cesta Gourmet",artesanal:"Cesta Artesanal",premium:"Cesta Premium",tematica:"Cesta Temática",luxo:"Cesta de Luxo"}
+      },
+      en: { 
+        contact:"Contact Us", 
+        openHours:"Open daily from 8am to 10pm",
+        navbar:{home:"Home",cestas:"Baskets & Gifts",pedidos:"Orders",encomenda:"Checkout",catering:"Kids Catering",contactos:"Contacts"},
+        items:{gourmet:"Gourmet Basket",artesanal:"Handmade Basket",premium:"Premium Basket",tematica:"Themed Basket",luxo:"Luxury Basket"}
+      },
+      zh: { 
+        contact:"联系我们", 
+        openHours:"每天营业，早上8点到晚上10点",
+        navbar:{home:"首页",cestas:"礼篮与礼品",pedidos:"订单",encomenda:"结账",catering:"儿童餐饮",contactos:"联系方式"},
+        items:{gourmet:"美食篮",artesanal:"手工篮",premium:"高级篮",tematica:"主题篮",luxo:"豪华篮"}
+      }
+    };
+
+    function setLang(lang) {
+      document.getElementById('cta-btn').textContent = translations[lang].contact;
+      document.getElementById('open-hours').textContent = translations[lang].openHours;
+      document.querySelectorAll('.nav-link').forEach(link => {
+        const key = link.getAttribute("data-key");
+        link.textContent = translations[lang].navbar[key];
+      });
+      document.querySelectorAll('.item-name').forEach(img => {
+        const key = img.getAttribute("data-key");
+        img.alt = translations[lang].items[key];
+      });
+    }
+
+    window.onload = function() {
+      const lang = localStorage.getItem("siteLang") || "pt";
+      setLang(lang);
+    };
+  </script>
 </body>
 </html>
