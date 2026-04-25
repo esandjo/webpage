@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Esandjo Atelier de Mimos</title>
+   <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
   <style>
     :root {
       --fundo: #1A2A40;
@@ -169,7 +170,7 @@
   <nav class="navbar">
     <a href="index.html">Início</a>
     <a href="cestas.html">Cestas & Mimos</a>
-    <a href="encomendas.html">Encomendas</a>
+    <a href="pedidos.html">Pedidos</a>
     <a href="catering.html">Catering Infantil</a>
     <a href="contactos.html">Contactos</a>
     <div class="lang-selector">
@@ -280,17 +281,30 @@
       if (e.target.id === 'lightbox') closeLightbox();
     });
 
-    // Traduções
-    const translations = {
-      pt: { contact: "Fale Conosco", openHours: "Aberto todos os dias das 8h às 22h" },
-      en: { contact: "Contact Us", openHours: "Open daily from 8am to 10pm" },
-      zh: { contact: "联系我们", openHours: "每天营业，早上8点到晚上10点" }
-    };
+     // Traduções
+  const translations = {
+    pt: { contact: "Fale Conosco", openHours: "Aberto todos os dias das 8h às 22h" },
+    en: { contact: "Contact Us", openHours: "Open daily from 8am to 10pm" },
+    zh: { contact: "联系我们", openHours: "每天营业，早上8点到晚上10点" }
+  };
 
-    function setLang(lang) {
-      document.getElementById('cta-btn').textContent = translations[lang].contact;
-      document.getElementById('open-hours').textContent = translations[lang].openHours;
-    }
+  // Função para definir idioma e guardar no storage
+  function setLang(lang) {
+    localStorage.setItem("siteLang", lang); // guarda idioma selecionado
+    applyLang(lang);
+  }
+
+  // Aplica traduções
+  function applyLang(lang) {
+    document.getElementById('cta-btn').textContent = translations[lang].contact;
+    document.getElementById('open-hours').textContent = translations[lang].openHours;
+  }
+
+  // Ao carregar a página, aplica automaticamente o idioma guardado
+  window.onload = function() {
+    const lang = localStorage.getItem("siteLang") || "pt"; // se não houver, default PT
+    applyLang(lang);
+  };
   </script>
 </body>
 </html>
