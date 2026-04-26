@@ -124,6 +124,68 @@
   document.getElementById("lightbox").addEventListener("click", function(e) {
     if(e.target.id === "lightbox") closeLightbox();
   });
+
+  // Traduções multilíngues
+  const translations = {
+    pt:{pageTitle:"Bem-vindo ao Esandjo Atelier de Mimos",subtitle:"Doces, cestas e momentos especiais",cta:"Explorar Cestas",
+        openHours:"Aberto todos os dias das 8h às 22h",
+        navbar:{home:"Início",cestas:"Cestas & Mimos",pedidos:"Pedidos",encomenda:"Encomenda",catering:"Catering Infantil",contactos:"Contactos"},
+        items:{gourmet:"Cesta Gourmet",artesanal:"Cesta Artesanal",premium:"Cesta Premium"},
+        desc:{descGourmet:"Perfeita para ocasiões especiais.",descArtesanal:"Feita com carinho e tradição.",descPremium:"Um toque de requinte e exclusividade."},
+        insta:"Instagram",fb:"Facebook"},
+    en:{pageTitle:"Welcome to Esandjo Atelier de Mimos",subtitle:"Sweets, baskets and special moments",cta:"Explore Baskets",
+        openHours:"Open daily from 8am to 10pm",
+        navbar:{home:"Home",cestas:"Baskets & Gifts",pedidos:"Orders",encomenda:"Checkout",catering:"Kids Catering",contactos:"Contacts"},
+        items:{gourmet:"Gourmet Basket",artesanal:"Handmade Basket",premium:"Premium Basket"},
+        desc:{descGourmet:"Perfect for special occasions.",descArtesanal:"Made with care and tradition.",descPremium:"A touch of refinement and exclusivity."},
+        insta:"Instagram",fb:"Facebook"},
+    zh:{pageTitle:"欢迎来到 Esandjo Atelier de Mimos",subtitle:"甜点、礼篮和特别时刻",cta:"探索礼篮",
+        openHours:"每天营业，早上8点到晚上10点",
+        navbar:{home:"首页",cestas:"礼篮与礼品",pedidos:"订单",encomenda:"结账",catering:"儿童餐饮",contactos:"联系方式"},
+        items:{gourmet:"美食篮",artesanal:"手工篮",premium:"高级篮"},
+        desc:{descGourmet:"适合特别场合。",descArtesanal:"用心和传统制作。",descPremium:"精致和独特的触感。"},
+        insta:"Instagram",fb:"Facebook"}
+  };
+
+  function setLang(lang) {
+    localStorage.setItem("siteLang", lang);
+    applyLang(lang);
+  }
+
+    function applyLang(lang) {
+    // Hero
+    if(document.getElementById('page-title')) document.getElementById('page-title').textContent = translations[lang].pageTitle;
+    if(document.getElementById('subtitle')) document.getElementById('subtitle').textContent = translations[lang].subtitle;
+    if(document.getElementById('cta')) document.getElementById('cta').textContent = translations[lang].cta;
+
+    // Footer
+    if(document.getElementById('open-hours')) document.getElementById('open-hours').textContent = translations[lang].openHours;
+    if(document.getElementById('insta')) document.getElementById('insta').textContent = translations[lang].insta;
+    if(document.getElementById('fb')) document.getElementById('fb').textContent = translations[lang].fb;
+
+    // Navbar
+    document.querySelectorAll('.nav-link').forEach(link => {
+      const key = link.getAttribute("data-key");
+      if(translations[lang].navbar[key]) link.textContent = translations[lang].navbar[key];
+    });
+
+    // Itens
+    document.querySelectorAll('.item-name').forEach(span => {
+      const key = span.getAttribute("data-key");
+      if(translations[lang].items[key]) span.textContent = translations[lang].items[key];
+    });
+
+    document.querySelectorAll('.item-desc').forEach(p => {
+      const key = p.getAttribute("data-key");
+      if(translations[lang].desc[key]) p.textContent = translations[lang].desc[key];
+    });
+  }
+
+  // Aplica idioma guardado ao carregar a página
+  window.onload = function() {
+    const lang = localStorage.getItem("siteLang") || "pt";
+    applyLang(lang);
+  };
 </script>
 </body>
 </html>
