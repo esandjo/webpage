@@ -3,284 +3,199 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Encomenda - Esandjo Atelier de Mimos</title>
+  <title>Encomendas - Esandjo Atelier de Mimos</title>
   <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
   <style>
-:root {
-  --fundo: #f5f5f5;          /* fundo claro inspirado no mármore */
-  --contraste: #1A2A40;      /* texto escuro para contraste */
-  --dourado: #C9A646;        /* dourado elegante do logo */
-  --branco: #ffffff;
-}
+    :root {
+      --fundo: #f5f5f5;
+      --contraste: #1A2A40;
+      --dourado: #C9A646;
+      --branco: #ffffff;
+    }
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: var(--fundo);
-  color: var(--contraste);
-  margin: 0;
-  padding: 0;
-  padding-top: 80px; /* reserva espaço para a navbar fixa */
-}
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--fundo);
+      color: var(--contraste);
+      margin: 0;
+      padding-top: 70px;
+    }
 
-/* Navbar fixa premium */
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--branco);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+    .navbar .logo {
+      height: 50px;
+    }
+    .nav-links {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  background: var(--branco);
-  padding: 10px;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-.navbar a {
-  background: var(--dourado);
-  color: var(--branco);
-  font-weight: 600;
-  text-decoration: none;
-  margin: 5px 8px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  transition: all 0.3s ease;
-}
-.navbar a:hover {
-  background: var(--contraste);
-  color: var(--branco);
+  gap: 12px;
+  transition: margin 0.3s ease;
+  margin-left: -2cm; /* move todos os itens */
 }
 
-/* Idiomas */
-.lang-selector {
-  margin-left: 20px;
-}
-.lang-selector button {
-  background: var(--contraste);
-  border: none;
-  color: var(--branco);
-  font-weight: bold;
-  margin: 0 3px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-}
-.lang-selector button:hover {
-  background: var(--dourado);
-  color: var(--contraste);
-}
+ 
+    .nav-links a {
+      background: var(--dourado);
+      color: var(--branco);
+      padding: 8px 14px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .nav-links a:hover { background: var(--contraste); }
 
-/* Header */
-header {
-  text-align: center;
-  padding: 40px 20px 20px;
-  background: var(--fundo);
-}
-.logo-header {
-  height: 70px;
-  margin-bottom: 10px;
-}
+    /* Menu hamburguer */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .menu-toggle span {
+      height: 3px;
+      width: 25px;
+      background: var(--contraste);
+      margin: 4px 0;
+      border-radius: 2px;
+    }
 
-/* Ajuste específico para mobile: move o logo 2cm para baixo */
-@media (max-width: 600px) {
-  .logo-header {
-    margin-top: 2cm;
-  }
-}
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--branco);
+        position: absolute;
+        top: 70px;
+        left: 0;
+        padding: 10px 0;
+      }
+      .nav-links.show { display: flex; }
+      .menu-toggle { display: flex; }
+    }
 
-/* Botão CTA */
-.cta {
-  display: block;
-  margin: 0 auto;
-  background: var(--dourado);
-  color: var(--branco);
-  padding: 10px 22px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background 0.3s ease;
-  max-width: 190px;
-}
-.cta:hover {
-  background: var(--contraste);
-  color: var(--branco);
-}
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+    .logo-header {
+      height: 70px;
+      margin-top: 2cm; /* versão mobile */
+    }
 
-/* Galeria */
-.galeria {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
-  padding: 20px 15px;
-}
-.galeria img {
-  width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: cover;
-  background-color: var(--fundo);
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-.galeria img:hover { transform: scale(1.05); }
+    /* Carrinho */
+    .cart { padding:20px; max-width:900px; margin:auto; }
+    .cart-table {
+      width:100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+      border-radius: 12px;
+      overflow: hidden;
+      font-size: 0.95em;
+    }
+    .cart-table th {
+      background: linear-gradient(135deg, var(--contraste), #2a3b55);
+      color: var(--dourado);
+      font-weight: bold;
+      padding: 14px;
+      text-transform: uppercase;
+    }
+    .cart-table td {
+      background: var(--branco);
+      color: var(--contraste);
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid var(--dourado);
+    }
+    .cart-table tr:hover td { background: #f0f0f0; }
 
-/* Carrinho Premium */
-.cart { padding:20px; max-width:900px; margin:auto; }
-.cart-table {
-  width:100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-  border-radius: 12px;
-  overflow: hidden;
-  font-size: 0.95em;
-}
-.cart-table th {
-  background: linear-gradient(135deg, var(--contraste), #2a3b55);
-  color: var(--dourado);
-  font-weight: bold;
-  padding: 14px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.cart-table td {
-  background: var(--branco);
-  color: var(--contraste);
-  padding: 12px;
-  text-align: center;
-  border-bottom: 1px solid var(--dourado);
-}
-.cart-table tr:hover td { background: #f0f0f0; transition: 0.3s; }
+    .cart-table button {
+      background: var(--dourado);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--branco);
+      margin: 0 4px;
+    }
+    .cart-table button:hover { background: var(--contraste); }
+    .cart-table button.remove { background: #e74c3c; }
+    .cart-table button.remove:hover { background: #c0392b; }
 
-/* Botões do carrinho */
-.cart-table button {
-  background: var(--dourado);
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  color: var(--branco);
-  margin: 0 4px;
-  transition: 0.3s;
-}
-.cart-table button:hover { background: var(--contraste); }
-.cart-table button.remove {
-  background: #e74c3c;
-  color: #fff;
-}
-.cart-table button.remove:hover { background: #c0392b; }
+    .total-row td {
+      font-weight: bold;
+      background: #eaeaea;
+      color: var(--contraste);
+      text-align: right;
+      font-size: 1.1em;
+      padding: 14px;
+    }
 
-/* Linha do total geral */
-.total-row td {
-  font-weight: bold;
-  background: #eaeaea;
-  color: var(--contraste);
-  text-align: right;
-  font-size: 1.1em;
-  padding: 14px;
-}
+    .finalizar {
+      display:block;
+      margin:20px auto;
+      background:#25D366;
+      color:#fff;
+      padding:10px 22px;
+      border-radius:30px;
+      text-decoration:none;
+      font-weight:bold;
+      text-align:center;
+      max-width:250px;
+    }
+    .finalizar:hover { background:#1ebe57; }
 
-/* Botão finalizar no WhatsApp */
-.finalizar {
-  display:block;
-  margin:20px auto;
-  background:#25D366;
-  color:#fff;
-  padding:10px 22px;
-  border-radius:30px;
-  text-decoration:none;
-  font-weight:bold;
-  text-align:center;
-  max-width:250px;
-}
-.finalizar:hover { background:#1ebe57; }
-
-/* Lightbox */
-.lightbox {
-  display: none;
-  position: fixed;
-  z-index: 2000;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.9);
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-#lightbox-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-#lightbox-content img,
-#lightbox-content video {
-  max-width: 90%;
-  max-height: 80%;
-  border-radius: 12px;
-}
-.close, .prev, .next {
-  position: absolute;
-  color: var(--contraste);
-  font-size: 40px;
-  cursor: pointer;
-  padding: 10px;
-}
-.close { top: 20px; right: 30px; }
-.prev { left: 30px; top: 50%; transform: translateY(-50%); }
-.next { right: 30px; top: 50%; transform: translateY(-50%); }
-
-/* Footer */
-footer {
-  background: var(--branco);
-  color: var(--contraste);
-  text-align:center;
-  padding:20px;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-}
-footer a {
-  color: var(--dourado);
-  margin:0 10px;
-  text-decoration:none;
-}
-footer a:hover { text-decoration:underline; }
-
-/* Responsividade */
-@media (min-width: 600px) {
-  .galeria { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 900px) {
-  .galeria { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 768px) {
-  .navbar { flex-direction: column; padding: 12px; }
-  .navbar a { margin: 6px 0; display: block; }
-  .lang-selector { margin-top: 10px; }
-  .cta { width: 100%; max-width: none; }
-}
-
-
+    /* Footer */
+    footer {
+      background: var(--branco);
+      color: var(--contraste);
+      text-align:center;
+      padding:20px;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    }
+    footer a {
+      color: var(--dourado);
+      margin:0 10px;
+      text-decoration:none;
+    }
+    footer a:hover { text-decoration:underline; }
   </style>
 </head>
 <body>
 
   <!-- Navbar -->
   <nav class="navbar">
-    <a href="index.html">Início</a>
-    <a href="cestas.html">Cestas & Mimos</a>
-    <a href="pedidos.html">Pedidos</a>
-    <a href="encomendas.html">Encomenda</a>
-    <a href="catering.html">Catering Infantil</a>
-    <a href="contactos.html">Contactos</a>
+    <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo">
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Início</a>
+      <a href="cestas.html">Cestas & Mimos</a>
+      <a href="pedidos.html">Pedidos</a>
+      <a href="encomendas.html">Encomenda</a>
+      <a href="catering.html">Catering Infantil</a>
+      <a href="contactos.html">Contactos</a>
+    </div>
   </nav>
 
   <!-- Header -->
   <header>
-    <img src="imagens/esandjo.logo.jpg" alt="Esandjo Atelier de Mimos" class="logo-header">
-    <h2>Carrinho de Encomendas</h2>
+    <h2>Encomendas</h2>
+    <p>Selecione os produtos e finalize pelo WhatsApp</p>
   </header>
 
   <!-- Carrinho -->
@@ -295,9 +210,7 @@ footer a:hover { text-decoration:underline; }
           <th>Ações</th>
         </tr>
       </thead>
-      <tbody id="cart-body">
-        <!-- Linhas dos itens serão inseridas dinamicamente -->
-      </tbody>
+      <tbody id="cart-body"></tbody>
       <tfoot>
         <tr class="total-row">
           <td colspan="3">Total Geral</td>
@@ -320,6 +233,10 @@ footer a:hover { text-decoration:underline; }
   </footer>
 
 <script>
+  function toggleMenu() {
+    document.getElementById("nav-links").classList.toggle("show");
+  }
+
   function renderCart(){
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     const tbody = document.getElementById("cart-body");
@@ -346,32 +263,32 @@ footer a:hover { text-decoration:underline; }
     document.getElementById("cart-total").textContent = total.toLocaleString()+" KZ";
   }
 
-  function changeQty(index,delta){
-    let cart=JSON.parse(localStorage.getItem("cart"))||[];
-    cart[index].qty+=delta;
-    if(cart[index].qty<=0) cart.splice(index,1);
-    localStorage.setItem("cart",JSON.stringify(cart));
+    function changeQty(index,delta){
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart[index].qty += delta;
+    if(cart[index].qty <= 0) cart.splice(index,1);
+    localStorage.setItem("cart", JSON.stringify(cart));
     renderCart();
   }
 
   function removeItem(index){
-    let cart=JSON.parse(localStorage.getItem("cart"))||[];
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.splice(index,1);
-    localStorage.setItem("cart",JSON.stringify(cart));
+    localStorage.setItem("cart", JSON.stringify(cart));
     renderCart();
   }
 
   // Finalizar no WhatsApp
   document.getElementById("finalizar-btn").addEventListener("click",function(){
-    let cart=JSON.parse(localStorage.getItem("cart"))||[];
-    if(cart.length===0) return;
-    let message="Pedido Esandjo Atelier de Mimos:%0A";
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if(cart.length === 0) return;
+    let message = "Pedido Esandjo Atelier de Mimos:%0A";
     cart.forEach(item=>{
-      let subtotal=item.price*item.qty;
-      message+=`${item.qty} x ${item.name} - ${subtotal.toLocaleString()} KZ%0A`;
+      let subtotal = item.price * item.qty;
+      message += `${item.qty} x ${item.name} - ${subtotal.toLocaleString()} KZ%0A`;
     });
-    message+="Total: "+cart.reduce((sum,i)=>sum+i.price*i.qty,0).toLocaleString()+" KZ";
-    window.open("https://wa.me/244924015087?text="+message,"_blank");
+    message += "Total: " + cart.reduce((sum,i)=>sum+i.price*i.qty,0).toLocaleString() + " KZ";
+    window.open("https://wa.me/244924015087?text=" + message, "_blank");
     localStorage.removeItem("cart");
     renderCart();
   });
