@@ -98,6 +98,36 @@
       .cart-panel { width:calc(100% - 24px); max-width:640px; margin:0 12px; }
       .product { min-height: auto; }
     }
+    /* Ajustes mobile para carrinho: reduzir fontes e botões + para caber */
+@media (max-width:480px) {
+  /* Texto geral do item do carrinho */
+  .cart-item { font-size:13px; }
+  .cart-item h4 { font-size:14px; }
+  .cart-item .desc { font-size:12px; }
+
+  /* Controlo de quantidade mais compacto */
+  .qty-controls { gap:6px; }
+  .qty-controls button {
+    width:30px;
+    height:30px;
+    font-size:16px;
+    padding:0;
+    border-radius:6px;
+  }
+  .qty-value { font-size:14px; min-width:24px; }
+
+  /* Botão remover e preço */
+  .remove-btn { font-size:12px; padding:4px 6px; }
+  .cart-item .meta .price { font-size:14px; }
+
+  /* Ajuste do painel para evitar overflow horizontal */
+  .cart-panel { padding:12px; }
+  .cart-items, .items { gap:10px; }
+
+  /* Garantir que o badge do FAB não sobrepõe controlos */
+  .cart-fab .count { width:20px; height:20px; font-size:11px; top:-5px; right:-5px; }
+}
+
   </style>
 </head>
 <body>
