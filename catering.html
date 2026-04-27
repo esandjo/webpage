@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Catering Infantil — Esandjo Atelier de Mimos</title>
+  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg" />
+  <link rel="stylesheet" href="base.css" />
+  <style>
+    /* Estilos específicos para catering infantil */
+    .hero {
+      padding: 56px 16px 36px;
+      background: linear-gradient(180deg, #fff8f9 0%, #fff 100%);
+    }
+    .hero h1 { font-size: 30px; letter-spacing: -0.2px; }
+    .hero p { max-width: 820px; margin: 8px auto 0; }
+
+    .intro {
+      max-width: 1100px;
+      margin: 18px auto;
+      padding: 0 16px 28px;
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+    }
+    .intro .lead {
+      flex:1;
+      background: var(--card-bg);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .intro .lead h2 { margin:0 0 8px; font-size:20px; }
+    .intro .lead p { color:var(--muted); line-height:1.45; }
+
+    .intro .highlights {
+      width: 320px;
+      min-width: 240px;
+      background: linear-gradient(180deg,#fff,#fff);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .highlight-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; }
+    .highlight-item strong { display:block; font-size:14px; }
+    .highlight-item span { color:var(--muted); font-size:13px; }
+
+    /* Menu packages grid */
+    .packages {
+      max-width: 1100px;
+      margin: 6px auto 28px;
+      padding: 0 16px;
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .package {
+      background: var(--card-bg);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .package .pkg-thumb { aspect-ratio: 4/3; background:var(--fill); display:flex; align-items:center; justify-content:center; }
+    .package .pkg-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .package .pkg-body { padding:12px; display:flex; flex-direction:column; gap:8px; }
+    .package h3 { margin:0; font-size:16px; }
+    .pkg-desc { color:var(--muted); font-size:13px; }
+    .pkg-meta { display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:6px; }
+    .pkg-price { font-weight:900; color:var(--accent); }
+    .pkg-actions { display:flex; gap:8px; margin-top:8px; }
+    .btn-choose { background:var(--accent); color:#fff; border:0; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:800; }
+    .btn-info { background:transparent; border:1px solid rgba(0,0,0,0.06); padding:8px 12px; border-radius:8px; cursor:pointer; }
+
+    /* Details & booking form */
+    .booking {
+      max-width: 1100px;
+      margin: 18px auto 60px;
+      padding: 0 16px;
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap: 18px;
+      align-items:start;
+    }
+    .booking .details {
+      background: var(--card-bg);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .booking .form {
+      background: var(--card-bg);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .field { display:flex; flex-direction:column; gap:6px; }
+    .field input, .field select, .field textarea {
+      padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:14px;
+    }
+    .field textarea { min-height:90px; resize:vertical; }
+
+    .summary-mini { display:flex; gap:8px; align-items:center; justify-content:space-between; padding:8px 0; border-top:1px dashed rgba(0,0,0,0.04); margin-top:8px; }
+
+    .cta-row { display:flex; gap:8px; margin-top:8px; }
+    .btn-final { background:var(--accent); color:#fff; border:0; padding:12px 14px; border-radius:10px; font-weight:900; cursor:pointer; flex:1; }
+    .btn-clear { background:transparent; border:1px solid rgba(0,0,0,0.06); padding:10px 12px; border-radius:8px; cursor:pointer; }
+
+    /* Gallery small preview */
+    .gallery-preview {
+      max-width: 1100px;
+      margin: 0 auto 28px;
+      padding: 0 16px;
+      display:flex;
+      gap:12px;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .gallery-preview img { width:220px; height:140px; object-fit:cover; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.06); cursor:pointer; }
+
+    /* IA suggestion toast */
+    .ai-toast {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 86px;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 10px;
+      z-index: 13000;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      max-width: 92%;
+      text-align: center;
+      font-size: 14px;
+    }
+    .ai-toast.show { display:flex; }
+
+    @media (max-width: 980px){
+      .booking { grid-template-columns: 1fr; }
+      .intro { flex-direction:column; }
+      .intro .highlights { width:100%; }
+      .gallery-preview img { width:160px; height:100px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar (padronizado institucional, sem botões de idioma) -->
+  <nav class="navbar">
+    <a href="index.html" aria-label="Início">
+      <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo" />
+    </a>
+
+    <!-- Menu hamburguer centralizado (círculo com 3 linhas) -->
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-label="Abrir menu" onclick="toggleMenu()">
+      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" focusable="false" role="img">
+        <circle class="menu-circle" cx="22" cy="22" r="20" fill="transparent" stroke="none"></circle>
+        <rect class="menu-line l1" x="10" y="15" width="24" height="2" rx="1"></rect>
+        <rect class="menu-line l2" x="10" y="21" width="24" height="2" rx="1"></rect>
+        <rect class="menu-line l3" x="10" y="27" width="24" height="2" rx="1"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-links" id="nav-links">
+      <a href="index.html" class="nav-link">Início</a>
+      <a href="cestas.html" class="nav-link">Cestas & Mimos</a>
+      <a href="pedidos.html" class="nav-link">Pedidos</a>
+      <a href="encomendas.html" class="nav-link">Encomenda</a>
+      <a href="catering.html" class="nav-link">Catering Infantil</a>
+      <a href="contactos.html" class="nav-link">Contactos</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <h1>Catering Infantil com requinte</h1>
+    <p>Transformamos festas infantis em experiências encantadoras: menus pensados para paladares pequenos, decoração temática, atividades lúdicas e logística cuidada para que os pais possam aproveitar cada momento.</p>
+  </header>
+
+  <!-- Intro com destaques -->
+  <section class="intro" aria-label="Introdução ao catering infantil">
+    <div class="lead" role="region" aria-labelledby="lead-title">
+      <h2 id="lead-title">O que oferecemos</h2>
+      <p>Menus equilibrados e coloridos, opções sem alergénios, mini-porções adaptadas à idade, bolos temáticos, estações de atividades (pintura facial, modelagem de balões), e equipa treinada para trabalhar com crianças. Trabalhamos com antecedência para garantir frescor, segurança alimentar e um serviço impecável.</p>
+
+      <h3 style="margin-top:12px;">Como funciona</h3>
+      <ul style="color:var(--muted); margin-left:18px; line-height:1.6;">
+        <li>Escolha um pacote ou monte o seu menu.</li>
+        <li>Defina número de crianças e adultos acompanhantes.</li>
+        <li>Agende data, horário e local; cuidamos do resto.</li>
+      </ul>
+    </div>
+
+    <aside class="highlights" aria-hidden="false">
+      <div class="highlight-item">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--accent);margin-top:6px;"></div>
+        <div><strong>Segurança alimentar</strong><span>Protocolos HACCP e ingredientes de qualidade.</span></div>
+      </div>
+      <div class="highlight-item">
+        <div style="width:10px;height:10px;border-radius:50%;background:#f6b0c0;margin-top:6px;"></div>
+        <div><strong>Temas personalizados</strong><span>Princesas, super-heróis, animais, e muito mais.</span></div>
+      </div>
+      <div class="highlight-item">
+        <div style="width:10px;height:10px;border-radius:50%;background:#ffd27f;margin-top:6px;"></div>
+        <div><strong>Equipe dedicada</strong><span>Profissionais com experiência em eventos infantis.</span></div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- Packages / Menus -->
+  <section class="packages" aria-label="Pacotes de catering infantil">
+    <article class="package" data-id="pkg-mini" data-name="Pacote Mini Festa" data-price="12.00" data-desc="Lanches simples, mini-sanduíches, sucos naturais, mini-bolinhos">
+      <div class="pkg-thumb"><img src="imagens/catering-mini.jpg" alt="Pacote Mini Festa" /></div>
+      <div class="pkg-body">
+        <h3>Pacote Mini Festa</h3>
+        <div class="pkg-desc">Ideal para encontros íntimos até 10 crianças.</div>
+        <div class="pkg-meta">
+          <div class="pkg-price">AKZ 12.00 / criança</div>
+          <div style="font-size:13px;color:var(--muted)">mín. 6 crianças</div>
+        </div>
+        <div class="pkg-actions">
+          <button class="btn-choose" data-action="choose">Escolher</button>
+          <button class="btn-info" data-action="info">Detalhes</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="package" data-id="pkg-deluxe" data-name="Pacote Deluxe" data-price="20.00" data-desc="Estação de snacks, mini-pratos quentes, bolo temático e sucos">
+      <div class="pkg-thumb"><img src="imagens/catering-deluxe.jpg" alt="Pacote Deluxe" /></div>
+      <div class="pkg-body">
+        <h3>Pacote Deluxe</h3>
+        <div class="pkg-desc">Para festas com animação e decoração temática.</div>
+        <div class="pkg-meta">
+          <div class="pkg-price">AKZ 20.00 / criança</div>
+          <div style="font-size:13px;color:var(--muted)">mín. 10 crianças</div>
+        </div>
+        <div class="pkg-actions">
+          <button class="btn-choose" data-action="choose">Escolher</button>
+          <button class="btn-info" data-action="info">Detalhes</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="package" data-id="pkg-premium" data-name="Pacote Premium" data-price="35.00" data-desc="Menu completo, bolo premium, lembrancinhas e atividades dirigidas">
+      <div class="pkg-thumb"><img src="imagens/catering-premium.jpg" alt="Pacote Premium" /></div>
+      <div class="pkg-body">
+        <h3>Pacote Premium</h3>
+        <div class="pkg-desc">Experiência completa com coordenação e staff dedicado.</div>
+        <div class="pkg-meta">
+          <div class="pkg-price">AKZ 35.00 / criança</div>
+          <div style="font-size:13px;color:var(--muted)">mín. 15 crianças</div>
+        </div>
+        <div class="pkg-actions">
+          <button class="btn-choose" data-action="choose">Escolher</button>
+          <button class="btn-info" data-action="info">Detalhes</button>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Gallery preview -->
+  <section class="gallery-preview" aria-label="Galeria de eventos infantis">
+    <img src="imagens/catering-1.jpg" alt="Decoração temática 1" data-full="imagens/catering-1.jpg" />
+    <img src="imagens/catering-2.jpg" alt="Mesa de doces" data-full="imagens/catering-2.jpg" />
+    <img src="imagens/catering-3.jpg" alt="Atividades infantis" data-full="imagens/catering-3.jpg" />
+    <img src="imagens/catering-4.jpg" alt="Bolo temático" data-full="imagens/catering-4.jpg" />
+  </section>
+
+  <!-- Booking & details -->
+  <section class="booking" aria-label="Formulário de encomenda de catering">
+    <div class="details" id="selected-details">
+      <h3>Detalhes do pacote selecionado</h3>
+      <p class="pkg-selected" style="color:var(--muted)">Nenhum pacote selecionado. Escolha um pacote acima para começar.</p>
+
+      <h4 style="margin-top:12px;">O que está incluído</h4>
+      <ul style="color:var(--muted); margin-left:18px;">
+        <li>Montagem e desmontagem</li>
+        <li>Utensílios descartáveis de qualidade</li>
+        <li>Equipe de atendimento</li>
+        <li>Limpeza básica após o evento</li>
+      </ul>
+
+      <div style="margin-top:12px;">
+        <strong>Observação:</strong>
+        <div style="color:var(--muted); font-size:13px; margin-top:6px;">Podemos adaptar menus para alergias e preferências alimentares. Informe no formulário ao lado.</div>
+      </div>
+    </div>
+
+    <form class="form" id="booking-form" onsubmit="return false;" aria-label="Formulário de reserva">
+      <div class="field">
+        <label for="pkg-name">Pacote selecionado</label>
+        <input id="pkg-name" name="pkg-name" readonly placeholder="Nenhum pacote selecionado" />
+      </div>
+
+      <div class="field">
+        <label for="guest-count">Número de crianças</label>
+        <input id="guest-count" name="guest-count" type="number" min="1" value="10" />
+      </div>
+
+      <div class="field">
+        <label for="date">Data do evento</label>
+        <input id="date" name="date" type="date" />
+      </div>
+
+      <div class="field">
+        <label for="time">Hora</label>
+        <input id="time" name="time" type="time" />
+      </div>
+
+      <div class="field">
+        <label for="location">Local (endereço)</label>
+        <input id="location" name="location" type="text" placeholder="Ex.: Rua X, Casa Y, Bairro Z" />
+      </div>
+
+      <div class="field">
+        <label for="contact-name">Nome do responsável</label>
+        <input id="contact-name" name="contact-name" type="text" placeholder="Ex.: João Silva" />
+      </div>
+
+      <div class="field">
+        <label for="contact-phone">Telefone para contacto</label>
+        <input id="contact-phone" name="contact-phone" type="tel" placeholder="+244 9xx xxx xxx" />
+      </div>
+
+      <div class="field">
+        <label for="notes">Observações (alergias, tema, preferências)</label>
+        <textarea id="notes" name="notes" placeholder="Ex.: Sem amendoim; tema: dinossauros"></textarea>
+      </div>
+
+      <div class="summary-mini">
+        <div style="color:var(--muted)">Preço estimado</div>
+        <div id="price-estimate" style="font-weight:900;color:var(--accent)">AKZ 0.00</div>
+      </div>
+
+      <div class="cta-row">
+        <button id="btn-book" class="btn-final" aria-label="Solicitar orçamento">Solicitar Orçamento</button>
+        <button id="btn-save" class="btn-clear" aria-label="Salvar rascunho">Salvar rascunho</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Lightbox (reaproveita estrutura) -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true" aria-label="Visualizador de imagens">
+    <div class="lightbox-content" role="document">
+      <div class="lightbox-controls" aria-hidden="false">
+        <button class="prev" aria-label="Anterior" title="Anterior">&#10094;</button>
+        <button class="next" aria-label="Próximo" title="Próximo">&#10095;</button>
+      </div>
+      <span class="close" role="button" aria-label="Fechar" title="Fechar">&times;</span>
+      <div id="lightbox-media" class="lightbox-media" tabindex="0"></div>
+      <div id="lightbox-thumbs" class="lightbox-thumbs" aria-hidden="false"></div>
+      <button id="lb-play" class="lb-play-btn" aria-label="Reproduzir">Reproduzir</button>
+    </div>
+  </div>
+
+  <!-- IA suggestion toast -->
+  <div id="ai-toast" class="ai-toast" role="status" aria-live="polite"></div>
+
+  <!-- Footer (contactos igual ao index) -->
+  <footer>
+    <p id="contacts">📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
+    <p>
+      <a href="https://www.instagram.com/esandjo_atelierdemimos/" target="_blank" id="insta">Instagram</a> |
+      <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank" id="fb">Facebook</a>
+    </p>
+    <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
+  </footer>
+
+  <script>
+    /* Navbar toggle */
+    function toggleMenu() {
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("menu-toggle");
+      const isOpen = btn.classList.toggle('open');
+      nav.classList.toggle("show");
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
+    }
+    document.addEventListener("click", function(e){
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("menu-toggle");
+      if (!nav || !btn) return;
+      if (!nav.contains(e.target) && !btn.contains(e.target)) {
+        nav.classList.remove("show");
+        btn.classList.remove("open");
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Abrir menu');
+      }
+    });
+
+    /* Simple lightbox for gallery preview images */
+    (function(){
+      const imgs = document.querySelectorAll('.gallery-preview img');
+      const lb = document.getElementById('lightbox');
+      const lbMedia = document.getElementById('lightbox-media');
+      const closeBtn = document.querySelector('.lightbox .close');
+      imgs.forEach((img, idx) => {
+        img.addEventListener('click', () => {
+          openLightboxImage(img.getAttribute('data-full') || img.src);
+        });
+      });
+      function openLightboxImage(src){
+        lbMedia.innerHTML = '';
+        const i = document.createElement('img');
+        i.src = src;
+        i.alt = '';
+        i.style.maxHeight = '86vh';
+        i.style.width = 'auto';
+        lbMedia.appendChild(i);
+        lb.setAttribute('aria-hidden','false');
+        lb.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+      function closeLightbox(){
+        lb.setAttribute('aria-hidden','true');
+        lb.style.display = 'none';
+        lbMedia.innerHTML = '';
+        document.body.style.overflow = '';
+      }
+      lb.addEventListener('click', function(e){ if (e.target === lb) closeLightbox(); });
+      if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+    })();
+
+    /* Packages selection, IA suggestions and booking logic */
+    const packages = document.querySelectorAll('.package');
+    const pkgNameInput = document.getElementById('pkg-name');
+    const priceEstimateEl = document.getElementById('price-estimate');
+    const pkgSelectedText = document.querySelector('.pkg-selected');
+    const aiToast = document.getElementById('ai-toast');
+    const STORAGE_BOOKING = 'esandjo_catering_booking';
+
+    let selectedPackage = null;
+    let aiTimer = null;
+
+    function formatCurrency(v){ return 'AKZ ' + Number(v).toFixed(2); }
+
+    packages.forEach(pkg => {
+      const choose = pkg.querySelector('[data-action="choose"]');
+      const info = pkg.querySelector('[data-action="info"]');
+      choose.addEventListener('click', () => {
+        const id = pkg.getAttribute('data-id');
+        const name = pkg.getAttribute('data-name');
+        const price = Number(pkg.getAttribute('data-price') || 0);
+        selectPackage({ id, name, price, desc: pkg.getAttribute('data-desc') });
+      });
+      info.addEventListener('click', () => {
+        const name = pkg.getAttribute('data-name');
+        const desc = pkg.getAttribute('data-desc');
+        showAISuggestion({ name, desc }, `Detalhes: ${desc}`);
+      });
+    });
+
+    function selectPackage(pkg){
+      selectedPackage = pkg;
+      pkgNameInput.value = pkg.name;
+      pkgSelectedText.textContent = `${pkg.name} — ${pkg.desc || ''}`;
+      updateEstimate();
+      // show IA suggestion for combos or extras for 2 seconds
+      showAISuggestion(pkg, `Sugestão: adicione lembrancinhas personalizadas e uma estação de pintura facial para complementar o ${pkg.name}.`);
+      // store selection in localStorage draft
+      saveDraft();
+    }
+
+    function updateEstimate(){
+      const guests = Number(document.getElementById('guest-count').value || 0);
+      const pricePer = selectedPackage ? Number(selectedPackage.price) : 0;
+      const estimate = guests * pricePer;
+      priceEstimateEl.textContent = formatCurrency(estimate);
+    }
+
+    // IA suggestion toast (simulated)
+    function showAISuggestion(context, message){
+      aiToast.textContent = message || `Sugestão para ${context.name || 'o pacote'}`;
+      aiToast.classList.add('show');
+      if (aiTimer) clearTimeout(aiTimer);
+      aiTimer = setTimeout(()=> {
+        aiToast.classList.remove('show');
+        aiTimer = null;
+      }, 2000);
+    }
+
+    // Booking form interactions
+    document.getElementById('guest-count').addEventListener('input', updateEstimate);
+    document.getElementById('btn-save').addEventListener('click', function(){
+      saveDraft();
+      showAISuggestion({}, 'Rascunho salvo localmente.');
+    });
+
+    document.getElementById('btn-book').addEventListener('click', function(){
+      const booking = collectBooking();
+      if (!booking) return;
+      // Save booking draft
+      localStorage.setItem(STORAGE_BOOKING, JSON.stringify(booking));
+      // Build WhatsApp message
+      const lines = [];
+      lines.push('🧁 *Pedido de Catering Infantil - Esandjo Atelier de Mimos*');
+      lines.push('');
+      lines.push(`Pacote: ${booking.pkgName || '—'}`);
+      lines.push(`Crianças: ${booking.guests}`);
+      lines.push(`Data: ${booking.date || '—'} ${booking.time || ''}`);
+      lines.push(`Local: ${booking.location || '—'}`);
+      lines.push('');
+      if (booking.notes) lines.push(`Observações: ${booking.notes}`);
+      lines.push('');
+      lines.push(`Contato: ${booking.contactName || '—'} — ${booking.contactPhone || '—'}`);
+      lines.push('');
+      lines.push('Por favor confirmar disponibilidade e orçamento.');
+      const message = encodeURIComponent(lines.join('\n'));
+
+      // WhatsApp number (negócio) — sem +, sem espaços
+      const waNumber = '244924015087';
+      const waUrl = `https://wa.me/${waNumber}?text=${message}`;
+
+      // Open WhatsApp and clear draft after
+      window.open(waUrl, '_blank');
+      // Clear stored draft and reset form
+      localStorage.removeItem(STORAGE_BOOKING);
+      resetForm();
+      // brief toast then redirect to index
+      showAISuggestion({}, 'Pedido enviado para WhatsApp. Voltando ao início…');
+      setTimeout(()=> { window.location.href = 'index.html'; }, 1400);
+    });
+
+    function collectBooking(){
+      const pkgName = document.getElementById('pkg-name').value.trim();
+      if (!pkgName){
+        showAISuggestion({}, 'Selecione um pacote antes de solicitar orçamento.');
+        return null;
+      }
+      const guests = Number(document.getElementById('guest-count').value || 0);
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+      const location = document.getElementById('location').value.trim();
+      const contactName = document.getElementById('contact-name').value.trim();
+      const contactPhone = document.getElementById('contact-phone').value.trim();
+      const notes = document.getElementById('notes').value.trim();
+
+      if (!guests || guests < 1){
+        showAISuggestion({}, 'Informe o número de crianças.');
+        return null;
+      }
+      if (!date){
+        showAISuggestion({}, 'Escolha a data do evento.');
+        return null;
+      }
+      if (!contactPhone){
+        showAISuggestion({}, 'Informe um telefone para contacto.');
+        return null;
+      }
+
+      return {
+        pkgName, guests, date, time, location, contactName, contactPhone, notes, createdAt: new Date().toISOString()
+      };
+    }
+
+    function saveDraft(){
+      const draft = {
+        pkgName: document.getElementById('pkg-name').value || '',
+        guests: Number(document.getElementById('guest-count').value || 0),
+        date: document.getElementById('date').value || '',
+        time: document.getElementById('time').value || '',
+        location: document.getElementById('location').value || '',
+        contactName: document.getElementById('contact-name').value || '',
+        contactPhone: document.getElementById('contact-phone').value || '',
+        notes: document.getElementById('notes').value || '',
+        updatedAt: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_BOOKING, JSON.stringify(draft));
+    }
+
+    function loadDraft(){
+      const raw = localStorage.getItem(STORAGE_BOOKING);
+      if (!raw) return;
+      try {
+        const d = JSON.parse(raw);
+        if (d.pkgName) {
+          document.getElementById('pkg-name').value = d.pkgName;
+          pkgSelectedText.textContent = d.pkgName;
+        }
+        if (d.guests) document.getElementById('guest-count').value = d.guests;
+        if (d.date) document.getElementById('date').value = d.date;
+        if (d.time) document.getElementById('time').value = d.time;
+        if (d.location) document.getElementById('location').value = d.location;
+        if (d.contactName) document.getElementById('contact-name').value = d.contactName;
+        if (d.contactPhone) document.getElementById('contact-phone').value = d.contactPhone;
+        if (d.notes) document.getElementById('notes').value = d.notes;
+        updateEstimate();
+      } catch(e){}
+    }
+
+    function resetForm(){
+      selectedPackage = null;
+      document.getElementById('pkg-name').value = '';
+      document.getElementById('guest-count').value = 10;
+      document.getElementById('date').value = '';
+      document.getElementById('time').value = '';
+      document.getElementById('location').value = '';
+      document.getElementById('contact-name').value = '';
+      document.getElementById('contact-phone').value = '';
+      document.getElementById('notes').value = '';
+      pkgSelectedText.textContent = 'Nenhum pacote selecionado. Escolha um pacote acima para começar.';
+      priceEstimateEl.textContent = formatCurrency(0);
+    }
+
+    // Load draft on start
+    window.addEventListener('load', function(){
+      loadDraft();
+      updateEstimate();
+    });
+
+    /* Accessibility small helpers: close toast on click */
+    aiToast.addEventListener('click', ()=> aiToast.classList.remove('show'));
+
+  </script>
+</body>
+</html>
