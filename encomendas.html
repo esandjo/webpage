@@ -7,133 +7,51 @@
   <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg" />
   <link rel="stylesheet" href="base.css" />
   <style>
-    /* Pequenos estilos específicos para a página de encomendas */
-    .container {
-      max-width: 1100px;
-      margin: 20px auto;
-      padding: 0 16px 48px;
-    }
-    .order-header {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 18px;
-    }
-    .order-title { font-size: 22px; font-weight:800; color:#222; }
+    /* Estilos específicos para encomendas (mantém requinte) */
+    .container { max-width:1100px; margin: 20px auto; padding: 0 16px 48px; }
+    .order-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+    .order-title { font-size:22px; font-weight:900; color:#222; }
     .order-sub { color:var(--muted); font-size:14px; }
 
-    .order-body {
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 18px;
-      align-items: start;
-    }
+    .order-body { display:grid; grid-template-columns: 1fr 380px; gap:18px; align-items:start; }
+    .cart-list { background: var(--card-bg); border-radius: calc(var(--radius) + 2px); box-shadow: var(--shadow); padding: 12px; min-height: 160px; }
+    .cart-empty { padding: 28px; text-align:center; color:var(--muted); }
 
-    /* Cart list */
-    .cart-list {
-      background: var(--card-bg);
-      border-radius: calc(var(--radius) + 2px);
-      box-shadow: var(--shadow);
-      padding: 12px;
-    }
-    .cart-item {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      padding:10px;
-      border-radius:8px;
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-    }
+    .cart-item { display:flex; gap:12px; align-items:center; padding:10px; border-radius:8px; border-bottom: 1px solid rgba(0,0,0,0.04); background: #fff; }
     .cart-item:last-child { border-bottom: none; }
-    .cart-item img { width:84px; height:64px; object-fit:cover; border-radius:6px; }
+    .cart-item img { width:96px; height:72px; object-fit:cover; border-radius:8px; flex:0 0 auto; }
     .cart-item .meta { flex:1; }
-    .cart-item .meta h4 { margin:0; font-size:16px; font-weight:700; color:#222; }
-    .cart-item .meta .price { color:var(--accent); font-weight:800; margin-top:6px; }
+    .cart-item .meta h4 { margin:0; font-size:16px; font-weight:800; color:#222; }
+    .cart-item .meta .desc { color:var(--muted); font-size:13px; margin-top:6px; }
+    .cart-item .meta .price { color:var(--accent); font-weight:900; margin-top:8px; }
+
     .qty-controls { display:flex; gap:8px; align-items:center; }
-    .qty-controls button { width:34px; height:34px; border-radius:8px; border:0; background:rgba(0,0,0,0.06); cursor:pointer; font-weight:700; }
+    .qty-controls button { width:34px; height:34px; border-radius:8px; border:0; background:rgba(0,0,0,0.06); cursor:pointer; font-weight:800; }
     .remove-btn { background:transparent; border:0; color:var(--muted); cursor:pointer; font-size:14px; }
 
-    /* Summary panel */
-    .summary {
-      background: var(--card-bg);
-      border-radius: calc(var(--radius) + 2px);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
+    .summary { background: var(--card-bg); border-radius: calc(var(--radius) + 2px); box-shadow: var(--shadow); padding: 14px; display:flex; flex-direction:column; gap:12px; }
     .summary .row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
     .summary .total { font-size:20px; font-weight:900; color:var(--accent); }
     .summary .note { color:var(--muted); font-size:13px; }
 
-    /* Form fields */
     .field { display:flex; flex-direction:column; gap:6px; }
     .field label { font-size:13px; color:#333; font-weight:700; }
-    .field input, .field textarea {
-      padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:14px;
-      background: #fff;
-    }
+    .field input, .field textarea { padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:14px; background:#fff; }
     .field textarea { min-height:80px; resize:vertical; }
 
-    .finalize {
-      display:flex;
-      gap:8px;
-      align-items:center;
-      justify-content:space-between;
-      margin-top:6px;
-    }
-    .btn-finalize {
-      background: var(--accent);
-      color:#fff;
-      border:0;
-      padding:12px 16px;
-      border-radius:10px;
-      font-weight:900;
-      cursor:pointer;
-      width:100%;
-    }
-    .btn-clear {
-      background: transparent;
-      border:1px solid rgba(0,0,0,0.06);
-      padding:10px 12px;
-      border-radius:8px;
-      cursor:pointer;
-    }
+    .finalize { display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:6px; }
+    .btn-finalize { background: var(--accent); color:#fff; border:0; padding:12px 16px; border-radius:10px; font-weight:900; cursor:pointer; width:100%; }
+    .btn-clear { background: transparent; border:1px solid rgba(0,0,0,0.06); padding:10px 12px; border-radius:8px; cursor:pointer; }
 
-    /* Empty state */
-    .empty {
-      padding: 28px;
-      text-align:center;
-      color:var(--muted);
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 22px;
-      background: rgba(0,0,0,0.9);
-      color: #fff;
-      padding: 10px 14px;
-      border-radius: 10px;
-      z-index: 13000;
-      display:none;
-      font-weight:700;
-    }
+    .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 22px; background: rgba(0,0,0,0.9); color: #fff; padding: 10px 14px; border-radius: 10px; z-index: 13000; display:none; font-weight:700; }
     .toast.show { display:block; }
 
-    @media (max-width: 980px) {
-      .order-body { grid-template-columns: 1fr; }
-      .summary { order: 2; }
-    }
+    @media (max-width:980px) { .order-body { grid-template-columns: 1fr; } .summary { order: 2; } }
   </style>
 </head>
 <body>
 
-  <!-- Navbar (mesma estrutura institucional) -->
+  <!-- Navbar (padronizado institucional) -->
   <nav class="navbar">
     <a href="index.html" aria-label="Início">
       <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo" />
@@ -148,34 +66,28 @@
       </svg>
     </button>
 
-    <div class="lang-selector">
-      <button onclick="setLang('pt')">PT</button>
-       </div>
-
     <div class="nav-links" id="nav-links">
-      <a href="index.html" class="nav-link" data-key="home">Início</a>
-      <a href="cestas.html" class="nav-link" data-key="cestas">Cestas & Mimos</a>
-      <a href="pedidos.html" class="nav-link" data-key="pedidos">Pedidos</a>
-      <a href="encomendas.html" class="nav-link" data-key="encomenda">Encomenda</a>
-      <a href="catering.html" class="nav-link" data-key="catering">Catering Infantil</a>
-      <a href="contactos.html" class="nav-link" data-key="contactos">Contactos</a>
+      <a href="index.html" class="nav-link">Início</a>
+      <a href="cestas.html" class="nav-link">Cestas & Mimos</a>
+      <a href="encomendas.html" class="nav-link">Encomenda</a>
+      <a href="catering.html" class="nav-link">Catering Infantil</a>
+      <a href="contactos.html" class="nav-link">Contactos</a>
     </div>
   </nav>
 
-  <!-- Conteúdo -->
   <main class="container" id="main">
     <div class="order-header">
       <div>
         <div class="order-title">Encomendas</div>
-        <div class="order-sub">Revise os itens, adicione instruções e finalize sua encomenda via WhatsApp.</div>
+        <div class="order-sub">Revise os itens selecionados em Cestas & Mimos e finalize sua encomenda.</div>
       </div>
       <div class="order-actions">
-        <button class="btn btn-view" id="continue-shopping" onclick="location.href='index.html'">Continuar comprando</button>
+        <button class="btn btn-view" id="continue-shopping" onclick="location.href='cestas.html'">Continuar comprando</button>
       </div>
     </div>
 
     <div class="order-body">
-      <!-- Lista de itens do carrinho -->
+      <!-- Lista de itens do carrinho (lida de cestas) -->
       <section class="cart-list" aria-label="Itens da encomenda" id="cart-list">
         <!-- preenchido por JS -->
       </section>
@@ -228,7 +140,9 @@
     </div>
   </main>
 
-  <!-- Footer (contactos igual ao index) -->
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <footer>
     <p id="contacts">📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
     <p>
@@ -238,33 +152,55 @@
     <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
   </footer>
 
-  <!-- Toast -->
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
   <script>
-    /* Chaves de storage (mesmas usadas na página de pedidos) */
-    const STORAGE_KEY = 'esandjo_pedido_cart';
-    const STORAGE_META = 'esandjo_pedido_meta';
+    /* Navbar toggle (reuse) */
+    function toggleMenu() {
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("menu-toggle");
+      const isOpen = btn.classList.toggle('open');
+      nav.classList.toggle("show");
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
+    }
+    document.addEventListener("click", function(e){
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("menu-toggle");
+      if (!nav || !btn) return;
+      if (!nav.contains(e.target) && !btn.contains(e.target)) {
+        nav.classList.remove("show");
+        btn.classList.remove("open");
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Abrir menu');
+      }
+    });
 
-    /* Utilitários */
+    /* Storage key must match cestas.html */
+    const STORAGE_KEY = 'esandjo_cestas_cart';
+    const STORAGE_META = 'esandjo_cestas_meta';
+
+    /* Utilities */
     function formatCurrency(v){ return 'AKZ ' + Number(v).toFixed(2); }
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); }); }
 
+    /* Load cart from localStorage */
     function loadCart(){
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         return raw ? JSON.parse(raw) : [];
       } catch(e){ return []; }
     }
+
     function saveCart(cart){
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
       renderCart();
     }
+
     function clearCart(){
       localStorage.removeItem(STORAGE_KEY);
       renderCart();
     }
 
-    /* Renderização do carrinho */
+    /* Render cart list */
     const cartListEl = document.getElementById('cart-list');
     const summaryCount = document.getElementById('summary-count');
     const summarySub = document.getElementById('summary-sub');
@@ -276,7 +212,7 @@
       const cart = loadCart();
       cartListEl.innerHTML = '';
       if (!cart || cart.length === 0){
-        cartListEl.innerHTML = '<div class="empty">Seu carrinho está vazio. Adicione produtos na página de Pedidos.</div>';
+        cartListEl.innerHTML = '<div class="cart-empty">Seu carrinho está vazio. Adicione cestas na página Cestas & Mimos.</div>';
         summaryCount.textContent = '0 itens';
         summarySub.textContent = formatCurrency(0);
         summaryDelivery.textContent = formatCurrency(0);
@@ -289,28 +225,36 @@
         item.className = 'cart-item';
         item.setAttribute('data-id', it.id);
         item.innerHTML = `
-          <img src="${it.img}" alt="${escapeHtml(it.name)}" />
+          <img src="${escapeHtml(it.img || 'imagens/placeholder.jpg')}" alt="${escapeHtml(it.name)}" />
           <div class="meta">
             <h4>${escapeHtml(it.name)}</h4>
+            <div class="desc">${escapeHtml(it.note || '')}</div>
             <div class="price">${formatCurrency(it.price)}</div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
             <div class="qty-controls" aria-label="Quantidade">
               <button class="qty-decr" aria-label="Diminuir quantidade">−</button>
-              <div style="min-width:28px;text-align:center;font-weight:700">${it.qty || 1}</div>
+              <div class="qty-value" style="min-width:28px;text-align:center;font-weight:700">${it.qty || 1}</div>
               <button class="qty-incr" aria-label="Aumentar quantidade">+</button>
             </div>
             <button class="remove-btn" aria-label="Remover item">Remover</button>
           </div>
         `;
-        // handlers
-        item.querySelector('.qty-incr').addEventListener('click', () => {
+
+        // Prevent clicks inside item from closing mobile overlays
+        item.addEventListener('click', function(ev){ ev.stopPropagation(); });
+
+        // Handlers
+        item.querySelector('.qty-incr').addEventListener('click', (e) => {
+          e.stopPropagation();
           changeQty(it.id, 1);
         });
-        item.querySelector('.qty-decr').addEventListener('click', () => {
+        item.querySelector('.qty-decr').addEventListener('click', (e) => {
+          e.stopPropagation();
           changeQty(it.id, -1);
         });
-        item.querySelector('.remove-btn').addEventListener('click', () => {
+        item.querySelector('.remove-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
           removeItem(it.id);
         });
 
@@ -340,7 +284,6 @@
       const cart = loadCart();
       const count = cart.reduce((s,i)=> s + (i.qty||1), 0);
       const subtotal = cart.reduce((s,i)=> s + (Number(i.price) * (i.qty||1)), 0);
-      // Delivery logic: free over AKZ 100? Example: AKZ 0 for now
       const delivery = subtotal > 0 ? 0 : 0;
       const total = subtotal + delivery;
 
@@ -352,7 +295,7 @@
 
     /* Toast helper */
     let toastTimer = null;
-    function showToast(msg, ms = 1800){
+    function showToast(msg, ms = 1600){
       toast.textContent = msg;
       toast.classList.add('show');
       if (toastTimer) clearTimeout(toastTimer);
@@ -366,11 +309,10 @@
     document.getElementById('btn-finalize').addEventListener('click', function(){
       const cart = loadCart();
       if (!cart || cart.length === 0){
-        showToast('Carrinho vazio. Adicione produtos antes de finalizar.');
+        showToast('Carrinho vazio. Adicione cestas antes de finalizar.');
         return;
       }
 
-      // coletar dados do cliente
       const name = (document.getElementById('cust-name').value || '').trim();
       const phone = (document.getElementById('cust-phone').value || '').trim();
       const note = (document.getElementById('cust-note').value || '').trim();
@@ -398,23 +340,19 @@
 
       const message = encodeURIComponent(lines.join('\n'));
 
-      // número do WhatsApp (usar número do negócio). Substitua pelo número real se necessário.
-      const waNumber = '244924015087'; // formato internacional sem + ou espaços
+      // número do WhatsApp (negócio)
+      const waNumber = '244924015087';
       const waUrl = `https://wa.me/${waNumber}?text=${message}`;
 
       // abrir WhatsApp em nova aba
       window.open(waUrl, '_blank');
 
-      // salvar meta (opcional) e limpar carrinho
-      localStorage.setItem(STORAGE_META, JSON.stringify({ from: 'encomendas', at: new Date().toISOString(), name, phone }));
+      // salvar meta e limpar carrinho
+      localStorage.setItem(STORAGE_META, JSON.stringify({ from: 'cestas', at: new Date().toISOString(), name, phone }));
       clearCart();
 
-      // feedback e redirecionamento para index após breve atraso
-      showToast('Enviando para WhatsApp…', 1600);
-      setTimeout(()=> {
-        // redireciona para index
-        window.location.href = 'index.html';
-      }, 1600);
+      showToast('Enviando para WhatsApp…', 1400);
+      setTimeout(()=> { window.location.href = 'index.html'; }, 1400);
     });
 
     /* Limpar carrinho */
@@ -424,59 +362,21 @@
       showToast('Carrinho limpo');
     });
 
-    /* Pequena função de escape para alt/texto */
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); });
-    }
+    /* Ensure cart items don't disappear when clicked and modal behavior on mobile is preserved */
+    // (Handled by stopping propagation on item elements above)
 
-    /* Navbar toggle (mesmo comportamento) */
-    function toggleMenu() {
-      const nav = document.getElementById("nav-links");
-      const btn = document.getElementById("menu-toggle");
-      const isOpen = btn.classList.toggle('open');
-      nav.classList.toggle("show");
-      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      btn.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
-    }
-    document.addEventListener("click", function(e){
-      const nav = document.getElementById("nav-links");
-      const btn = document.getElementById("menu-toggle");
-      if (!nav || !btn) return;
-      if (!nav.contains(e.target) && !btn.contains(e.target)) {
-        nav.classList.remove("show");
-        btn.classList.remove("open");
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('aria-label', 'Abrir menu');
-      }
-    });
-
-    /* Inicialização */
+    /* Initialize */
     window.addEventListener('load', function(){
-      // garantir chave
       if (!localStorage.getItem(STORAGE_KEY)) localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
       renderCart();
     });
 
-    /* Multilanguage small hook (paridade com outras páginas) */
-    const translations = {
-      pt:{pageTitle:"Encomendas"},
-      en:{pageTitle:"Orders"},
-      zh:{pageTitle:"订单"}
+    /* Expose small API for other pages if needed */
+    window.EsandjoCestas = {
+      load: loadCart,
+      save: saveCart,
+      clear: clearCart
     };
-    function setLang(lang){
-      localStorage.setItem("siteLang", lang);
-      applyLang(lang);
-    }
-    function applyLang(lang){
-      const t = translations[lang] || translations.pt;
-      if (document.title) document.title = t.pageTitle + ' — Esandjo Atelier de Mimos';
-      if (document.getElementById('page-title')) document.getElementById('page-title').textContent = t.pageTitle;
-    }
-    (function initLang(){
-      const lang = localStorage.getItem("siteLang") || "pt";
-      applyLang(lang);
-    })();
-
   </script>
 </body>
 </html>
