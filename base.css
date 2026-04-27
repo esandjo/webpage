@@ -37,21 +37,7 @@ img, video { max-width: 100%; display: block; }
   z-index: 60;
 }
 .logo { height: 44px; object-fit: contain; }
-
-/* Menu toggle centralizado (posicionado no centro da navbar) */
-.menu-toggle {
-  display: none;
-  cursor: pointer;
-  width: 36px;
-  height: 28px;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 80;
-}
+.menu-toggle { display: none; cursor: pointer; width: 36px; height: 28px; align-items: center; justify-content: center; }
 .menu-toggle span { display: block; height: 3px; background: #333; margin: 4px 0; border-radius: 2px; }
 .nav-links { display: flex; gap: 14px; align-items: center; }
 .nav-link { color: #333; padding: 8px 10px; border-radius: 6px; font-weight: 600; }
@@ -335,3 +321,56 @@ footer a:hover { text-decoration: underline; }
 .hidden { display: none !important; }
 .center { display: flex; align-items: center; justify-content: center; }
 .small { font-size: 13px; color: var(--muted); }
+
+/* ===== Adição: centralizar o menu hamburguer na navbar (mobile) =====
+   Apenas regras adicionais para garantir que o toggle apareça no centro
+   em telas pequenas, sem alterar o restante do layout.
+*/
+@media (max-width: 700px) {
+  .menu-toggle {
+    display: flex !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 44px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    background: transparent;
+    border: 0;
+    padding: 6px;
+    cursor: pointer;
+  }
+
+  /* Mantém as barras do hamburguer consistentes */
+  .menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 3px;
+    background: #333;
+    margin: 3px 0;
+    border-radius: 2px;
+  }
+
+  /* Evita que os links da nav fiquem por cima do toggle central */
+  .nav-links {
+    padding-left: 12px;
+    padding-right: 12px;
+    z-index: 80;
+  }
+
+  /* Garante que o logo fique acima do toggle para evitar sobreposição visual */
+  .logo, .navbar > a:first-child .logo {
+    position: relative;
+    z-index: 90;
+  }
+
+  /* Foco acessível no toggle */
+  .menu-toggle:focus {
+    outline: 3px solid rgba(201,79,109,0.18);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+}
