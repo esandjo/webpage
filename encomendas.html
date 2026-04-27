@@ -1,299 +1,484 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Encomendas - Esandjo Atelier de Mimos</title>
-  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Encomendas — Esandjo Atelier de Mimos</title>
+  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg" />
+  <link rel="stylesheet" href="base.css" />
   <style>
-    :root {
-      --fundo: #f5f5f5;
-      --contraste: #1A2A40;
-      --dourado: #C9A646;
-      --branco: #ffffff;
+    /* Pequenos estilos específicos para a página de encomendas */
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 16px 48px;
+    }
+    .order-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 18px;
+    }
+    .order-title { font-size: 22px; font-weight:800; color:#222; }
+    .order-sub { color:var(--muted); font-size:14px; }
+
+    .order-body {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 18px;
+      align-items: start;
     }
 
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: var(--fundo);
-      color: var(--contraste);
-      margin: 0;
-      padding-top: 70px;
-    }
-
-    /* Navbar */
-    .navbar {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: var(--branco);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      z-index: 1000;
-    }
-    .navbar .logo {
-      height: 50px;
-    }
-    .nav-links {
-  display: flex;
-  gap: 12px;
-  transition: margin 0.3s ease;
-  margin-left: -2cm; /* move todos os itens */
-}
-
- 
-    .nav-links a {
-      background: var(--dourado);
-      color: var(--branco);
-      padding: 8px 14px;
-      border-radius: 20px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-    .nav-links a:hover { background: var(--contraste); }
-
-    /* Menu hamburguer */
-    .menu-toggle {
-      display: none;
-      flex-direction: column;
-      cursor: pointer;
-    }
-    .menu-toggle span {
-      height: 3px;
-      width: 25px;
-      background: var(--contraste);
-      margin: 4px 0;
-      border-radius: 2px;
-    }
-
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background: var(--branco);
-        position: absolute;
-        top: 70px;
-        left: 0;
-        padding: 10px 0;
-      }
-      .nav-links.show { display: flex; }
-      .menu-toggle { display: flex; }
-    }
-
-    header {
-      text-align: center;
-      padding: 20px;
-    }
-    .logo-header {
-      height: 70px;
-      margin-top: 2cm; /* versão mobile */
-    }
-
-    /* Carrinho */
-    .cart { padding:20px; max-width:900px; margin:auto; }
-    .cart-table {
-      width:100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-      border-radius: 12px;
-      overflow: hidden;
-      font-size: 0.95em;
-    }
-    .cart-table th {
-      background: linear-gradient(135deg, var(--contraste), #2a3b55);
-      color: var(--dourado);
-      font-weight: bold;
-      padding: 14px;
-      text-transform: uppercase;
-    }
-    .cart-table td {
-      background: var(--branco);
-      color: var(--contraste);
+    /* Cart list */
+    .cart-list {
+      background: var(--card-bg);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
       padding: 12px;
-      text-align: center;
-      border-bottom: 1px solid var(--dourado);
     }
-    .cart-table tr:hover td { background: #f0f0f0; }
-
-    .cart-table button {
-      background: var(--dourado);
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      color: var(--branco);
-      margin: 0 4px;
+    .cart-item {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:8px;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
     }
-    .cart-table button:hover { background: var(--contraste); }
-    .cart-table button.remove { background: #e74c3c; }
-    .cart-table button.remove:hover { background: #c0392b; }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item img { width:84px; height:64px; object-fit:cover; border-radius:6px; }
+    .cart-item .meta { flex:1; }
+    .cart-item .meta h4 { margin:0; font-size:16px; font-weight:700; color:#222; }
+    .cart-item .meta .price { color:var(--accent); font-weight:800; margin-top:6px; }
+    .qty-controls { display:flex; gap:8px; align-items:center; }
+    .qty-controls button { width:34px; height:34px; border-radius:8px; border:0; background:rgba(0,0,0,0.06); cursor:pointer; font-weight:700; }
+    .remove-btn { background:transparent; border:0; color:var(--muted); cursor:pointer; font-size:14px; }
 
-    .total-row td {
-      font-weight: bold;
-      background: #eaeaea;
-      color: var(--contraste);
-      text-align: right;
-      font-size: 1.1em;
+    /* Summary panel */
+    .summary {
+      background: var(--card-bg);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
       padding: 14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
     }
+    .summary .row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .summary .total { font-size:20px; font-weight:900; color:var(--accent); }
+    .summary .note { color:var(--muted); font-size:13px; }
 
-    .finalizar {
-      display:block;
-      margin:20px auto;
-      background:#25D366;
+    /* Form fields */
+    .field { display:flex; flex-direction:column; gap:6px; }
+    .field label { font-size:13px; color:#333; font-weight:700; }
+    .field input, .field textarea {
+      padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:14px;
+      background: #fff;
+    }
+    .field textarea { min-height:80px; resize:vertical; }
+
+    .finalize {
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:6px;
+    }
+    .btn-finalize {
+      background: var(--accent);
       color:#fff;
-      padding:10px 22px;
-      border-radius:30px;
-      text-decoration:none;
-      font-weight:bold;
-      text-align:center;
-      max-width:250px;
+      border:0;
+      padding:12px 16px;
+      border-radius:10px;
+      font-weight:900;
+      cursor:pointer;
+      width:100%;
     }
-    .finalizar:hover { background:#1ebe57; }
+    .btn-clear {
+      background: transparent;
+      border:1px solid rgba(0,0,0,0.06);
+      padding:10px 12px;
+      border-radius:8px;
+      cursor:pointer;
+    }
 
-    /* Footer */
-    footer {
-      background: var(--branco);
-      color: var(--contraste);
+    /* Empty state */
+    .empty {
+      padding: 28px;
       text-align:center;
-      padding:20px;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+      color:var(--muted);
     }
-    footer a {
-      color: var(--dourado);
-      margin:0 10px;
-      text-decoration:none;
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 22px;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      z-index: 13000;
+      display:none;
+      font-weight:700;
     }
-    footer a:hover { text-decoration:underline; }
+    .toast.show { display:block; }
+
+    @media (max-width: 980px) {
+      .order-body { grid-template-columns: 1fr; }
+      .summary { order: 2; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Navbar (mesma estrutura institucional) -->
   <nav class="navbar">
-    <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo">
-    <div class="menu-toggle" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
+    <a href="index.html" aria-label="Início">
+      <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo" />
+    </a>
+
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-label="Abrir menu" onclick="toggleMenu()">
+      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" focusable="false" role="img">
+        <circle class="menu-circle" cx="22" cy="22" r="20" fill="transparent" stroke="none"></circle>
+        <rect class="menu-line l1" x="10" y="15" width="24" height="2" rx="1"></rect>
+        <rect class="menu-line l2" x="10" y="21" width="24" height="2" rx="1"></rect>
+        <rect class="menu-line l3" x="10" y="27" width="24" height="2" rx="1"></rect>
+      </svg>
+    </button>
+
+    <div class="lang-selector">
+      <button onclick="setLang('pt')">PT</button>
+      <button onclick="setLang('en')">EN</button>
+      <button onclick="setLang('zh')">中文</button>
     </div>
+
     <div class="nav-links" id="nav-links">
-      <a href="index.html">Início</a>
-      <a href="cestas.html">Cestas & Mimos</a>
-      <a href="pedidos.html">Pedidos</a>
-      <a href="encomendas.html">Encomenda</a>
-      <a href="catering.html">Catering Infantil</a>
-      <a href="contactos.html">Contactos</a>
+      <a href="index.html" class="nav-link" data-key="home">Início</a>
+      <a href="cestas.html" class="nav-link" data-key="cestas">Cestas & Mimos</a>
+      <a href="pedidos.html" class="nav-link" data-key="pedidos">Pedidos</a>
+      <a href="encomendas.html" class="nav-link" data-key="encomenda">Encomenda</a>
+      <a href="catering.html" class="nav-link" data-key="catering">Catering Infantil</a>
+      <a href="contactos.html" class="nav-link" data-key="contactos">Contactos</a>
     </div>
   </nav>
 
-  <!-- Header -->
-  <header>
-    <h2>Encomendas</h2>
-    <p>Selecione os produtos e finalize pelo WhatsApp</p>
-  </header>
+  <!-- Conteúdo -->
+  <main class="container" id="main">
+    <div class="order-header">
+      <div>
+        <div class="order-title">Encomendas</div>
+        <div class="order-sub">Revise os itens, adicione instruções e finalize sua encomenda via WhatsApp.</div>
+      </div>
+      <div class="order-actions">
+        <button class="btn btn-view" id="continue-shopping" onclick="location.href='index.html'">Continuar comprando</button>
+      </div>
+    </div>
 
-  <!-- Carrinho -->
-  <section class="cart">
-    <table class="cart-table">
-      <thead>
-        <tr>
-          <th>Produto</th>
-          <th>Quantidade</th>
-          <th>Preço Unitário</th>
-          <th>Subtotal</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="cart-body"></tbody>
-      <tfoot>
-        <tr class="total-row">
-          <td colspan="3">Total Geral</td>
-          <td colspan="2" id="cart-total">0 KZ</td>
-        </tr>
-      </tfoot>
-    </table>
-  </section>
+    <div class="order-body">
+      <!-- Lista de itens do carrinho -->
+      <section class="cart-list" aria-label="Itens da encomenda" id="cart-list">
+        <!-- preenchido por JS -->
+      </section>
 
-  <a href="#" class="finalizar" id="finalizar-btn">Finalizar no WhatsApp</a>
+      <!-- Painel de resumo e formulário -->
+      <aside class="summary" aria-label="Resumo da encomenda">
+        <div class="row">
+          <div style="font-weight:800">Resumo</div>
+          <div id="summary-count" style="color:var(--muted)">0 itens</div>
+        </div>
 
-  <!-- Footer -->
+        <div class="row">
+          <div class="note">Subtotal</div>
+          <div id="summary-sub" class="note">AKZ 0.00</div>
+        </div>
+
+        <div class="row">
+          <div class="note">Taxa de entrega</div>
+          <div id="summary-delivery" class="note">AKZ 0.00</div>
+        </div>
+
+        <div class="row">
+          <div class="total">Total</div>
+          <div id="summary-total" class="total">AKZ 0.00</div>
+        </div>
+
+        <div class="field">
+          <label for="cust-name">Nome (opcional)</label>
+          <input id="cust-name" type="text" placeholder="Ex.: João Silva" />
+        </div>
+
+        <div class="field">
+          <label for="cust-phone">Telefone (recomendado)</label>
+          <input id="cust-phone" type="tel" placeholder="+244 9xx xxx xxx" />
+        </div>
+
+        <div class="field">
+          <label for="cust-note">Instruções / Observações</label>
+          <textarea id="cust-note" placeholder="Ex.: Entregar após as 18h; incluir cartão"></textarea>
+        </div>
+
+        <div class="finalize">
+          <button id="btn-finalize" class="btn-finalize" aria-label="Faça sua encomenda via WhatsApp">FAÇA SUA ENCOMENDA</button>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:6px;">
+          <button id="btn-clear" class="btn-clear" aria-label="Limpar carrinho">Limpar carrinho</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Footer (contactos igual ao index) -->
   <footer>
-    <p>📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
+    <p id="contacts">📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
     <p>
-      <a href="https://www.instagram.com/esandjoatelierdemimos/" target="_blank">Instagram</a> | 
-      <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank">Facebook</a>
+      <a href="https://www.instagram.com/esandjo_atelierdemimos/" target="_blank" id="insta">Instagram</a> |
+      <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank" id="fb">Facebook</a>
     </p>
-    <p>Aberto todos os dias das 8h às 22h</p>
+    <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
   </footer>
 
-<script>
-  function toggleMenu() {
-    document.getElementById("nav-links").classList.toggle("show");
-  }
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  function renderCart(){
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const tbody = document.getElementById("cart-body");
-    tbody.innerHTML = "";
-    let total = 0;
+  <script>
+    /* Chaves de storage (mesmas usadas na página de pedidos) */
+    const STORAGE_KEY = 'esandjo_pedido_cart';
+    const STORAGE_META = 'esandjo_pedido_meta';
 
-    cart.forEach((item,index)=>{
-      let subtotal = item.price * item.qty;
-      total += subtotal;
-      tbody.innerHTML += `
-        <tr>
-          <td>${item.name}</td>
-          <td>${item.qty}</td>
-          <td>${item.price.toLocaleString()} KZ</td>
-          <td>${subtotal.toLocaleString()} KZ</td>
-          <td>
-            <button onclick="changeQty(${index},1)">+</button>
-            <button onclick="changeQty(${index},-1)">-</button>
-            <button class="remove" onclick="removeItem(${index})">Remover</button>
-          </td>
-        </tr>`;
+    /* Utilitários */
+    function formatCurrency(v){ return 'AKZ ' + Number(v).toFixed(2); }
+
+    function loadCart(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch(e){ return []; }
+    }
+    function saveCart(cart){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      renderCart();
+    }
+    function clearCart(){
+      localStorage.removeItem(STORAGE_KEY);
+      renderCart();
+    }
+
+    /* Renderização do carrinho */
+    const cartListEl = document.getElementById('cart-list');
+    const summaryCount = document.getElementById('summary-count');
+    const summarySub = document.getElementById('summary-sub');
+    const summaryDelivery = document.getElementById('summary-delivery');
+    const summaryTotal = document.getElementById('summary-total');
+    const toast = document.getElementById('toast');
+
+    function renderCart(){
+      const cart = loadCart();
+      cartListEl.innerHTML = '';
+      if (!cart || cart.length === 0){
+        cartListEl.innerHTML = '<div class="empty">Seu carrinho está vazio. Adicione produtos na página de Pedidos.</div>';
+        summaryCount.textContent = '0 itens';
+        summarySub.textContent = formatCurrency(0);
+        summaryDelivery.textContent = formatCurrency(0);
+        summaryTotal.textContent = formatCurrency(0);
+        return;
+      }
+
+      cart.forEach((it, idx) => {
+        const item = document.createElement('div');
+        item.className = 'cart-item';
+        item.setAttribute('data-id', it.id);
+        item.innerHTML = `
+          <img src="${it.img}" alt="${escapeHtml(it.name)}" />
+          <div class="meta">
+            <h4>${escapeHtml(it.name)}</h4>
+            <div class="price">${formatCurrency(it.price)}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+            <div class="qty-controls" aria-label="Quantidade">
+              <button class="qty-decr" aria-label="Diminuir quantidade">−</button>
+              <div style="min-width:28px;text-align:center;font-weight:700">${it.qty || 1}</div>
+              <button class="qty-incr" aria-label="Aumentar quantidade">+</button>
+            </div>
+            <button class="remove-btn" aria-label="Remover item">Remover</button>
+          </div>
+        `;
+        // handlers
+        item.querySelector('.qty-incr').addEventListener('click', () => {
+          changeQty(it.id, 1);
+        });
+        item.querySelector('.qty-decr').addEventListener('click', () => {
+          changeQty(it.id, -1);
+        });
+        item.querySelector('.remove-btn').addEventListener('click', () => {
+          removeItem(it.id);
+        });
+
+        cartListEl.appendChild(item);
+      });
+
+      updateSummary();
+    }
+
+    function changeQty(id, delta){
+      const cart = loadCart();
+      const found = cart.find(i => i.id === id);
+      if (!found) return;
+      found.qty = Math.max(1, (found.qty || 1) + delta);
+      saveCart(cart);
+      showToast('Quantidade atualizada');
+    }
+
+    function removeItem(id){
+      let cart = loadCart();
+      cart = cart.filter(i => i.id !== id);
+      saveCart(cart);
+      showToast('Item removido');
+    }
+
+    function updateSummary(){
+      const cart = loadCart();
+      const count = cart.reduce((s,i)=> s + (i.qty||1), 0);
+      const subtotal = cart.reduce((s,i)=> s + (Number(i.price) * (i.qty||1)), 0);
+      // Delivery logic: free over AKZ 100? Example: AKZ 0 for now
+      const delivery = subtotal > 0 ? 0 : 0;
+      const total = subtotal + delivery;
+
+      summaryCount.textContent = `${count} ${count === 1 ? 'item' : 'itens'}`;
+      summarySub.textContent = formatCurrency(subtotal);
+      summaryDelivery.textContent = formatCurrency(delivery);
+      summaryTotal.textContent = formatCurrency(total);
+    }
+
+    /* Toast helper */
+    let toastTimer = null;
+    function showToast(msg, ms = 1800){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> {
+        toast.classList.remove('show');
+        toastTimer = null;
+      }, ms);
+    }
+
+    /* Finalizar encomenda: montar mensagem e abrir WhatsApp */
+    document.getElementById('btn-finalize').addEventListener('click', function(){
+      const cart = loadCart();
+      if (!cart || cart.length === 0){
+        showToast('Carrinho vazio. Adicione produtos antes de finalizar.');
+        return;
+      }
+
+      // coletar dados do cliente
+      const name = (document.getElementById('cust-name').value || '').trim();
+      const phone = (document.getElementById('cust-phone').value || '').trim();
+      const note = (document.getElementById('cust-note').value || '').trim();
+
+      // montar resumo
+      let lines = [];
+      lines.push('🧺 *Nova Encomenda - Esandjo Atelier de Mimos*');
+      if (name) lines.push(`Nome: ${name}`);
+      if (phone) lines.push(`Telefone: ${phone}`);
+      lines.push('');
+      lines.push('Itens:');
+      cart.forEach(it => {
+        lines.push(`- ${it.name} x${it.qty || 1} — ${formatCurrency(Number(it.price) * (it.qty||1))}`);
+      });
+      const subtotal = cart.reduce((s,i)=> s + (Number(i.price) * (i.qty||1)), 0);
+      lines.push('');
+      lines.push(`Subtotal: ${formatCurrency(subtotal)}`);
+      lines.push(`Total: ${formatCurrency(subtotal)}`);
+      if (note) {
+        lines.push('');
+        lines.push(`Observações: ${note}`);
+      }
+      lines.push('');
+      lines.push('Por favor confirmar disponibilidade e prazo de entrega.');
+
+      const message = encodeURIComponent(lines.join('\n'));
+
+      // número do WhatsApp (usar número do negócio). Substitua pelo número real se necessário.
+      const waNumber = '244924015087'; // formato internacional sem + ou espaços
+      const waUrl = `https://wa.me/${waNumber}?text=${message}`;
+
+      // abrir WhatsApp em nova aba
+      window.open(waUrl, '_blank');
+
+      // salvar meta (opcional) e limpar carrinho
+      localStorage.setItem(STORAGE_META, JSON.stringify({ from: 'encomendas', at: new Date().toISOString(), name, phone }));
+      clearCart();
+
+      // feedback e redirecionamento para index após breve atraso
+      showToast('Enviando para WhatsApp…', 1600);
+      setTimeout(()=> {
+        // redireciona para index
+        window.location.href = 'index.html';
+      }, 1600);
     });
 
-    document.getElementById("cart-total").textContent = total.toLocaleString()+" KZ";
-  }
-
-    function changeQty(index,delta){
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart[index].qty += delta;
-    if(cart[index].qty <= 0) cart.splice(index,1);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    renderCart();
-  }
-
-  function removeItem(index){
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.splice(index,1);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    renderCart();
-  }
-
-  // Finalizar no WhatsApp
-  document.getElementById("finalizar-btn").addEventListener("click",function(){
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    if(cart.length === 0) return;
-    let message = "Pedido Esandjo Atelier de Mimos:%0A";
-    cart.forEach(item=>{
-      let subtotal = item.price * item.qty;
-      message += `${item.qty} x ${item.name} - ${subtotal.toLocaleString()} KZ%0A`;
+    /* Limpar carrinho */
+    document.getElementById('btn-clear').addEventListener('click', function(){
+      if (!confirm('Deseja realmente limpar o carrinho?')) return;
+      clearCart();
+      showToast('Carrinho limpo');
     });
-    message += "Total: " + cart.reduce((sum,i)=>sum+i.price*i.qty,0).toLocaleString() + " KZ";
-    window.open("https://wa.me/244924015087?text=" + message, "_blank");
-    localStorage.removeItem("cart");
-    renderCart();
-  });
 
-  window.onload = renderCart;
-</script>
+    /* Pequena função de escape para alt/texto */
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); });
+    }
+
+    /* Navbar toggle (mesmo comportamento) */
+    function toggleMenu() {
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("menu-toggle");
+      const isOpen = btn.classList.toggle('open');
+      nav.classList.toggle("show");
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
+    }
+    document.addEventListener("click", function(e){
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("menu-toggle");
+      if (!nav || !btn) return;
+      if (!nav.contains(e.target) && !btn.contains(e.target)) {
+        nav.classList.remove("show");
+        btn.classList.remove("open");
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Abrir menu');
+      }
+    });
+
+    /* Inicialização */
+    window.addEventListener('load', function(){
+      // garantir chave
+      if (!localStorage.getItem(STORAGE_KEY)) localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+      renderCart();
+    });
+
+    /* Multilanguage small hook (paridade com outras páginas) */
+    const translations = {
+      pt:{pageTitle:"Encomendas"},
+      en:{pageTitle:"Orders"},
+      zh:{pageTitle:"订单"}
+    };
+    function setLang(lang){
+      localStorage.setItem("siteLang", lang);
+      applyLang(lang);
+    }
+    function applyLang(lang){
+      const t = translations[lang] || translations.pt;
+      if (document.title) document.title = t.pageTitle + ' — Esandjo Atelier de Mimos';
+      if (document.getElementById('page-title')) document.getElementById('page-title').textContent = t.pageTitle;
+    }
+    (function initLang(){
+      const lang = localStorage.getItem("siteLang") || "pt";
+      applyLang(lang);
+    })();
+
+  </script>
 </body>
 </html>
