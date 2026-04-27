@@ -1,6 +1,6 @@
 /* base.css
    Esandjo Atelier de Mimos
-   Estilos completos atualizados: navbar (menu circular central), galeria, lightbox, responsividade
+   Estilos completos atualizados: navbar fixa, menu circular central, galeria, lightbox, responsividade
 */
 
 /* Variáveis */
@@ -15,6 +15,9 @@
   --lightbox-z: 9999;
   --radius: 8px;
   --transition-fast: 0.12s;
+
+  /* Altura da navbar (ajuste se alterar padding/logo) */
+  --navbar-height: 68px;
 }
 
 /* Reset e base */
@@ -23,8 +26,11 @@ html, body { height: 100%; font-family: "Segoe UI", Roboto, "Helvetica Neue", Ar
 a { color: inherit; text-decoration: none; }
 img, video { max-width: 100%; display: block; }
 
+/* Evita que o conteúdo fique por baixo da navbar fixa */
+body { padding-top: var(--navbar-height); }
+
 /* =========================
-   NAVBAR
+   NAVBAR (FIXA)
    ========================= */
 .navbar {
   display: flex;
@@ -34,10 +40,13 @@ img, video { max-width: 100%; display: block; }
   padding: 12px 20px;
   background: var(--bg);
   border-bottom: 1px solid rgba(0,0,0,0.06);
-  position: sticky;
+  position: fixed; /* FIXA em todas as páginas */
   top: 0;
-  z-index: 60;
-  position: relative; /* contexto para toggle central */
+  left: 0;
+  width: 100%;
+  height: var(--navbar-height);
+  z-index: 11000; /* acima do conteúdo, abaixo do lightbox */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 /* Logo (link) */
@@ -59,7 +68,6 @@ img, video { max-width: 100%; display: block; }
 
 /* =========================
    MENU TOGGLE (círculo com 3 linhas)
-   - Usar <button class="menu-toggle"> com SVG interno
    ========================= */
 .menu-toggle {
   display: none; /* visível via media query em mobile */
@@ -72,7 +80,7 @@ img, video { max-width: 100%; display: block; }
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 9999;
+  z-index: 12000; /* acima da navbar para clique */
   background: transparent;
   border: 0;
   padding: 0;
@@ -207,9 +215,6 @@ img, video { max-width: 100%; display: block; }
 
 /* =========================
    LIGHTBOX
-   - main media large (>80% viewport height)
-   - thumbnails row below
-   - clicking overlay closes
    ========================= */
 .lightbox {
   display: none;
@@ -218,7 +223,7 @@ img, video { max-width: 100%; display: block; }
   background: rgba(0,0,0,0.85);
   align-items: center;
   justify-content: center;
-  z-index: var(--lightbox-z);
+  z-index: calc(var(--lightbox-z) + 10); /* acima da navbar fixa */
   transition: opacity .18s ease;
 }
 .lightbox[aria-hidden="false"] { display: flex; opacity: 1; }
@@ -247,7 +252,7 @@ img, video { max-width: 100%; display: block; }
   min-height: 120px;
   position: relative;
   z-index: 10;
-  max-height: 86vh; /* garante >80% da viewport em maioria dos ecrãs */
+  max-height: 86vh;
 }
 
 /* Main media elements */
@@ -430,7 +435,7 @@ footer a:hover { text-decoration: underline; }
   /* Nav links transformam-se em menu flutuante */
   .nav-links {
     position: fixed;
-    top: 64px;
+    top: var(--navbar-height);
     right: 12px;
     background: var(--bg);
     flex-direction: column;
@@ -438,7 +443,7 @@ footer a:hover { text-decoration: underline; }
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     display: none;
-    z-index: 80;
+    z-index: 12000;
   }
   .nav-links.show { display: flex; }
 
