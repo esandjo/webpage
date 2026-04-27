@@ -35,10 +35,28 @@ img, video { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 60;
+  /* contexto para posicionamento absoluto do toggle central */
+  position: relative;
 }
 .logo { height: 44px; object-fit: contain; }
-.menu-toggle { display: none; cursor: pointer; width: 36px; height: 28px; align-items: center; justify-content: center; }
+
+/* Menu toggle (hamburguer) */
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  width: 36px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 80;
+  background: transparent;
+  border: 0;
+  padding: 6px;
+}
 .menu-toggle span { display: block; height: 3px; background: #333; margin: 4px 0; border-radius: 2px; }
+
+/* Nav links and language selector */
 .nav-links { display: flex; gap: 14px; align-items: center; }
 .nav-link { color: #333; padding: 8px 10px; border-radius: 6px; font-weight: 600; }
 .nav-link:hover { background: rgba(0,0,0,0.04); }
@@ -124,26 +142,30 @@ img, video { max-width: 100%; display: block; }
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Play overlay for video thumbnails */
-.play-overlay {
+/* Badge "mais itens" sobre thumbnails da galeria */
+.media-more-badge {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  right: 10px;
+  bottom: 10px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: 0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 13px;
   pointer-events: none;
-  transition: transform var(--transition-fast) ease, background var(--transition-fast) ease, opacity var(--transition-fast) ease;
-  z-index: 5;
-  opacity: 0.98;
+  z-index: 6;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
 }
-.play-overlay svg { width: 28px; height: 28px; fill: #fff; }
-.media:hover .play-overlay { transform: translate(-50%, -50%) scale(1.05); background: rgba(0,0,0,0.55); }
+
+/* Play overlay for video thumbnails
+   NOTE: do not show play overlay on gallery thumbnails (.media).
+   The play overlay is used only for explicit video preview elements
+   (e.g., inside lightbox thumbs). To keep compatibility, we hide
+   .play-overlay inside .media but keep the class available for other contexts.
+*/
+.media .play-overlay { display: none !important; }
 
 /* Lightbox */
 .lightbox {
@@ -165,6 +187,8 @@ img, video { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .lightbox-media {
@@ -186,6 +210,54 @@ img, video { max-width: 100%; display: block; }
   border-radius: 6px;
   background-color: var(--fill);
 }
+
+/* Thumbnails row inside lightbox */
+.lightbox-thumbs {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.lightbox-thumbs .lb-thumb {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox-thumbs .lb-thumb img,
+.lightbox-thumbs .lb-thumb video {
+  width: 84px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  display: block;
+}
+
+/* For video thumbs we keep a small play overlay inside the thumb wrapper */
+.lightbox-thumbs .lb-thumb .thumb-play-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 4;
+}
+.lightbox-thumbs .lb-thumb .thumb-play-overlay svg { width: 16px; height: 16px; fill: #fff; }
 
 /* Controls */
 .lightbox .close {
@@ -297,36 +369,7 @@ footer a:hover { text-decoration: underline; }
   .hero h1 { font-size: 24px; }
 }
 @media (max-width: 700px) {
-  .menu-toggle { display: flex; }
-  .nav-links {
-    position: fixed;
-    top: 64px;
-    right: 12px;
-    background: var(--bg);
-    flex-direction: column;
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    display: none;
-  }
-  .nav-links.show { display: flex; }
-  .destaques { padding: 12px; gap: 12px; }
-  .media { max-width: 320px; aspect-ratio: 4 / 3; }
-  .lightbox-controls button { font-size: 26px; padding: 10px; }
-  .play-overlay { width: 56px; height: 56px; }
-  .lb-play-btn { padding: 10px 14px; font-size: 15px; }
-}
-
-/* Utilities */
-.hidden { display: none !important; }
-.center { display: flex; align-items: center; justify-content: center; }
-.small { font-size: 13px; color: var(--muted); }
-
-/* ===== Adição: centralizar o menu hamburguer na navbar (mobile) =====
-   Apenas regras adicionais para garantir que o toggle apareça no centro
-   em telas pequenas, sem alterar o restante do layout.
-*/
-@media (max-width: 700px) {
+  /* Mostrar toggle e centralizá-lo na navbar */
   .menu-toggle {
     display: flex !important;
     position: absolute !important;
@@ -354,23 +397,43 @@ footer a:hover { text-decoration: underline; }
     border-radius: 2px;
   }
 
-  /* Evita que os links da nav fiquem por cima do toggle central */
+  /* Nav links transformam-se em menu flutuante (mantido) */
   .nav-links {
-    padding-left: 12px;
-    padding-right: 12px;
+    position: fixed;
+    top: 64px;
+    right: 12px;
+    background: var(--bg);
+    flex-direction: column;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    display: none;
     z-index: 80;
   }
+  .nav-links.show { display: flex; }
 
-  /* Garante que o logo fique acima do toggle para evitar sobreposição visual */
+  .destaques { padding: 12px; gap: 12px; }
+  .media { max-width: 320px; aspect-ratio: 4 / 3; }
+  .lightbox-controls button { font-size: 26px; padding: 10px; }
+  .play-overlay { width: 56px; height: 56px; }
+  .lb-play-btn { padding: 10px 14px; font-size: 15px; }
+
+  /* Evita que o toggle cubra o logo visualmente */
   .logo, .navbar > a:first-child .logo {
     position: relative;
     z-index: 90;
   }
 
-  /* Foco acessível no toggle */
-  .menu-toggle:focus {
-    outline: 3px solid rgba(201,79,109,0.18);
-    outline-offset: 4px;
-    border-radius: 6px;
+  /* Ajuste para badge em thumbs em telas pequenas */
+  .media-more-badge {
+    right: 8px;
+    bottom: 8px;
+    padding: 5px 7px;
+    font-size: 12px;
   }
 }
+
+/* Utilities */
+.hidden { display: none !important; }
+.center { display: flex; align-items: center; justify-content: center; }
+.small { font-size: 13px; color: var(--muted); }
