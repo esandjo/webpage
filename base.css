@@ -1,6 +1,6 @@
 /* base.css
    Esandjo Atelier de Mimos
-   Contém todos os estilos necessários (layout, galeria, lightbox, vídeos, responsividade)
+   Estilos completos atualizados: navbar (menu circular central), galeria, lightbox, responsividade
 */
 
 /* Variáveis */
@@ -23,7 +23,9 @@ html, body { height: 100%; font-family: "Segoe UI", Roboto, "Helvetica Neue", Ar
 a { color: inherit; text-decoration: none; }
 img, video { max-width: 100%; display: block; }
 
-/* Navbar */
+/* =========================
+   NAVBAR
+   ========================= */
 .navbar {
   display: flex;
   align-items: center;
@@ -37,23 +39,9 @@ img, video { max-width: 100%; display: block; }
   z-index: 60;
   position: relative; /* contexto para toggle central */
 }
-.logo { height: 44px; object-fit: contain; }
 
-/* Menu toggle (hamburguer) */
-.menu-toggle {
-  display: none;
-  cursor: pointer;
-  width: 36px;
-  height: 28px;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 80;
-  background: transparent;
-  border: 0;
-  padding: 6px;
-}
-.menu-toggle span { display: block; height: 3px; background: #333; margin: 4px 0; border-radius: 2px; }
+/* Logo (link) */
+.logo { height: 44px; object-fit: contain; display: block; }
 
 /* Nav links and language selector */
 .nav-links { display: flex; gap: 14px; align-items: center; }
@@ -69,7 +57,61 @@ img, video { max-width: 100%; display: block; }
 }
 .lang-selector button:hover { background: rgba(0,0,0,0.04); }
 
-/* Hero */
+/* =========================
+   MENU TOGGLE (círculo com 3 linhas)
+   - Usar <button class="menu-toggle"> com SVG interno
+   ========================= */
+.menu-toggle {
+  display: none; /* visível via media query em mobile */
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+}
+
+/* SVG sizing */
+.menu-toggle svg { display: block; width: 44px; height: 44px; }
+
+/* circle styling (subtle) */
+.menu-toggle .menu-circle {
+  fill: transparent;
+  stroke: rgba(0,0,0,0.06);
+  stroke-width: 0;
+  transition: fill 180ms ease, stroke 180ms ease;
+}
+
+/* lines */
+.menu-toggle .menu-line {
+  fill: #333;
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 180ms ease;
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+}
+
+/* open state: optional transform to X (keeps circle) */
+.menu-toggle.open .menu-circle {
+  fill: rgba(0,0,0,0.04);
+}
+.menu-toggle.open .l1 { transform: translateY(6px) rotate(45deg); }
+.menu-toggle.open .l2 { opacity: 0; transform: scaleX(0); }
+.menu-toggle.open .l3 { transform: translateY(-6px) rotate(-45deg); }
+
+/* Focus styles for accessibility */
+.menu-toggle:focus { outline: 3px solid rgba(201,79,109,0.18); outline-offset: 4px; border-radius: 50%; }
+
+/* =========================
+   HERO
+   ========================= */
 .hero {
   display: flex;
   flex-direction: column;
@@ -91,7 +133,9 @@ img, video { max-width: 100%; display: block; }
 }
 .cta-btn:hover { opacity: .95; transform: translateY(-1px); transition: all .18s ease; }
 
-/* Cards / Galerias */
+/* =========================
+   CARDS / GALERIA
+   ========================= */
 .destaques {
   display: flex;
   gap: 18px;
@@ -111,7 +155,7 @@ img, video { max-width: 100%; display: block; }
 .card h3 { margin-top: 8px; font-size: 18px; color: #222; }
 .card p { color: var(--muted); font-size: 14px; margin-top: 6px; }
 
-/* Media container (uniform) */
+/* Media container (thumbnail) */
 .media {
   width: 100%;
   max-width: var(--max-card-width);
@@ -131,7 +175,7 @@ img, video { max-width: 100%; display: block; }
 .media video {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
   background-color: transparent;
   cursor: pointer;
@@ -161,7 +205,12 @@ img, video { max-width: 100%; display: block; }
 /* Hide play overlay on gallery thumbnails */
 .media .play-overlay { display: none !important; }
 
-/* Lightbox */
+/* =========================
+   LIGHTBOX
+   - main media large (>80% viewport height)
+   - thumbnails row below
+   - clicking overlay closes
+   ========================= */
 .lightbox {
   display: none;
   position: fixed;
@@ -185,6 +234,7 @@ img, video { max-width: 100%; display: block; }
   flex-direction: column;
   gap: 12px;
   padding: 18px;
+  pointer-events: auto;
 }
 
 /* Main media area: large, centered, above thumbnails */
@@ -197,8 +247,7 @@ img, video { max-width: 100%; display: block; }
   min-height: 120px;
   position: relative;
   z-index: 10;
-  /* ensure main media visually dominates */
-  max-height: 86vh;
+  max-height: 86vh; /* garante >80% da viewport em maioria dos ecrãs */
 }
 
 /* Main media elements */
@@ -365,42 +414,20 @@ footer {
 footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
 footer a:hover { text-decoration: underline; }
 
-/* Responsividade */
+/* =========================
+   RESPONSIVIDADE
+   ========================= */
 @media (max-width: 900px) {
   .card { max-width: 360px; }
   .media { max-width: 360px; }
   .hero h1 { font-size: 24px; }
 }
+
 @media (max-width: 700px) {
   /* Mostrar toggle e centralizá-lo na navbar */
-  .menu-toggle {
-    display: flex !important;
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 44px;
-    height: 36px;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    background: transparent;
-    border: 0;
-    padding: 6px;
-    cursor: pointer;
-  }
+  .menu-toggle { display: flex !important; }
 
-  /* Mantém as barras do hamburguer consistentes */
-  .menu-toggle span {
-    display: block;
-    width: 22px;
-    height: 3px;
-    background: #333;
-    margin: 3px 0;
-    border-radius: 2px;
-  }
-
-  /* Nav links transformam-se em menu flutuante (mantido) */
+  /* Nav links transformam-se em menu flutuante */
   .nav-links {
     position: fixed;
     top: 64px;
@@ -422,18 +449,10 @@ footer a:hover { text-decoration: underline; }
   .lb-play-btn { padding: 10px 14px; font-size: 15px; }
 
   /* Evita que o toggle cubra o logo visualmente */
-  .logo, .navbar > a:first-child .logo {
-    position: relative;
-    z-index: 90;
-  }
+  .logo, .navbar > a:first-child .logo { position: relative; z-index: 90; }
 
   /* Ajuste para badge em thumbs em telas pequenas */
-  .media-more-badge {
-    right: 8px;
-    bottom: 8px;
-    padding: 5px 7px;
-    font-size: 12px;
-  }
+  .media-more-badge { right: 8px; bottom: 8px; padding: 5px 7px; font-size: 12px; }
 }
 
 /* Utilities */
