@@ -127,6 +127,32 @@
   /* Garantir que o badge do FAB não sobrepõe controlos */
   .cart-fab .count { width:20px; height:20px; font-size:11px; top:-5px; right:-5px; }
 }
+/* Menu lateral responsivo com largura dinâmica */
+:root { --menu-min-width:180px; --menu-max-width:320px; --menu-padding:20px; --menu-width:240px; }
+.nav-links {
+  position:fixed;
+  top:0;
+  right:calc(-1 * var(--menu-width));
+  width:var(--menu-width);
+  height:100vh;
+  background:linear-gradient(180deg,#fff,#fffafc);
+  flex-direction:column;
+  padding:18px;
+  gap:12px;
+  box-shadow:-12px 0 36px rgba(0,0,0,0.12);
+  transition:right .28s cubic-bezier(.2,.9,.2,1);
+  z-index:14000;
+  overflow-y:auto;
+  box-sizing:border-box;
+}
+
+/* quando aberto */
+.nav-links.show { right:0; }
+
+/* limites visuais */
+@media (max-width:920px){
+  .nav-links { width:var(--menu-width); }
+}
 
   </style>
 </head>
@@ -675,6 +701,39 @@
         }
       }
     };
-  </script>
+    (function adjustMenuWidth(){
+  const nav = document.getElementById('nav-links');
+  if (!nav) return;
+
+  const root = document.documentElement;
+  const MIN = parseInt(getComputedStyle(root).getPropertyValue('--menu-min-width')) || 180;
+  const MAX = parseInt(getComputedStyle(root).getPropertyValue('--menu-max-width')) || 320;
+  const PAD = parseInt(getComputedStyle(root).getPropertyValue('--menu-padding')) || 20;
+
+  function computeAndApply(){
+    // calcula largura do conteúdo (inclui padding interno)
+    // usamos scrollWidth para garantir que todos os botões cabem
+    const contentWidth = Math.ceil(nav.scrollWidth);
+    // adicionar um pequeno padding visual
+    let desired = contentWidth + PAD;
+    // aplicar limites
+    desired = Math.max(MIN, Math.min(MAX, desired));
+    // definir variável CSS usada pelo CSS do menu
+    root.style.setProperty('--menu-width', desired + 'px');
+  }
+
+  // recalcula em load, resize e quando o conteúdo muda
+  window.addEventListener('load', computeAndApply);
+  window.addEventListener('resize', computeAndApply);
+
+  // observar mudanças no menu (ex.: tradução, adição de links)
+  const obs = new MutationObserver(computeAndApply);
+  obs.observe(nav, { childList: true, subtree: true, characterData: true });
+
+  // aplicar imediatamente
+  computeAndApply();
+})();
+
+</script>
 </body>
 </html>
