@@ -56,10 +56,7 @@
              videos/cesta1b.mp4
            ">
         <img src="imagens/cesta1.jpg" alt="Cesta 1" />
-        <!-- badge indicando que há mais itens no set (não é play) -->
-        <button class="media-more-badge" aria-hidden="true" style="position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,0.6);color:#fff;border:0;padding:6px 8px;border-radius:6px;font-weight:700;font-size:13px;pointer-events:none;">
-          3 itens
-        </button>
+        <button class="media-more-badge" aria-hidden="true">3 itens</button>
       </div>
       <h3 class="item-name">Cesta Gourmet</h3>
       <p class="item-desc">Perfeita para ocasiões especiais.</p>
@@ -75,9 +72,7 @@
              videos/cesta2b.mp4
            ">
         <img src="imagens/cesta2.jpg" alt="Cesta 2" />
-        <button class="media-more-badge" aria-hidden="true" style="position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,0.6);color:#fff;border:0;padding:6px 8px;border-radius:6px;font-weight:700;font-size:13px;pointer-events:none;">
-          3 itens
-        </button>
+        <button class="media-more-badge" aria-hidden="true">3 itens</button>
       </div>
       <h3 class="item-name">Cesta Artesanal</h3>
       <p class="item-desc">Feita com carinho e tradição.</p>
@@ -93,9 +88,7 @@
              videos/cesta3b.mp4
            ">
         <img src="imagens/cesta3.jpg" alt="Cesta 3" />
-        <button class="media-more-badge" aria-hidden="true" style="position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,0.6);color:#fff;border:0;padding:6px 8px;border-radius:6px;font-weight:700;font-size:13px;pointer-events:none;">
-          3 itens
-        </button>
+        <button class="media-more-badge" aria-hidden="true">3 itens</button>
       </div>
       <h3 class="item-name">Cesta Especial</h3>
       <p class="item-desc">Uma seleção especial para ocasiões únicas.</p>
@@ -112,11 +105,11 @@
       </div>
       <span class="close" role="button" aria-label="Fechar" title="Fechar">&times;</span>
 
-      <!-- Área principal do media -->
+      <!-- Área principal do media (grande, ocupa >80% da altura) -->
       <div id="lightbox-media" class="lightbox-media" tabindex="0"></div>
 
       <!-- Miniaturas do set (adicionadas dinamicamente) -->
-      <div id="lightbox-thumbs" class="lightbox-thumbs" aria-hidden="false" style="width:100%;display:flex;gap:8px;align-items:center;justify-content:center;padding:12px 8px;overflow:auto;"></div>
+      <div id="lightbox-thumbs" class="lightbox-thumbs" aria-hidden="false"></div>
 
       <!-- Botão Play grande (aparece quando autoplay bloqueado para vídeos) -->
       <button id="lb-play" class="lb-play-btn" aria-label="Reproduzir">Reproduzir</button>
@@ -179,6 +172,8 @@
        - Works for any number of cards and supports images and videos.
        - In the gallery thumbnails we DO NOT show a play overlay.
        - Instead we show a "badge" indicating how many items the set contains.
+       - Lightbox shows the active media large (>=80vh) and thumbnails below.
+       - Clicking outside the lightbox content closes it.
        ------------------------- */
 
     const lb = document.getElementById("lightbox");
@@ -218,7 +213,10 @@
 
         // Remove previous handler if any, then add click handler
         if (el._openHandler) el.removeEventListener('click', el._openHandler);
-        el._openHandler = () => openLightbox(0, setName);
+        el._openHandler = (e) => {
+          // open lightbox and show the clicked item as first (index 0)
+          openLightbox(0, setName);
+        };
         el.addEventListener('click', el._openHandler);
 
         // Ensure gallery thumbnail does NOT show play overlay.
@@ -241,8 +239,9 @@
           if (e.key === 'ArrowRight') changeSlide(1);
         });
 
-        // Click outside closes
+        // Click outside closes (click on overlay but outside content)
         lb.addEventListener('click', function(e){
+          // close only if click is on the overlay (lb) and not inside content
           if (e.target === lb) closeLightbox();
         });
 
@@ -265,18 +264,6 @@
         badge = document.createElement('button');
         badge.className = 'media-more-badge';
         badge.setAttribute('aria-hidden', 'true');
-        // minimal inline styles to avoid changing base.css
-        badge.style.position = 'absolute';
-        badge.style.right = '10px';
-        badge.style.bottom = '10px';
-        badge.style.background = 'rgba(0,0,0,0.6)';
-        badge.style.color = '#fff';
-        badge.style.border = '0';
-        badge.style.padding = '6px 8px';
-        badge.style.borderRadius = '6px';
-        badge.style.fontWeight = '700';
-        badge.style.fontSize = '13px';
-        badge.style.pointerEvents = 'none';
         mediaEl.appendChild(badge);
       }
       badge.textContent = (count > 1) ? `${count} itens` : `${count} item`;
@@ -332,11 +319,17 @@
       prevBtn.disabled = len <= 1;
       nextBtn.disabled = len <= 1;
 
+      // Ensure the main media area is visually above thumbnails and large
+      lbMedia.classList.add('active-media');
+
       if (item.type === 'img'){
         // Load image and wait for load/error to update UI
         const img = new Image();
         img.alt = item.alt || '';
         img.loading = 'eager';
+        img.style.maxHeight = '86vh';
+        img.style.width = 'auto';
+        img.style.maxWidth = '100%';
         lbMedia.classList.add('loading');
         lbMedia.setAttribute('data-message', 'A carregar imagem...');
         img.onload = () => {
@@ -360,7 +353,8 @@
         video.setAttribute('playsinline','');
         video.controls = true;
         video.preload = 'metadata';
-        video.style.maxHeight = '80vh';
+        video.style.maxHeight = '86vh';
+        video.style.width = 'auto';
         video.setAttribute('aria-label','Vídeo');
         video.className = 'lb-video';
 
@@ -453,6 +447,7 @@
         btn.style.display = 'inline-flex';
         btn.style.alignItems = 'center';
         btn.style.justifyContent = 'center';
+        btn.style.position = 'relative';
 
         // Thumbnail content: image for images; for videos show a small poster/video preview
         if (it.type === 'img') {
@@ -487,18 +482,7 @@
           wrapper.appendChild(tv);
 
           const ov = document.createElement('div');
-          ov.style.position = 'absolute';
-          ov.style.pointerEvents = 'none';
-          ov.style.width = '28px';
-          ov.style.height = '28px';
-          ov.style.borderRadius = '50%';
-          ov.style.background = 'rgba(0,0,0,0.45)';
-          ov.style.display = 'flex';
-          ov.style.alignItems = 'center';
-          ov.style.justifyContent = 'center';
-          ov.style.left = '50%';
-          ov.style.top = '50%';
-          ov.style.transform = 'translate(-50%,-50%)';
+          ov.className = 'thumb-play-overlay';
           ov.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="#fff" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
           wrapper.appendChild(ov);
 
@@ -530,6 +514,10 @@
           t.style.outline = 'none';
         }
       });
+
+      // Scroll thumb into view if needed
+      const active = lbThumbs.querySelector('.lb-thumb[data-index="'+currentIndex+'"]');
+      if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
     function onLbPlayClick() {
