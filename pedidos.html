@@ -3,136 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pedidos — Esandjo Atelier de Mimos</title>
+  <title>Esandjo Atelier de Mimos</title>
   <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg" />
-  <link rel="stylesheet" href="base.css" />
-  <style>
-    /* Pequenos ajustes específicos para a página de pedidos */
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .product {
-      background: var(--card-bg);
-      border-radius: calc(var(--radius) + 2px);
-      box-shadow: var(--shadow);
-      padding: 12px;
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .product .thumb {
-      width: 100%;
-      aspect-ratio: 4/3;
-      overflow: hidden;
-      border-radius: 8px;
-      background: var(--fill);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .product .thumb img { width: 100%; height: 100%; object-fit: cover; display:block; }
-    .product h4 { margin: 0; font-size: 16px; color: #222; }
-    .product .price { font-weight: 800; color: var(--accent); font-size: 16px; }
-    .product .meta { color: var(--muted); font-size: 13px; }
-    .product .actions { margin-top: auto; display:flex; gap:8px; align-items:center; }
-    .btn {
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:8px 12px; border-radius:8px; border:0; cursor:pointer; font-weight:700;
-    }
-    .btn-add { background: var(--accent); color:#fff; }
-    .btn-view { background: transparent; border:1px solid rgba(0,0,0,0.06); color: #222; }
-
-    /* Cart floating button */
-    .cart-fab {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      background: var(--accent);
-      color: #fff;
-      border-radius: 999px;
-      width: 56px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 11000;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-      cursor: pointer;
-      border: 0;
-      font-weight: 800;
-    }
-    .cart-fab .count {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      background: #222;
-      color: #fff;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:12px; font-weight:700;
-    }
-
-    /* IA suggestion popup (toast) */
-    .ai-toast {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 86px;
-      background: rgba(0,0,0,0.9);
-      color: #fff;
-      padding: 12px 16px;
-      border-radius: 10px;
-      z-index: 12000;
-      display: none;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-      max-width: 92%;
-      text-align: center;
-      font-size: 14px;
-    }
-    .ai-toast.show { display: flex; }
-
-    /* Small cart preview modal */
-    .cart-modal {
-      position: fixed;
-      right: 18px;
-      bottom: 86px;
-      width: 320px;
-      max-width: calc(100% - 36px);
-      background: var(--bg);
-      border-radius: 10px;
-      box-shadow: 0 12px 36px rgba(0,0,0,0.18);
-      z-index: 12000;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .cart-modal.show { display: flex; }
-    .cart-modal .head { padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.04); font-weight:700; }
-    .cart-modal .items { max-height: 260px; overflow:auto; padding: 8px; display:flex; flex-direction:column; gap:8px; }
-    .cart-modal .item { display:flex; gap:8px; align-items:center; padding:6px; border-radius:8px; }
-    .cart-modal .item img { width:48px; height:36px; object-fit:cover; border-radius:6px; }
-    .cart-modal .foot { padding: 12px; border-top: 1px solid rgba(0,0,0,0.04); display:flex; gap:8px; }
-    .cart-modal .total { margin-left:auto; font-weight:800; color:var(--accent); align-self:center; }
-
-    @media (max-width:700px){
-      .cart-modal { right: 12px; left: 12px; width: auto; bottom: 86px; }
-      .ai-toast { bottom: 76px; }
-    }
-  </style>
+  <link rel="stylesheet" href="base.css">
 </head>
 <body>
 
-  <!-- Navbar (mantém perfil institucional) -->
+  <!-- Navbar -->
   <nav class="navbar">
     <a href="index.html" aria-label="Início">
       <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo" />
@@ -150,8 +27,7 @@
 
     <div class="lang-selector">
       <button onclick="setLang('pt')">PT</button>
-      <button onclick="setLang('en')">EN</button>
-      <button onclick="setLang('zh')">中文</button>
+      
     </div>
 
     <div class="nav-links" id="nav-links">
@@ -164,73 +40,87 @@
     </div>
   </nav>
 
-  <!-- Page header -->
+  <!-- Hero -->
   <header class="hero">
-    <h1 id="page-title">Pedidos</h1>
-    <p id="subtitle">Escolha os produtos, veja sugestões e envie para Encomendas.</p>
-  </header>
+    <h1 id="page-title">Bem-vindo ao Esandjo Atelier de Mimos</h1>
+    <p id="subtitle">Doces, cestas e momentos especiais</p>
+    <a href="https://www.instagram.com/esandjo_atelierdemimos/" class="cta-btn" id="cta">Adoce o seu dia, fale conosco</a>
+	  </header>
 
-  <!-- Produtos / Galeria com preços -->
-  <main>
-    <section class="products" aria-label="Produtos disponíveis">
-      <!-- Exemplo de produto: substitua src por imagens reais -->
-      <article class="product" data-id="p1" data-name="Cesta Gourmet" data-price="45.00" data-img="imagens/cesta1.jpg">
-        <div class="thumb"><img src="imagens/cesta1.jpg" alt="Cesta Gourmet" /></div>
-        <h4>Cesta Gourmet</h4>
-        <div class="meta">Seleção de doces e mimos</div>
-        <div class="price">AKZ 45.00</div>
-        <div class="actions">
-          <button class="btn btn-add" data-action="add">Adicionar</button>
-          <button class="btn btn-view" data-action="details">Ver</button>
-        </div>
-      </article>
+  <!-- Galeria: cada card referencia um set via data-set e lista de itens em data-items (uma entrada por linha para melhor manutenção) -->
+  <section class="destaques" aria-label="Galeria de Cestas">
 
-      <article class="product" data-id="p2" data-name="Cesta Artesanal" data-price="35.00" data-img="imagens/cesta2.jpg">
-        <div class="thumb"><img src="imagens/cesta2.jpg" alt="Cesta Artesanal" /></div>
-        <h4>Cesta Artesanal</h4>
-        <div class="meta">Feita com carinho e tradição</div>
-        <div class="price">AKZ 35.00</div>
-        <div class="actions">
-          <button class="btn btn-add" data-action="add">Adicionar</button>
-          <button class="btn btn-view" data-action="details">Ver</button>
-        </div>
-      </article>
+    <!-- Cesta 1: três itens (duas imagens + vídeo) -->
+    <div class="card">
+      <div class="media"
+           data-set="set-cesta1"
+           data-items="
+             imagens/cesta1.jpg
+             imagens/cesta1a.jpg
+             videos/cesta1b.mp4
+           ">
+        <img src="imagens/cesta1.jpg" alt="Cesta 1" />
+        <button class="media-more-badge" aria-hidden="true">3 itens</button>
+      </div>
+      <h3 class="item-name">Cesta Gourmet</h3>
+      <p class="item-desc">Perfeita para ocasiões especiais.</p>
+    </div>
 
-      <article class="product" data-id="p3" data-name="Cesta Especial" data-price="60.00" data-img="imagens/cesta3.jpg">
-        <div class="thumb"><img src="imagens/cesta3.jpg" alt="Cesta Especial" /></div>
-        <h4>Cesta Especial</h4>
-        <div class="meta">Seleção premium para ocasiões únicas</div>
-        <div class="price">AKZ 60.00</div>
-        <div class="actions">
-          <button class="btn btn-add" data-action="add">Adicionar</button>
-          <button class="btn btn-view" data-action="details">Ver</button>
-        </div>
-      </article>
+    <!-- Cesta 2: três itens (duas imagens + vídeo) -->
+    <div class="card">
+      <div class="media"
+           data-set="set-cesta2"
+           data-items="
+             imagens/cesta2.jpg
+             imagens/cesta2a.jpg
+             videos/cesta2b.mp4
+           ">
+        <img src="imagens/cesta2.jpg" alt="Cesta 2" />
+        <button class="media-more-badge" aria-hidden="true">3 itens</button>
+      </div>
+      <h3 class="item-name">Cesta Artesanal</h3>
+      <p class="item-desc">Feita com carinho e tradição.</p>
+    </div>
 
-      <!-- Adicione mais produtos seguindo o mesmo padrão -->
-    </section>
-  </main>
+    <!-- Cesta 3: exemplo adicional com três itens -->
+    <div class="card">
+      <div class="media"
+           data-set="set-cesta3"
+           data-items="
+             imagens/cesta3.jpg
+             imagens/cesta3a.jpg
+             videos/cesta3b.mp4
+           ">
+        <img src="imagens/cesta3.jpg" alt="Cesta 3" />
+        <button class="media-more-badge" aria-hidden="true">3 itens</button>
+      </div>
+      <h3 class="item-name">Cesta Especial</h3>
+      <p class="item-desc">Uma seleção especial para ocasiões únicas.</p>
+    </div>
 
-  <!-- IA suggestion toast -->
-  <div id="ai-toast" class="ai-toast" role="status" aria-live="polite"></div>
+  </section>
 
-  <!-- Cart floating action button -->
-  <button id="cart-fab" class="cart-fab" aria-label="Ver carrinho">
-    🧺
-    <span class="count" id="cart-count">0</span>
-  </button>
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true" aria-label="Visualizador de mídia">
+    <div class="lightbox-content" role="document">
+      <div class="lightbox-controls" aria-hidden="false">
+        <button class="prev" aria-label="Anterior" title="Anterior">&#10094;</button>
+        <button class="next" aria-label="Próximo" title="Próximo">&#10095;</button>
+      </div>
+      <span class="close" role="button" aria-label="Fechar" title="Fechar">&times;</span>
 
-  <!-- Small cart preview -->
-  <div id="cart-modal" class="cart-modal" aria-hidden="true">
-    <div class="head">Carrinho</div>
-    <div class="items" id="cart-items"></div>
-    <div class="foot">
-      <button class="btn btn-view" id="go-encomendas">Ir para Encomendas</button>
-      <div class="total" id="cart-total">AKZ 0.00</div>
+      <!-- Área principal do media (grande, ocupa >80% da altura) -->
+      <div id="lightbox-media" class="lightbox-media" tabindex="0"></div>
+
+      <!-- Miniaturas do set (adicionadas dinamicamente) -->
+      <div id="lightbox-thumbs" class="lightbox-thumbs" aria-hidden="false"></div>
+
+      <!-- Botão Play grande (aparece quando autoplay bloqueado para vídeos) -->
+      <button id="lb-play" class="lb-play-btn" aria-label="Reproduzir">Reproduzir</button>
     </div>
   </div>
 
-  <!-- Footer (contactos igual ao index) -->
+  <!-- Footer -->
   <footer>
     <p id="contacts">📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
     <p>
@@ -241,7 +131,7 @@
   </footer>
 
   <script>
-    /* Navbar toggle (mantém comportamento) */
+    // Toggle do menu: atualiza aria-expanded e classe 'open' para animação
     function toggleMenu() {
       const nav = document.getElementById("nav-links");
       const btn = document.getElementById("menu-toggle");
@@ -250,6 +140,8 @@
       btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       btn.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
     }
+
+    // Fecha o menu se clicar fora
     document.addEventListener("click", function(e){
       const nav = document.getElementById("nav-links");
       const btn = document.getElementById("menu-toggle");
@@ -262,195 +154,402 @@
       }
     });
 
-    /* Local storage keys */
-    const STORAGE_KEY = 'esandjo_pedido_cart'; // persist cart for Encomendas page
-    const STORAGE_META = 'esandjo_pedido_meta';
-
-    /* Utilities */
-    function formatCurrency(v){ return 'AKZ ' + Number(v).toFixed(2); }
-
-    /* Cart management */
-    function loadCart(){
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : [];
-      } catch(e){ return []; }
-    }
-    function saveCart(cart){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-      updateCartUI();
-    }
-    function addToCart(item){
-      const cart = loadCart();
-      const found = cart.find(i => i.id === item.id);
-      if (found) found.qty += 1;
-      else cart.push({...item, qty:1});
-      saveCart(cart);
-    }
-    function cartTotal(){
-      const cart = loadCart();
-      return cart.reduce((s,i)=> s + (Number(i.price) * (i.qty||1)), 0);
-    }
-    function updateCartUI(){
-      const cart = loadCart();
-      const count = cart.reduce((s,i)=> s + (i.qty||1), 0);
-      document.getElementById('cart-count').textContent = count;
-      document.getElementById('cart-total').textContent = formatCurrency(cartTotal());
-      // update cart items list
-      const list = document.getElementById('cart-items');
-      list.innerHTML = '';
-      if (cart.length === 0){
-        list.innerHTML = '<div style="padding:12px;color:var(--muted)">Carrinho vazio</div>';
-        return;
-      }
-      cart.forEach(it => {
-        const el = document.createElement('div');
-        el.className = 'item';
-        el.innerHTML = `<img src="${it.img}" alt="${it.name}" /><div style="flex:1"><div style="font-weight:700">${it.name}</div><div style="font-size:13px;color:var(--muted)">${it.qty} × ${formatCurrency(it.price)}</div></div><div style="font-weight:800;color:var(--accent)">${formatCurrency(it.price * it.qty)}</div>`;
-        list.appendChild(el);
+    // Multilanguage (mantido)
+    const translations = {
+      pt:{pageTitle:"Bem-vindo ao Esandjo Atelier de Mimos",subtitle:"Doces, cestas e momentos especiais",cta:"Adoce o seu dia, fale conosco.",openHours:"Aberto todos os dias das 8h às 22h",insta:"Instagram",fb:"Facebook",
+          navbar:{home:"Início",cestas:"Cestas & Mimos",pedidos:"Pedidos",encomenda:"Encomenda",catering:"Catering Infantil",contactos:"Contactos"},
+          items:{}, desc:{}},
+      en:{pageTitle:"Welcome to Esandjo Atelier de Mimos",subtitle:"Sweets, baskets and special moments",cta:"Explore Baskets",openHours:"Open daily from 8am to 10pm",insta:"Instagram",fb:"Facebook",navbar:{},items:{},desc:{}},
+      zh:{pageTitle:"欢迎来到 Esandjo Atelier de Mimos",subtitle:"甜点、礼篮和特别时刻",cta:"探索礼篮",openHours:"每天营业，早上8点到晚上10点",insta:"Instagram",fb:"Facebook",navbar:{},items:{},desc:{}}
+    };
+    function setLang(lang){ localStorage.setItem("siteLang", lang); applyLang(lang); }
+    function applyLang(lang){
+      if(document.getElementById('page-title')) document.getElementById('page-title').textContent = translations[lang].pageTitle || document.getElementById('page-title').textContent;
+      if(document.getElementById('subtitle')) document.getElementById('subtitle').textContent = translations[lang].subtitle || document.getElementById('subtitle').textContent;
+      if(document.getElementById('cta')) document.getElementById('cta').textContent = translations[lang].cta || document.getElementById('cta').textContent;
+      if(document.getElementById('open-hours')) document.getElementById('open-hours').textContent = translations[lang].openHours || document.getElementById('open-hours').textContent;
+      if(document.getElementById('insta')) document.getElementById('insta').textContent = translations[lang].insta || document.getElementById('insta').textContent;
+      if(document.getElementById('fb')) document.getElementById('fb').textContent = translations[lang].fb || document.getElementById('fb').textContent;
+      document.querySelectorAll('.nav-link').forEach(link => {
+        const key = link.getAttribute("data-key");
+        if(translations[lang].navbar && translations[lang].navbar[key]) link.textContent = translations[lang].navbar[key];
       });
     }
 
-    /* IA suggestion popup (simulated) */
-    const aiToast = document.getElementById('ai-toast');
-    let aiTimer = null;
-    function showAISuggestion(product){
-      // Simulate quick AI suggestions for 2 seconds
-      aiToast.textContent = `Sugestão: combine "${product.name}" com um cartão personalizado e um mini bolo.`;
-      aiToast.classList.add('show');
-      if (aiTimer) clearTimeout(aiTimer);
-      aiTimer = setTimeout(()=> {
-        aiToast.classList.remove('show');
-        aiTimer = null;
-      }, 4000);
-    }
-
-    /* Product click handlers */
-    document.addEventListener('click', function(e){
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      const action = btn.getAttribute('data-action');
-      const productEl = btn.closest('.product');
-      if (!productEl) return;
-
-      const id = productEl.getAttribute('data-id');
-      const name = productEl.getAttribute('data-name');
-      const price = productEl.getAttribute('data-price');
-      const img = productEl.getAttribute('data-img');
-
-      if (action === 'add'){
-        // Add to cart and show AI suggestion popup for 2s
-        addToCart({ id, name, price: Number(price), img });
-        showAISuggestion({ id, name, price });
-      } else if (action === 'details'){
-        // Open lightbox-like quick preview (reuse existing lightbox if present)
-        openQuickPreview({ id, name, price, img });
-      }
+    window.addEventListener("load", function(){
+      const lang = localStorage.getItem("siteLang") || "pt";
+      applyLang(lang);
+      initGallery();
     });
 
-    /* Quick preview (simple overlay) */
-    function openQuickPreview(item){
-      // reuse lightbox if available on site
-      const lb = document.getElementById('lightbox');
-      const lbMedia = document.getElementById('lightbox-media');
-      const lbThumbs = document.getElementById('lightbox-thumbs');
-      if (!lb || !lbMedia) {
-        alert(item.name + ' — ' + formatCurrency(item.price));
-        return;
-      }
-      lbMedia.innerHTML = '';
-      lbThumbs.innerHTML = '';
-      const img = document.createElement('img');
-      img.src = item.img;
-      img.alt = item.name;
-      img.style.maxHeight = '86vh';
-      img.style.width = 'auto';
-      lbMedia.appendChild(img);
-      // small caption
-      const cap = document.createElement('div');
-      cap.style.position = 'absolute';
-      cap.style.bottom = '12px';
-      cap.style.left = '12px';
-      cap.style.padding = '8px 10px';
-      cap.style.background = 'rgba(0,0,0,0.5)';
-      cap.style.color = '#fff';
-      cap.style.borderRadius = '8px';
-      cap.textContent = `${item.name} — ${formatCurrency(item.price)}`;
-      lbMedia.appendChild(cap);
+    /* -------------------------
+       Gallery / Lightbox logic
+       - Each .media element must have:
+         data-set="unique-id"
+         data-items="one entry per line (or comma separated)"
+       - The script builds galleries from data-items automatically.
+       - Works for any number of cards and supports images and videos.
+       - In the gallery thumbnails we DO NOT show a play overlay.
+       - Instead we show a "badge" indicating how many items the set contains.
+       - Lightbox shows the active media large (>=80vh) and thumbnails below.
+       - Clicking outside the lightbox content closes it.
+       ------------------------- */
 
+    const lb = document.getElementById("lightbox");
+    const lbMedia = document.getElementById("lightbox-media");
+    const lbThumbs = document.getElementById("lightbox-thumbs");
+    const prevBtn = document.querySelector(".prev");
+    const nextBtn = document.querySelector(".next");
+    const closeBtn = document.querySelector(".close");
+    const lbPlayBtn = document.getElementById("lb-play");
+
+    const galleries = {}; // populated at init
+    let currentSet = null;
+    let currentIndex = 0;
+    let controlsBound = false;
+
+    function initGallery(){
+      // reset galleries
+      for (const k in galleries) delete galleries[k];
+
+      // Find all .media elements with data-items and data-set
+      const mediaEls = document.querySelectorAll('.media[data-items][data-set]');
+      mediaEls.forEach(el => {
+        const setName = el.getAttribute('data-set').trim();
+        const raw = el.getAttribute('data-items') || '';
+
+        // Split by newlines or commas, trim each line
+        const parts = raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+
+        // build items array with type detection by extension
+        const items = parts.map(src => {
+          const lower = src.toLowerCase();
+          const isVideo = lower.endsWith('.mp4') || lower.endsWith('.webm') || lower.endsWith('.ogg');
+          return { type: isVideo ? 'video' : 'img', src: src };
+        });
+
+        galleries[setName] = items;
+
+        // Remove previous handler if any, then add click handler
+        if (el._openHandler) el.removeEventListener('click', el._openHandler);
+        el._openHandler = (e) => {
+          openLightbox(0, setName);
+        };
+        el.addEventListener('click', el._openHandler);
+
+        // Ensure gallery thumbnail does NOT show play overlay.
+        // Instead update or create a "more" badge showing number of items.
+        updateMoreBadge(el, items.length);
+      });
+
+      // Bind controls once
+      if (!controlsBound) {
+        prevBtn.addEventListener('click', () => changeSlide(-1));
+        nextBtn.addEventListener('click', () => changeSlide(1));
+        closeBtn.addEventListener('click', closeLightbox);
+        lbPlayBtn.addEventListener('click', onLbPlayClick);
+
+        // Keyboard
+        document.addEventListener('keydown', function(e){
+          if (lb.getAttribute('aria-hidden') === 'true') return;
+          if (e.key === 'Escape') closeLightbox();
+          if (e.key === 'ArrowLeft') changeSlide(-1);
+          if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Click outside closes (click on overlay but outside content)
+        lb.addEventListener('click', function(e){
+          if (e.target === lb) closeLightbox();
+        });
+
+        // Swipe support
+        addSwipeSupport();
+
+        controlsBound = true;
+      }
+    }
+
+    // Replace or create the "more" badge inside the gallery thumbnail
+    function updateMoreBadge(mediaEl, count){
+      const existingPlay = mediaEl.querySelector('.play-overlay');
+      if (existingPlay) existingPlay.remove();
+
+      let badge = mediaEl.querySelector('.media-more-badge');
+      if (!badge) {
+        badge = document.createElement('button');
+        badge.className = 'media-more-badge';
+        badge.setAttribute('aria-hidden', 'true');
+        mediaEl.appendChild(badge);
+      }
+      badge.textContent = (count > 1) ? `${count} itens` : `${count} item`;
+    }
+
+    function openLightbox(index, setName){
+      const set = galleries[setName];
+      if (!set || set.length === 0) return;
+      currentSet = setName;
+      currentIndex = Math.max(0, Math.min(index || 0, set.length - 1));
+      showMedia();
+      populateThumbs();
       lb.setAttribute('aria-hidden','false');
       lb.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+      setTimeout(()=> lbMedia.focus(), 60);
     }
 
-    // Close lightbox when clicking overlay or close button
-    (function bindLightboxClose(){
-      const lb = document.getElementById('lightbox');
-      const closeBtn = document.querySelector('.lightbox .close');
-      if (!lb) return;
-      lb.addEventListener('click', function(e){
-        if (e.target === lb) closeLightbox();
-      });
-      if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-      function closeLightbox(){
-        lb.setAttribute('aria-hidden','true');
-        lb.style.display = 'none';
-        const lbMedia = document.getElementById('lightbox-media');
-        if (lbMedia) lbMedia.innerHTML = '';
-        document.body.style.overflow = '';
+    function closeLightbox(){
+      const v = lbMedia.querySelector('video');
+      if (v) { try { v.pause(); v.currentTime = 0; } catch(e){} }
+      lb.setAttribute('aria-hidden','true');
+      lb.style.display = 'none';
+      lbMedia.innerHTML = '';
+      lbThumbs.innerHTML = '';
+      lbPlayBtn.classList.remove('show');
+      currentSet = null;
+      document.body.style.overflow = '';
+    }
+
+    function changeSlide(direction){
+      if (!currentSet) return;
+      const items = galleries[currentSet];
+      if (!items || items.length === 0) return;
+      currentIndex = (currentIndex + direction + items.length) % items.length;
+      showMedia();
+      highlightActiveThumb();
+    }
+
+    function showMedia(){
+      const items = galleries[currentSet];
+      if (!items || !items[currentIndex]) return;
+      const item = items[currentIndex];
+
+      lbMedia.innerHTML = '';
+      lbMedia.classList.remove('loading','error');
+      lbMedia.removeAttribute('data-message');
+      lbPlayBtn.classList.remove('show');
+
+      const len = items.length;
+      prevBtn.disabled = len <= 1;
+      nextBtn.disabled = len <= 1;
+
+      lbMedia.classList.add('active-media');
+
+      if (item.type === 'img'){
+        const img = new Image();
+        img.alt = item.alt || '';
+        img.loading = 'eager';
+        img.style.maxHeight = '86vh';
+        img.style.width = 'auto';
+        img.style.maxWidth = '100%';
+        lbMedia.classList.add('loading');
+        lbMedia.setAttribute('data-message', 'A carregar imagem...');
+        img.onload = () => {
+          lbMedia.classList.remove('loading');
+          lbMedia.removeAttribute('data-message');
+          lbMedia.innerHTML = '';
+          img.classList.add('video-force-repaint');
+          lbMedia.appendChild(img);
+          highlightActiveThumb();
+        };
+        img.onerror = () => {
+          lbMedia.classList.remove('loading');
+          lbMedia.classList.add('error');
+          lbMedia.setAttribute('data-message', 'Erro ao carregar imagem');
+          lbMedia.innerHTML = '';
+        };
+        img.src = item.src;
+      } else if (item.type === 'video'){
+        const video = document.createElement('video');
+        video.setAttribute('playsinline','');
+        video.controls = true;
+        video.preload = 'metadata';
+        video.style.maxHeight = '86vh';
+        video.style.width = 'auto';
+        video.setAttribute('aria-label','Vídeo');
+        video.className = 'lb-video';
+
+        const source = document.createElement('source');
+        source.src = item.src;
+        if (item.src.toLowerCase().endsWith('.mp4')) source.type = 'video/mp4';
+        else if (item.src.toLowerCase().endsWith('.webm')) source.type = 'video/webm';
+        else if (item.src.toLowerCase().endsWith('.ogg')) source.type = 'video/ogg';
+        video.appendChild(source);
+
+        lbMedia.classList.add('loading');
+        lbMedia.setAttribute('data-message', 'A carregar vídeo...');
+
+        video.muted = true;
+        video.autoplay = true;
+        video.playsInline = true;
+
+        lbMedia.innerHTML = '';
+        lbMedia.appendChild(video);
+
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            lbMedia.classList.remove('loading');
+            lbMedia.removeAttribute('data-message');
+            highlightActiveThumb();
+          }).catch(err => {
+            console.warn('Autoplay bloqueado:', err);
+            lbMedia.classList.remove('loading');
+            lbMedia.removeAttribute('data-message');
+            lbPlayBtn.classList.add('show');
+            highlightActiveThumb();
+          });
+        } else {
+          lbMedia.classList.remove('loading');
+          lbMedia.removeAttribute('data-message');
+          highlightActiveThumb();
+        }
+
+        video.addEventListener('error', () => {
+          lbMedia.classList.remove('loading');
+          lbMedia.classList.add('error');
+          lbMedia.setAttribute('data-message', 'Erro ao carregar vídeo');
+          lbPlayBtn.classList.remove('show');
+        });
+
+        const tryPlayOnInteraction = () => {
+          if (video.paused) {
+            video.play().catch(e => {
+              console.warn('Play falhou após interação:', e);
+              lbPlayBtn.classList.add('show');
+            });
+          }
+        };
+        lbMedia.addEventListener('click', tryPlayOnInteraction, { once: true });
+
+        const tryPlayAfterNav = () => { setTimeout(()=> { const v = lbMedia.querySelector('video'); if (v && v.paused) v.play().catch(()=>{}); }, 60); };
+        prevBtn.removeEventListener('click', tryPlayAfterNav);
+        nextBtn.removeEventListener('click', tryPlayAfterNav);
+        prevBtn.addEventListener('click', tryPlayAfterNav);
+        nextBtn.addEventListener('click', tryPlayAfterNav);
+      } else {
+        const fallback = document.createElement('img');
+        fallback.src = item.src;
+        lbMedia.appendChild(fallback);
+        highlightActiveThumb();
       }
-    })();
-
-    /* Cart FAB and modal behavior */
-    const cartFab = document.getElementById('cart-fab');
-    const cartModal = document.getElementById('cart-modal');
-    cartFab.addEventListener('click', function(e){
-      cartModal.classList.toggle('show');
-      cartModal.setAttribute('aria-hidden', cartModal.classList.contains('show') ? 'false' : 'true');
-      updateCartUI();
-    });
-
-    // Go to Encomendas page: store meta and redirect
-    document.getElementById('go-encomendas').addEventListener('click', function(){
-      // Optionally store a timestamp or meta
-      localStorage.setItem(STORAGE_META, JSON.stringify({ from: 'pedidos', at: new Date().toISOString() }));
-      // Redirect to encomendas page (user will implement)
-      window.location.href = 'encomendas.html';
-    });
-
-    /* Initialize page state */
-    window.addEventListener('load', function(){
-      updateCartUI();
-      // If there is an existing cart, keep it; otherwise ensure key exists
-      if (!localStorage.getItem(STORAGE_KEY)) localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
-    });
-
-    /* Expose small API for Encomendas page (optional) */
-    window.EsandjoCart = {
-      load: loadCart,
-      save: saveCart,
-      clear: function(){ localStorage.removeItem(STORAGE_KEY); updateCartUI(); }
-    };
-
-    /* Multilanguage small hook (keeps parity with index) */
-    const translations = {
-      pt:{pageTitle:"Pedidos", subtitle:"Escolha os produtos, veja sugestões e envie para Encomendas."},
-      en:{pageTitle:"Orders", subtitle:"Choose products, see suggestions and send to Orders."},
-      zh:{pageTitle:"订单", subtitle:"选择产品，查看建议并发送到订单。"}
-    };
-    function setLang(lang){
-      localStorage.setItem("siteLang", lang);
-      applyLang(lang);
     }
-    function applyLang(lang){
-      const t = translations[lang] || translations.pt;
-      if (document.getElementById('page-title')) document.getElementById('page-title').textContent = t.pageTitle;
-      if (document.getElementById('subtitle')) document.getElementById('subtitle').textContent = t.subtitle;
+
+    function populateThumbs(){
+      lbThumbs.innerHTML = '';
+      if (!currentSet) return;
+      const items = galleries[currentSet];
+      if (!items || items.length === 0) return;
+
+      items.forEach((it, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'lb-thumb';
+        btn.setAttribute('data-index', idx);
+        btn.style.border = 'none';
+        btn.style.background = 'transparent';
+        btn.style.padding = '0';
+        btn.style.cursor = 'pointer';
+        btn.style.display = 'inline-flex';
+        btn.style.alignItems = 'center';
+        btn.style.justifyContent = 'center';
+        btn.style.position = 'relative';
+
+        if (it.type === 'img') {
+          const timg = document.createElement('img');
+          timg.src = it.src;
+          timg.alt = '';
+          timg.style.width = '84px';
+          timg.style.height = '56px';
+          timg.style.objectFit = 'cover';
+          timg.style.borderRadius = '6px';
+          timg.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
+          btn.appendChild(timg);
+        } else {
+          const tv = document.createElement('video');
+          tv.muted = true;
+          tv.playsInline = true;
+          tv.preload = 'metadata';
+          tv.style.width = '84px';
+          tv.style.height = '56px';
+          tv.style.objectFit = 'cover';
+          tv.style.borderRadius = '6px';
+          tv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
+          const s = document.createElement('source');
+          s.src = it.src;
+          if (it.src.toLowerCase().endsWith('.mp4')) s.type = 'video/mp4';
+          else if (it.src.toLowerCase().endsWith('.webm')) s.type = 'video/webm';
+          else if (it.src.toLowerCase().endsWith('.ogg')) s.type = 'video/ogg';
+          tv.appendChild(s);
+          const wrapper = document.createElement('div');
+          wrapper.style.position = 'relative';
+          wrapper.style.display = 'inline-block';
+          wrapper.appendChild(tv);
+
+          const ov = document.createElement('div');
+          ov.className = 'thumb-play-overlay';
+          ov.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="#fff" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+          wrapper.appendChild(ov);
+
+          btn.appendChild(wrapper);
+        }
+
+        btn.addEventListener('click', () => {
+          currentIndex = idx;
+          showMedia();
+          highlightActiveThumb();
+        });
+
+        lbThumbs.appendChild(btn);
+      });
+
+      highlightActiveThumb();
     }
-    (function initLang(){
-      const lang = localStorage.getItem("siteLang") || "pt";
-      applyLang(lang);
-    })();
+
+    function highlightActiveThumb(){
+      const thumbs = lbThumbs.querySelectorAll('.lb-thumb');
+      thumbs.forEach((t, i) => {
+        if (i === currentIndex) {
+          t.style.outline = '3px solid rgba(201,79,109,0.18)';
+          t.style.outlineOffset = '4px';
+        } else {
+          t.style.outline = 'none';
+        }
+      });
+
+      const active = lbThumbs.querySelector('.lb-thumb[data-index="'+currentIndex+'"]');
+      if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    function onLbPlayClick() {
+      const v = lbMedia.querySelector('video');
+      if (!v) return;
+      try { v.muted = false; } catch(e) {}
+      v.play().then(() => {
+        lbPlayBtn.classList.remove('show');
+      }).catch(err => {
+        console.warn('Play falhou após clique:', err);
+      });
+    }
+
+    function addSwipeSupport(){
+      let startX = 0;
+      let endX = 0;
+      const THRESHOLD = 40;
+      lbMedia.addEventListener('touchstart', function(e){ startX = e.changedTouches[0].screenX; }, {passive:true});
+      lbMedia.addEventListener('touchend', function(e){
+        endX = e.changedTouches[0].screenX;
+        const diff = endX - startX;
+        if (Math.abs(diff) > THRESHOLD){
+          if (diff > 0) changeSlide(-1); else changeSlide(1);
+        }
+      }, {passive:true});
+    }
+
+    // Utility: allow adding new cards dynamically and re-initializing bindings
+    function refreshGalleryBindings(){
+      initGallery();
+    }
+    window.refreshGalleryBindings = refreshGalleryBindings;
 
   </script>
 </body>
