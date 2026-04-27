@@ -56,7 +56,6 @@
 
     /* Grid */
     .layout { max-width:1200px; margin: 12px auto 80px; padding: 0 20px; display:grid; grid-template-columns: 1fr 360px; gap:20px; align-items:start; }
-    /* On small screens the detail panel becomes full width below */
     @media (max-width:980px){ .layout { grid-template-columns: 1fr; } }
 
     .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:18px; }
@@ -74,30 +73,6 @@
     .btn-add { background:var(--accent); color:#fff; }
     .btn-view { background:transparent; border:1px solid rgba(0,0,0,0.06); color:#222; }
 
-    /* Product detail panel (in-page, not popup) */
-    .detail-panel {
-      background:var(--card);
-      border-radius:12px;
-      box-shadow:var(--shadow);
-      padding:16px;
-      position:relative;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      min-height:220px;
-      max-height:calc(100vh - 120px);
-      overflow-y:auto;
-    }
-    .detail-hidden { display:none; }
-    .detail-media { width:100%; height:260px; border-radius:10px; overflow:hidden; background:#faf5f7; display:flex; align-items:center; justify-content:center; }
-    .detail-media img { width:100%; height:100%; object-fit:cover; display:block; }
-    .detail-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    .detail-head h3 { margin:0; font-size:20px; }
-    .detail-close { background:transparent; border:0; font-size:20px; cursor:pointer; color:var(--muted); }
-
-    .detail-meta { display:flex; gap:12px; align-items:center; justify-content:space-between; }
-    .detail-actions { display:flex; gap:8px; margin-top:8px; }
-
     /* Cart FAB */
     .cart-fab { position:fixed; right:20px; bottom:20px; width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:15000; cursor:pointer; border:0; background:linear-gradient(180deg,#c94f6d,#b23b57); color:#fff; box-shadow:0 18px 48px rgba(178,59,87,0.22); }
     .cart-fab .count { position:absolute; top:-6px; right:-6px; background:#fff; color:var(--accent); width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:12px; box-shadow:0 6px 18px rgba(0,0,0,0.12); }
@@ -111,16 +86,17 @@
     .qty-controls { display:flex; gap:8px; align-items:center; }
     .qty-controls button { width:34px; height:34px; border-radius:8px; border:0; background:rgba(0,0,0,0.06); cursor:pointer; font-weight:800; }
 
-    /* Lightbox removed from view usage (we show details in-page) */
+    /* Image modal (centered) */
+    .image-modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.75); z-index:17000; padding:20px; }
+    .image-modal.show { display:flex; }
+    .image-modal .frame { max-width:92vw; max-height:88vh; border-radius:12px; overflow:hidden; background:#fff; display:flex; align-items:center; justify-content:center; }
+    .image-modal img { width:100%; height:100%; object-fit:contain; display:block; }
 
     footer { padding:28px 20px; text-align:center; color:var(--muted); font-size:14px; }
 
     @media (max-width:980px){
-      .layout { grid-template-columns: 1fr; }
-      .detail-media { height:200px; }
-      .detail-panel { max-height:none; }
       .cart-panel { width:calc(100% - 24px); max-width:640px; margin:0 12px; }
-      .cart-item { flex-wrap:wrap; }
+      .product { min-height: auto; }
     }
   </style>
 </head>
@@ -152,7 +128,7 @@
   <header class="hero" role="banner" aria-label="Pedidos">
     <div>
       <h1>Pedidos</h1>
-      <p>Escolha os produtos, veja detalhes e envie para Encomendas.</p>
+      <p>Escolha os produtos, veja a imagem e envie para Encomendas.</p>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <button class="btn btn-add" onclick="document.getElementById('search').focus()">Explorar</button>
@@ -175,8 +151,8 @@
     </div>
   </div>
 
-  <!-- Main layout: products + detail panel -->
-  <main class="layout" role="main" aria-label="Produtos e detalhe">
+  <!-- Main layout: products + (right column reserved for other controls if needed) -->
+  <main class="layout" role="main" aria-label="Produtos">
     <!-- Products grid -->
     <section class="grid" id="products" aria-label="Produtos disponíveis">
       <article class="product basket" data-id="p1" data-name="Cesta Gourmet" data-price="45.00" data-img="imagens/cesta1.jpg" data-type="gourmet" data-featured="1">
@@ -184,6 +160,7 @@
         <h4>Cesta Gourmet</h4>
         <div class="desc">Seleção de doces e mimos.</div>
         <div class="meta"><div class="price">AKZ 45.00</div><div style="font-size:13px;color:var(--muted)">Pronta</div></div>
+        <div class="gift"><label><input type="checkbox" class="gift-opt" /> Embrulho premium (+AKZ 8.00)</label></div>
         <div class="actions">
           <button class="btn btn-add" data-action="add">Adicionar</button>
           <button class="btn btn-view" data-action="view">Ver</button>
@@ -195,6 +172,7 @@
         <h4>Cesta Artesanal</h4>
         <div class="desc">Feita com carinho e tradição.</div>
         <div class="meta"><div class="price">AKZ 35.00</div><div style="font-size:13px;color:var(--muted)">24h</div></div>
+        <div class="gift"><label><input type="checkbox" class="gift-opt" /> Embrulho premium (+AKZ 6.00)</label></div>
         <div class="actions">
           <button class="btn btn-add" data-action="add">Adicionar</button>
           <button class="btn btn-view" data-action="view">Ver</button>
@@ -206,54 +184,24 @@
         <h4>Cesta Especial</h4>
         <div class="desc">Seleção premium para ocasiões únicas.</div>
         <div class="meta"><div class="price">AKZ 60.00</div><div style="font-size:13px;color:var(--muted)">Sob encomenda</div></div>
+        <div class="gift"><label><input type="checkbox" class="gift-opt" /> Embrulho premium (+AKZ 12.00)</label></div>
         <div class="actions">
           <button class="btn btn-add" data-action="add">Adicionar</button>
           <button class="btn btn-view" data-action="view">Ver</button>
         </div>
       </article>
-
-      <!-- more products can be appended dynamically -->
     </section>
 
-    <!-- Detail panel (shows selected product inline) -->
-    <aside id="product-detail" class="detail-panel detail-hidden" aria-hidden="true" aria-label="Detalhe do produto">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div style="font-weight:800">Detalhe do produto</div>
-        <button id="detail-close" class="detail-close" aria-label="Fechar detalhe">✕</button>
-      </div>
-
-      <div class="detail-media" id="detail-media">
-        <img id="detail-img" src="imagens/placeholder.jpg" alt="Imagem do produto" />
-      </div>
-
-      <div>
-        <div class="detail-head">
-          <h3 id="detail-name">Nome do produto</h3>
-          <div id="detail-price" class="price">AKZ 0.00</div>
-        </div>
-        <div id="detail-desc" class="desc" style="margin-top:8px;">Descrição do produto</div>
-
-        <div style="margin-top:10px;">
-          <label><input id="detail-gift" type="checkbox" /> Embrulho premium (+AKZ <span id="detail-gift-surcharge">0.00</span>)</label>
-        </div>
-
-        <div class="detail-actions">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <button id="detail-add" class="btn btn-add">Adicionar ao carrinho</button>
-            <button id="detail-encomendas" class="btn btn-outline">Ir para Encomendas</button>
-          </div>
-          <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
-            <div style="color:var(--muted);font-size:13px">Quantidade</div>
-            <div class="qty-controls" style="align-items:center;">
-              <button id="detail-decr" class="btn" style="padding:6px 10px;background:rgba(0,0,0,0.06);">−</button>
-              <div id="detail-qty" style="min-width:28px;text-align:center;font-weight:700">1</div>
-              <button id="detail-incr" class="btn" style="padding:6px 10px;background:rgba(0,0,0,0.06);">+</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </aside>
+    <!-- Right column placeholder (keeps layout balanced) -->
+    <aside aria-hidden="true" style="display:block"></aside>
   </main>
+
+  <!-- Image modal (centered, shows only image) -->
+  <div id="image-modal" class="image-modal" aria-hidden="true" role="dialog" aria-label="Visualização da imagem">
+    <div class="frame" role="document">
+      <img id="image-modal-img" src="" alt="Imagem do produto" />
+    </div>
+  </div>
 
   <!-- AI toast -->
   <div id="ai-toast" class="ai-toast" role="status" aria-live="polite" style="display:none;"></div>
@@ -344,22 +292,24 @@
 
     function addToCart(item){
       const cart = loadCart();
+      // match by id + gift flag to allow same product with/without gift separately
       const found = cart.find(i => i.id === item.id && !!i.gift === !!item.gift);
       if (found) found.qty = (found.qty || 1) + (item.qty || 1);
       else cart.push({...item, qty: item.qty || 1});
       saveCart(cart);
       showAI({ name: item.name });
     }
-    function changeQty(id, delta){
+    function changeQty(id, delta, giftFlag){
       const cart = loadCart();
-      const found = cart.find(i => i.id === id);
+      // if giftFlag provided, match both id and gift; otherwise match first id
+      const found = cart.find(i => i.id === id && (typeof giftFlag === 'undefined' ? true : !!i.gift === !!giftFlag));
       if(!found) return;
       found.qty = Math.max(1, (found.qty || 1) + delta);
       saveCart(cart);
     }
-    function removeFromCart(id){
+    function removeFromCart(id, giftFlag){
       let cart = loadCart();
-      cart = cart.filter(i => i.id !== id);
+      cart = cart.filter(i => !(i.id === id && (typeof giftFlag === 'undefined' ? true : !!i.gift === !!giftFlag)));
       saveCart(cart);
     }
 
@@ -381,12 +331,13 @@
       }
       let subtotal = 0;
       let count = 0;
-      cart.forEach(it => {
+      cart.forEach((it, idx) => {
         subtotal += Number(it.price) * (it.qty || 1);
         count += it.qty || 1;
         const el = document.createElement('div');
         el.className = 'cart-item';
         el.setAttribute('data-id', it.id);
+        el.setAttribute('data-gift', it.gift ? '1' : '0');
         el.innerHTML = `
           <img src="${escapeHtml(it.img || 'imagens/placeholder.jpg')}" alt="${escapeHtml(it.name)}" />
           <div style="flex:1">
@@ -407,9 +358,9 @@
         const incr = el.querySelector('.qty-incr');
         const decr = el.querySelector('.qty-decr');
         const rem = el.querySelector('.remove-btn');
-        if(incr) incr.addEventListener('click', (e) => { e.stopPropagation(); changeQty(it.id, 1); });
-        if(decr) decr.addEventListener('click', (e) => { e.stopPropagation(); changeQty(it.id, -1); });
-        if(rem) rem.addEventListener('click', (e) => { e.stopPropagation(); removeFromCart(it.id); });
+        if(incr) incr.addEventListener('click', (e) => { e.stopPropagation(); changeQty(it.id, 1, it.gift); });
+        if(decr) decr.addEventListener('click', (e) => { e.stopPropagation(); changeQty(it.id, -1, it.gift); });
+        if(rem) rem.addEventListener('click', (e) => { e.stopPropagation(); removeFromCart(it.id, it.gift); });
         cartItemsEl.appendChild(el);
       });
       cartTotalEl.textContent = formatCurrency(subtotal);
@@ -457,6 +408,7 @@
       renderCartOverlay();
       updateCartUI();
     });
+    // close cart when clicking outside panel
     cartOverlay.addEventListener('click', function(e){ if(e.target === cartOverlay) closeCartOverlay(); });
 
     /* Checkout -> WhatsApp (keeps storage meta) */
@@ -513,91 +465,35 @@
     }
     aiToastEl.addEventListener('click', ()=> aiToastEl.style.display = 'none');
 
-    /* Product "Ver" behavior: show inline detail panel (no popup) */
-    const detailPanel = document.getElementById('product-detail');
-    const detailImg = document.getElementById('detail-img');
-    const detailName = document.getElementById('detail-name');
-    const detailDesc = document.getElementById('detail-desc');
-    const detailPrice = document.getElementById('detail-price');
-    const detailGift = document.getElementById('detail-gift');
-    const detailGiftSurcharge = document.getElementById('detail-gift-surcharge');
-    const detailAdd = document.getElementById('detail-add');
-    const detailEncomendas = document.getElementById('detail-encomendas');
-    const detailClose = document.getElementById('detail-close');
-    const detailQtyEl = document.getElementById('detail-qty');
-    const detailIncr = document.getElementById('detail-incr');
-    const detailDecr = document.getElementById('detail-decr');
+    /* Image modal (centered) behavior */
+    const imageModal = document.getElementById('image-modal');
+    const imageModalImg = document.getElementById('image-modal-img');
 
-    let currentDetail = null;
-    let currentQty = 1;
-
-    function openDetail(item){
-      currentDetail = item;
-      currentQty = 1;
-      detailQtyEl.textContent = String(currentQty);
-      detailImg.src = item.img || 'imagens/placeholder.jpg';
-      detailImg.alt = item.name || '';
-      detailName.textContent = item.name || '';
-      detailDesc.textContent = item.desc || '';
-      detailPrice.textContent = formatCurrency(Number(item.price || 0));
-      detailGift.checked = !!item.gift;
-      detailGiftSurcharge.textContent = (item.giftSurcharge ? Number(item.giftSurcharge).toFixed(2) : '0.00');
-      detailPanel.classList.remove('detail-hidden');
-      detailPanel.setAttribute('aria-hidden','false');
-      // scroll into view on small screens
-      detailPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // close cart overlay if open
-      if(cartOverlay.classList.contains('show')) closeCartOverlay();
+    function openImageModal(src, alt){
+      imageModalImg.src = src || 'imagens/placeholder.jpg';
+      imageModalImg.alt = alt || '';
+      imageModal.classList.add('show');
+      imageModal.setAttribute('aria-hidden','false');
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
     }
-
-    function closeDetail(){
-      currentDetail = null;
-      detailPanel.classList.add('detail-hidden');
-      detailPanel.setAttribute('aria-hidden','true');
+    function closeImageModal(){
+      imageModal.classList.remove('show');
+      imageModal.setAttribute('aria-hidden','true');
+      imageModalImg.src = '';
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
     }
-
-    detailClose.addEventListener('click', closeDetail);
-    // close detail when clicking outside: listen on document and check if click is inside panel or product card
-    document.addEventListener('click', function(e){
-      const insidePanel = e.target.closest('#product-detail');
-      const clickedProduct = e.target.closest('.product');
-      if (!insidePanel && !clickedProduct) {
-        // if detail is open, close it
-        if (!detailPanel.classList.contains('detail-hidden')) closeDetail();
-      }
+    // close when clicking outside frame
+    imageModal.addEventListener('click', function(e){
+      if (e.target === imageModal) closeImageModal();
     });
-
-    // keyboard ESC closes detail
+    // close on ESC
     document.addEventListener('keydown', function(e){
       if (e.key === 'Escape') {
-        if (!detailPanel.classList.contains('detail-hidden')) closeDetail();
+        if (imageModal.classList.contains('show')) closeImageModal();
         if (cartOverlay.classList.contains('show')) closeCartOverlay();
       }
-    });
-
-    // quantity controls in detail
-    detailIncr.addEventListener('click', function(){ currentQty = Math.min(99, currentQty + 1); detailQtyEl.textContent = String(currentQty); });
-    detailDecr.addEventListener('click', function(){ currentQty = Math.max(1, currentQty - 1); detailQtyEl.textContent = String(currentQty); });
-
-    // add from detail
-    detailAdd.addEventListener('click', function(){
-      if(!currentDetail) return;
-      const gift = detailGift.checked;
-      const giftSurcharge = Number(currentDetail.giftSurcharge || 0);
-      const price = Number(currentDetail.price || 0) + (gift ? giftSurcharge : 0);
-      addToCart({ id: currentDetail.id, name: currentDetail.name, price, img: currentDetail.img, gift, note: currentDetail.note || '', qty: currentQty });
-      showAI('Item adicionado ao carrinho');
-    });
-
-    // go to encomendas from detail (adds item then redirect)
-    detailEncomendas.addEventListener('click', function(){
-      if(!currentDetail) return;
-      const gift = detailGift.checked;
-      const giftSurcharge = Number(currentDetail.giftSurcharge || 0);
-      const price = Number(currentDetail.price || 0) + (gift ? giftSurcharge : 0);
-      addToCart({ id: currentDetail.id, name: currentDetail.name, price, img: currentDetail.img, gift, note: currentDetail.note || '', qty: currentQty });
-      localStorage.setItem(STORAGE_META, JSON.stringify({ from: 'pedidos_detail', at: new Date().toISOString(), item: currentDetail.id }));
-      window.location.href = 'encomendas.html';
     });
 
     /* Delegated click handler for product actions */
@@ -610,7 +506,8 @@
 
       const id = productEl.getAttribute('data-id');
       const name = productEl.getAttribute('data-name') || productEl.querySelector('h4')?.textContent?.trim();
-      const price = productEl.getAttribute('data-price') || productEl.querySelector('.price')?.textContent?.replace(/[^\d.,]/g,'') || '0';
+      const priceRaw = productEl.getAttribute('data-price') || productEl.querySelector('.price')?.textContent?.replace(/[^\d.,]/g,'') || '0';
+      const price = Number(String(priceRaw).replace(',', '.')) || 0;
       const img = productEl.getAttribute('data-img') || productEl.querySelector('img')?.src;
       const desc = productEl.querySelector('.desc') ? productEl.querySelector('.desc').textContent.trim() : '';
 
@@ -623,14 +520,18 @@
       } catch(e){}
 
       if (action === 'add'){
-        addToCart({ id, name, price: Number(price), img, gift: false, note: '', qty: 1 });
+        // check gift checkbox state
+        const giftCheckbox = productEl.querySelector('.gift-opt');
+        const gift = !!(giftCheckbox && giftCheckbox.checked);
+        const finalPrice = price + (gift ? giftSurcharge : 0);
+        addToCart({ id, name, price: finalPrice, img, gift, note: '', qty: 1 });
       } else if (action === 'view'){
-        // open inline detail panel with product info
-        openDetail({ id, name, price: Number(price), img, desc, giftSurcharge });
+        // open centered image modal only (no details)
+        openImageModal(img, name);
       }
     });
 
-    /* Search / filter / sort (same as before) */
+    /* Search / filter / sort */
     const searchInput = document.getElementById('search');
     const filterType = document.getElementById('filter-type');
     const sortBy = document.getElementById('sort-by');
@@ -677,11 +578,10 @@
     filterType.addEventListener('change', applyFilters);
     sortBy.addEventListener('change', applyFilters);
 
-    /* Mini gallery preview: open detail instead of popup */
+    /* Mini gallery preview: open image modal */
     document.querySelectorAll('.mini-gallery img').forEach(img => {
       img.addEventListener('click', () => {
-        // show image in detail panel as a neutral preview
-        openDetail({ id: 'preview', name: img.alt || 'Imagem', price: 0, img: img.getAttribute('data-full') || img.src, desc: '' });
+        openImageModal(img.getAttribute('data-full') || img.src, img.alt || '');
       });
     });
 
@@ -695,7 +595,7 @@
       applyFilters();
     });
 
-    /* Expose small API */
+    /* Small API */
     window.Esandjo = {
       addProductFromLine: function(line){
         try {
@@ -730,6 +630,7 @@
             <h4>${escapeHtml(obj.name)}</h4>
             <div class="desc">${escapeHtml(obj.desc || '')}</div>
             <div class="meta"><div class="price">${formatCurrency(obj.price || 0)}</div><div style="font-size:13px;color:var(--muted)">${escapeHtml(obj.type || '')}</div></div>
+            <div class="gift"><label><input type="checkbox" class="gift-opt" /> Embrulho premium</label></div>
             <div class="actions">
               <button class="btn btn-add" data-action="add">Adicionar</button>
               <button class="btn btn-view" data-action="view">Ver</button>
