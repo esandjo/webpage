@@ -15,7 +15,9 @@
       --card:#fff;
       --radius:14px;
       --shadow: 0 12px 36px rgba(0,0,0,0.08);
+      --menu-width:240px; /* largura do menu lateral em mobile */
     }
+
     html,body{height:100%;margin:0;padding:0;font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:#222; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
     body { padding-top: calc(var(--nav-h) + 8px); }
 
@@ -35,9 +37,9 @@
 
     @media (max-width:920px){
       .menu-toggle { display:flex; }
-      /* smaller panel width to match index */
+      /* painel lateral com largura igual ao index (ajustada para 240px) */
       .nav-links {
-        position:fixed; top:0; right:-260px; width:260px; height:100vh;
+        position:fixed; top:0; right: calc(-1 * var(--menu-width)); width: var(--menu-width); height:100vh;
         background:linear-gradient(180deg,#fff,#fffafc);
         flex-direction:column; padding:18px; gap:12px;
         box-shadow:-12px 0 36px rgba(0,0,0,0.12);
@@ -68,7 +70,7 @@
     .filters input[type="search"] { width:220px; max-width:44vw; min-width:120px; }
     .filters select { min-width:120px; }
 
-    /* GRID: uniform media size */
+    /* GRID: uniform media size so all images same size on desktop */
     .grid { max-width:1200px; margin: 12px auto 80px; padding: 0 20px; display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:20px; align-items:start; }
     .card { background:var(--card); border-radius:16px; overflow:hidden; box-shadow:0 12px 36px rgba(0,0,0,0.06); display:flex; flex-direction:column; transition: transform .18s ease; }
     .card:hover { transform: translateY(-6px); }
