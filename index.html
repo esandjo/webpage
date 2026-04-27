@@ -15,11 +15,15 @@
       <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo" />
     </a>
 
-    <!-- Menu hamburguer centralizado -->
-    <div class="menu-toggle" id="menu-toggle" onclick="toggleMenu()" aria-label="Abrir menu" role="button">
-	 <div class="menu-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></div>
-      <span></span><span></span><span></span>
-    </div>
+    <!-- Menu hamburguer centralizado (círculo com 3 linhas) -->
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-label="Abrir menu" onclick="toggleMenu()">
+      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" focusable="false" role="img">
+        <circle class="menu-circle" cx="22" cy="22" r="20" fill="transparent" stroke="none"></circle>
+        <rect class="menu-line l1" x="10" y="15" width="24" height="2" rx="1"></rect>
+        <rect class="menu-line l2" x="10" y="21" width="24" height="2" rx="1"></rect>
+        <rect class="menu-line l3" x="10" y="27" width="24" height="2" rx="1"></rect>
+      </svg>
+    </button>
 
     <div class="lang-selector">
       <button onclick="setLang('pt')">PT</button>
@@ -121,19 +125,34 @@
   <footer>
     <p id="contacts">📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
     <p>
-      <a href="https://www.instagram.com/esandjoatelierdemimos/" target="_blank" id="insta">Instagram</a> |
+      <a href="https://www.instagram.com/esandjo_atelierdemimos/" target="_blank" id="insta">Instagram</a> |
       <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank" id="fb">Facebook</a>
     </p>
     <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
   </footer>
 
   <script>
-    // Menu hamburguer
-    function toggleMenu() { document.getElementById("nav-links").classList.toggle("show"); }
+    // Toggle do menu: atualiza aria-expanded e classe 'open' para animação
+    function toggleMenu() {
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("menu-toggle");
+      const isOpen = btn.classList.toggle('open');
+      nav.classList.toggle("show");
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
+    }
+
+    // Fecha o menu se clicar fora
     document.addEventListener("click", function(e){
       const nav = document.getElementById("nav-links");
-      const toggle = document.getElementById("menu-toggle") || document.querySelector(".menu-toggle");
-      if(!nav.contains(e.target) && toggle && !toggle.contains(e.target)) nav.classList.remove("show");
+      const btn = document.getElementById("menu-toggle");
+      if (!nav || !btn) return;
+      if (!nav.contains(e.target) && !btn.contains(e.target)) {
+        nav.classList.remove("show");
+        btn.classList.remove("open");
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Abrir menu');
+      }
     });
 
     // Multilanguage (mantido)
@@ -215,7 +234,6 @@
         // Remove previous handler if any, then add click handler
         if (el._openHandler) el.removeEventListener('click', el._openHandler);
         el._openHandler = (e) => {
-          // open lightbox and show the clicked item as first (index 0)
           openLightbox(0, setName);
         };
         el.addEventListener('click', el._openHandler);
@@ -242,7 +260,6 @@
 
         // Click outside closes (click on overlay but outside content)
         lb.addEventListener('click', function(e){
-          // close only if click is on the overlay (lb) and not inside content
           if (e.target === lb) closeLightbox();
         });
 
@@ -255,11 +272,9 @@
 
     // Replace or create the "more" badge inside the gallery thumbnail
     function updateMoreBadge(mediaEl, count){
-      // remove any existing play-overlay inside gallery thumbnail
       const existingPlay = mediaEl.querySelector('.play-overlay');
       if (existingPlay) existingPlay.remove();
 
-      // find existing badge
       let badge = mediaEl.querySelector('.media-more-badge');
       if (!badge) {
         badge = document.createElement('button');
@@ -276,7 +291,7 @@
       currentSet = setName;
       currentIndex = Math.max(0, Math.min(index || 0, set.length - 1));
       showMedia();
-      populateThumbs(); // monta as miniaturas do set atual
+      populateThumbs();
       lb.setAttribute('aria-hidden','false');
       lb.style.display = 'flex';
       document.body.style.overflow = 'hidden';
@@ -309,22 +324,18 @@
       if (!items || !items[currentIndex]) return;
       const item = items[currentIndex];
 
-      // Clear previous content and states
       lbMedia.innerHTML = '';
       lbMedia.classList.remove('loading','error');
       lbMedia.removeAttribute('data-message');
       lbPlayBtn.classList.remove('show');
 
-      // Update prev/next disabled state
       const len = items.length;
       prevBtn.disabled = len <= 1;
       nextBtn.disabled = len <= 1;
 
-      // Ensure the main media area is visually above thumbnails and large
       lbMedia.classList.add('active-media');
 
       if (item.type === 'img'){
-        // Load image and wait for load/error to update UI
         const img = new Image();
         img.alt = item.alt || '';
         img.loading = 'eager';
@@ -349,7 +360,6 @@
         };
         img.src = item.src;
       } else if (item.type === 'video'){
-        // Create video element with source
         const video = document.createElement('video');
         video.setAttribute('playsinline','');
         video.controls = true;
@@ -369,7 +379,6 @@
         lbMedia.classList.add('loading');
         lbMedia.setAttribute('data-message', 'A carregar vídeo...');
 
-        // Start muted to maximize autoplay compatibility
         video.muted = true;
         video.autoplay = true;
         video.playsInline = true;
@@ -377,7 +386,6 @@
         lbMedia.innerHTML = '';
         lbMedia.appendChild(video);
 
-        // Try to play; if blocked, show play button
         const playPromise = video.play();
         if (playPromise !== undefined) {
           playPromise.then(() => {
@@ -404,7 +412,6 @@
           lbPlayBtn.classList.remove('show');
         });
 
-        // Try play on first interaction
         const tryPlayOnInteraction = () => {
           if (video.paused) {
             video.play().catch(e => {
@@ -415,7 +422,6 @@
         };
         lbMedia.addEventListener('click', tryPlayOnInteraction, { once: true });
 
-        // Ensure navigation attempts to play new video
         const tryPlayAfterNav = () => { setTimeout(()=> { const v = lbMedia.querySelector('video'); if (v && v.paused) v.play().catch(()=>{}); }, 60); };
         prevBtn.removeEventListener('click', tryPlayAfterNav);
         nextBtn.removeEventListener('click', tryPlayAfterNav);
@@ -429,7 +435,6 @@
       }
     }
 
-    // Popula a barra de miniaturas dentro do lightbox
     function populateThumbs(){
       lbThumbs.innerHTML = '';
       if (!currentSet) return;
@@ -450,7 +455,6 @@
         btn.style.justifyContent = 'center';
         btn.style.position = 'relative';
 
-        // Thumbnail content: image for images; for videos show a small poster/video preview
         if (it.type === 'img') {
           const timg = document.createElement('img');
           timg.src = it.src;
@@ -490,7 +494,6 @@
           btn.appendChild(wrapper);
         }
 
-        // click on thumb jumps to that index
         btn.addEventListener('click', () => {
           currentIndex = idx;
           showMedia();
@@ -500,11 +503,9 @@
         lbThumbs.appendChild(btn);
       });
 
-      // highlight active thumb initially
       highlightActiveThumb();
     }
 
-    // Marca visualmente a miniatura ativa (adiciona outline simples)
     function highlightActiveThumb(){
       const thumbs = lbThumbs.querySelectorAll('.lb-thumb');
       thumbs.forEach((t, i) => {
@@ -516,7 +517,6 @@
         }
       });
 
-      // Scroll thumb into view if needed
       const active = lbThumbs.querySelector('.lb-thumb[data-index="'+currentIndex+'"]');
       if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
