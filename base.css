@@ -1,7 +1,4 @@
-/* base.css
-   Esandjo Atelier de Mimos
-   Estilos completos atualizados: navbar fixa, menu circular central, galeria, lightbox, responsividade
-*/
+/* base.css — versão atualizada com navbar fixa (inclui mobile) */
 
 /* Variáveis */
 :root{
@@ -68,6 +65,7 @@ body { padding-top: var(--navbar-height); }
 
 /* =========================
    MENU TOGGLE (círculo com 3 linhas)
+   - posicionado em relação à navbar (verticalmente centrado nela)
    ========================= */
 .menu-toggle {
   display: none; /* visível via media query em mobile */
@@ -78,7 +76,8 @@ body { padding-top: var(--navbar-height); }
   justify-content: center;
   position: absolute;
   left: 50%;
-  top: 50%;
+  /* centraliza verticalmente dentro da navbar fixa */
+  top: calc(var(--navbar-height) / 2);
   transform: translate(-50%, -50%);
   z-index: 12000; /* acima da navbar para clique */
   background: transparent;
@@ -432,7 +431,7 @@ footer a:hover { text-decoration: underline; }
   /* Mostrar toggle e centralizá-lo na navbar */
   .menu-toggle { display: flex !important; }
 
-  /* Nav links transformam-se em menu flutuante */
+  /* Nav links transformam-se em menu flutuante e aparecem abaixo da navbar fixa */
   .nav-links {
     position: fixed;
     top: var(--navbar-height);
