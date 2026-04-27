@@ -2,181 +2,139 @@
 <html lang="pt">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Forçar escala 100% e impedir zoom inicial -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Cestas & Mimos — Esandjo Atelier de Mimos</title>
   <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg" />
   <link rel="stylesheet" href="base.css" />
   <style>
-    /* Página Cestas & Mimos — ajustes finais solicitados */
-    .hero { padding: 56px 16px 36px; background: linear-gradient(180deg,#fffafc 0%, #fff 100%); text-align:center; }
-    .hero h1 { font-size: 32px; letter-spacing:-0.3px; margin-bottom:8px; }
-    .hero p { color:var(--muted); max-width:900px; margin:0 auto 14px; }
+    :root{
+      --navbar-height:72px;
+      --accent:#b23b57;
+      --muted:#6b6b6b;
+      --bg:#fff;
+      --card-bg:#fff;
+      --radius:10px;
+      --shadow: 0 8px 28px rgba(0,0,0,0.06);
+    }
+    html,body{height:100%;margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    body { padding-top: calc(var(--navbar-height) + 8px); -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; background:#fff; color:#222; }
 
+    /* NAVBAR FIXA */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: var(--bg);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      z-index: 1000;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 10px 20px;
+      gap:12px;
+    }
+    .navbar .logo { height:44px; object-fit:contain; display:block; }
+    .nav-links { display:flex; gap:14px; align-items:center; }
+    .nav-link { color:#222; text-decoration:none; font-weight:700; padding:8px 10px; border-radius:8px; }
+    .nav-link[aria-current="page"] { background: linear-gradient(90deg,#fffafc,#fff); box-shadow: 0 6px 18px rgba(178,59,87,0.04); }
+
+    /* Menu toggle (mobile) */
+    .menu-toggle { display:none; background:transparent; border:0; padding:6px; cursor:pointer; }
+    @media (max-width:900px){
+      .nav-links { display:none; position:fixed; top:var(--navbar-height); left:0; right:0; background:var(--bg); flex-direction:column; padding:12px; box-shadow:0 12px 36px rgba(0,0,0,0.06); }
+      .nav-links.show { display:flex; }
+      .menu-toggle { display:block; }
+      body { padding-top: calc(var(--navbar-height) + 8px); }
+    }
+
+    /* HERO */
+    .hero { padding: 24px 16px 36px; background: linear-gradient(180deg,#fffafc 0%, #fff 100%); text-align:center; }
+    .hero h1 { font-size:28px; margin:0 0 8px; }
+    .hero p { color:var(--muted); max-width:900px; margin:0 auto; }
+
+    /* CONTROLS */
     .controls { max-width:1100px; margin: 18px auto; padding: 0 16px; display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
     .filters { display:flex; gap:8px; align-items:center; }
-    .filters select, .filters input[type="search"] { padding:8px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.06); background:#fff; }
+    .filters input[type="search"], .filters select { padding:8px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.06); background:#fff; min-width:160px; }
 
-    /*
-      Grid: keep consistent card size even when only one item matches.
-      Approach:
-      - Each .basket has a fixed preferred width (flex-basis) so it doesn't stretch to fill the entire row.
-      - Grid uses auto-flow with centered content so single item stays centered but keeps its width.
-      - On small screens the cards become full width.
-    */
-    .grid {
-      max-width:1100px;
-      margin: 12px auto 40px;
-      padding: 0 16px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
-      justify-content: center;
-      gap: 18px;
-      align-items: start;
-    }
+    /* MINI GALLERY */
+    .mini-gallery { display:flex; gap:10px; overflow:auto; padding: 0 16px 18px; max-width:1100px; margin:0 auto; -webkit-overflow-scrolling:touch; }
+    .mini-gallery img { width:160px; height:110px; object-fit:cover; border-radius:8px; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
 
-    .basket {
-      background: linear-gradient(180deg,#fff,#fff);
-      border-radius: calc(var(--radius) + 2px);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform .18s ease, box-shadow .18s ease;
-      /* fixed card size so it doesn't expand when alone */
-      width: 300px;
-      min-height: 360px;
-      box-sizing: border-box;
-    }
-    .basket:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(0,0,0,0.12); }
-    .basket .thumb { aspect-ratio: 4/3; background:var(--fill); display:flex; align-items:center; justify-content:center; overflow:hidden; cursor: pointer; }
-    .basket .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-    .basket .body { padding:12px; display:flex; flex-direction:column; gap:8px; flex:1 1 auto; }
-    .basket h3 { margin:0; font-size:16px; color:#222; }
-    .basket .desc { color:var(--muted); font-size:13px; min-height:36px; }
-    .basket .meta { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:6px; }
-    .basket .price { font-weight:900; color:var(--accent); }
-    .badge-lux { background: linear-gradient(90deg,#f7e9ef,#fff); color:#b23b57; padding:6px 8px; border-radius:999px; font-weight:800; font-size:12px; box-shadow: 0 6px 18px rgba(178,59,87,0.06); }
+    /* GRID & CARD */
+    .grid { max-width:1100px; margin: 12px auto 40px; padding: 0 16px; display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 300px)); justify-content:center; gap:18px; align-items:start; }
+    .basket { background:var(--card-bg); border-radius:calc(var(--radius) + 2px); box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column; width:300px; min-height:360px; box-sizing:border-box; }
+    .thumb { aspect-ratio:4/3; background:var(--fill); display:flex; align-items:center; justify-content:center; overflow:hidden; cursor:pointer; }
+    .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .body { padding:12px; display:flex; flex-direction:column; gap:8px; flex:1 1 auto; }
+    .desc { color:var(--muted); font-size:13px; min-height:36px; }
+    .meta { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:6px; }
+    .price { font-weight:900; color:var(--accent); }
+    .badge-lux { background: linear-gradient(90deg,#f7e9ef,#fff); color:var(--accent); padding:6px 8px; border-radius:999px; font-weight:800; font-size:12px; box-shadow: 0 6px 18px rgba(178,59,87,0.06); }
 
     .gift { display:flex; gap:8px; align-items:center; margin-top:6px; font-size:13px; color:var(--muted); }
-    .gift input { width:16px; height:16px; }
-
     .actions { display:flex; gap:8px; margin-top:8px; }
     .btn { padding:8px 12px; border-radius:8px; border:0; cursor:pointer; font-weight:800; }
     .btn-add { background:var(--accent); color:#fff; }
     .btn-view { background:transparent; border:1px solid rgba(0,0,0,0.06); color:#222; }
 
-    .mini-gallery { display:flex; gap:10px; overflow:auto; padding: 0 16px 18px; max-width:1100px; margin:0 auto; -webkit-overflow-scrolling:touch; }
-    .mini-gallery img { width:160px; height:110px; object-fit:cover; border-radius:8px; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
-
-    /* cart modal: keep items visible (no internal scroll) and prevent images from disappearing */
-    .cart-modal {
-      right: 18px;
-      bottom: 86px;
-      width: 360px;
-      max-width: calc(100% - 36px);
-      background: linear-gradient(180deg,#fff,#fff);
-      border-radius: 12px;
-      box-shadow: 0 18px 48px rgba(0,0,0,0.18);
-      z-index: 12000;
-      display: none;
-      flex-direction: column;
-      overflow: visible; /* allow modal to grow rather than scroll internally */
-      border: 1px solid rgba(0,0,0,0.04);
-      max-height: calc(100vh - 120px);
-    }
-    .cart-modal.show { display:flex; }
-    .cart-modal .head { padding: 14px; border-bottom: 1px solid rgba(0,0,0,0.04); font-weight:800; display:flex; align-items:center; gap:10px; }
-    .cart-modal .head .title { font-size:15px; }
-    .cart-modal .items { padding: 12px; display:flex; flex-direction:column; gap:10px; overflow: auto; max-height: 48vh; } /* allow page-level scroll but keep modal internal scroll only when necessary */
-    .cart-modal .item { display:flex; gap:8px; align-items:center; padding:8px; border-radius:10px; background: #fff; box-shadow: 0 6px 18px rgba(0,0,0,0.04); }
-    .cart-modal .item img { width:56px; height:44px; object-fit:cover; border-radius:8px; flex: 0 0 auto; }
-    .cart-modal .foot { padding: 12px; border-top: 1px solid rgba(0,0,0,0.04); display:flex; gap:8px; align-items:center; }
-    .cart-modal .total { margin-left:auto; font-weight:900; color:var(--accent); align-self:center; }
-
-    /* Premium floating cart (more charming) */
-    .cart-fab {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      background: linear-gradient(180deg,#c94f6d,#b23b57);
-      color: #fff;
-      border-radius: 999px;
-      width: 64px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 11999;
-      box-shadow: 0 18px 48px rgba(178,59,87,0.22);
-      cursor: pointer;
-      border: 0;
-      font-weight: 800;
-      font-size: 20px;
-    }
-    .cart-fab .count {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      background: #fff;
-      color: var(--accent);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:12px; font-weight:900; box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    }
-
     /* AI toast */
-    .ai-toast {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 96px;
-      background: rgba(0,0,0,0.9);
-      color: #fff;
-      padding: 12px 16px;
-      border-radius: 10px;
-      z-index: 13000;
-      display: none;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-      max-width: 92%;
-      text-align: center;
-      font-size: 14px;
-    }
+    .ai-toast { position: fixed; left:50%; transform:translateX(-50%); bottom:96px; background:rgba(0,0,0,0.9); color:#fff; padding:12px 16px; border-radius:10px; z-index:16000; display:none; align-items:center; gap:10px; box-shadow:0 8px 24px rgba(0,0,0,0.3); max-width:92%; text-align:center; font-size:14px; }
     .ai-toast.show { display:flex; }
 
+    /* FAB */
+    .cart-fab { position: fixed; right: 18px; bottom: 18px; background: linear-gradient(180deg,#c94f6d,#b23b57); color:#fff; border-radius:999px; width:64px; height:64px; display:flex; align-items:center; justify-content:center; z-index:13000; box-shadow: 0 18px 48px rgba(178,59,87,0.22); border:0; cursor:pointer; font-size:20px; }
+    .cart-fab .count { position:absolute; top:-6px; right:-6px; background:#fff; color:var(--accent); width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:12px; box-shadow:0 6px 18px rgba(0,0,0,0.12); }
+
+    /* CART OVERLAY (full-screen) */
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:14000; padding:20px; }
+    .cart-overlay.show { display:flex; }
+    .cart-panel { background:#fff; width:100%; max-width:920px; border-radius:12px; box-shadow:0 24px 64px rgba(0,0,0,0.28); padding:18px; max-height:92vh; overflow:auto; display:flex; flex-direction:column; gap:12px; }
+    .cart-panel .top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .cart-panel .items { display:flex; flex-direction:column; gap:12px; }
+    .cart-item { display:flex; gap:12px; align-items:center; padding:10px; border-radius:10px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,0.04); }
+    .cart-item img { width:96px; height:72px; object-fit:cover; border-radius:8px; flex:0 0 auto; }
+    .qty-controls { display:flex; gap:8px; align-items:center; }
+    .qty-controls button { width:34px; height:34px; border-radius:8px; border:0; background:rgba(0,0,0,0.06); cursor:pointer; font-weight:800; }
+
+    /* LIGHTBOX */
+    .lightbox { position: fixed; inset: 0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,0.85); z-index:15000; padding:20px; }
+    .lightbox.show { display:flex; }
+    .lightbox .media { max-width:92%; max-height:86vh; display:flex; align-items:center; justify-content:center; position:relative; }
+    .lightbox img { max-width:100%; max-height:100%; object-fit:contain; border-radius:8px; display:block; }
+    .lightbox .caption { position:absolute; left:12px; bottom:12px; background: rgba(0,0,0,0.5); color:#fff; padding:8px 10px; border-radius:8px; font-weight:700; }
+
+    /* FOOTER */
+    footer { padding:18px; text-align:center; color:var(--muted); font-size:14px; }
+
     @media (max-width:900px){
-      .mini-gallery img { width:120px; height:84px; }
-      .controls { padding: 0 12px; }
-      .grid { grid-template-columns: 1fr; justify-content: center; }
-      .basket { width: 100%; min-height: auto; }
-      .cart-modal { right: 12px; left: 12px; width: auto; bottom: 86px; max-height: calc(100vh - 120px); }
-      .cart-modal .items { max-height: calc(100vh - 260px); overflow:auto; }
+      .grid { grid-template-columns: 1fr; justify-content:center; }
+      .basket { width:100%; }
+      .cart-panel { width:96%; max-width:720px; }
     }
   </style>
 </head>
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar">
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
     <a href="index.html" aria-label="Início">
       <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo" />
     </a>
 
     <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-label="Abrir menu" onclick="toggleMenu()">
-      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" focusable="false" role="img">
-        <circle class="menu-circle" cx="22" cy="22" r="20" fill="transparent" stroke="none"></circle>
-        <rect class="menu-line l1" x="10" y="15" width="24" height="2" rx="1"></rect>
-        <rect class="menu-line l2" x="10" y="21" width="24" height="2" rx="1"></rect>
-        <rect class="menu-line l3" x="10" y="27" width="24" height="2" rx="1"></rect>
+      <svg width="36" height="36" viewBox="0 0 44 44" aria-hidden="true" focusable="false" role="img">
+        <rect x="10" y="14" width="24" height="2" rx="1"></rect>
+        <rect x="10" y="20" width="24" height="2" rx="1"></rect>
+        <rect x="10" y="26" width="24" height="2" rx="1"></rect>
       </svg>
     </button>
 
     <div class="nav-links" id="nav-links">
       <a href="index.html" class="nav-link">Início</a>
-      <a href="cestas.html" class="nav-link">Cestas & Mimos</a>
+      <a href="cestas.html" class="nav-link" aria-current="page">Cestas & Mimos</a>
       <a href="encomendas.html" class="nav-link">Encomenda</a>
       <a href="catering.html" class="nav-link">Catering Infantil</a>
       <a href="contactos.html" class="nav-link">Contactos</a>
@@ -184,7 +142,7 @@
   </nav>
 
   <!-- Hero -->
-  <header class="hero">
+  <header class="hero" role="banner" aria-label="Cestas e mimos">
     <h1>Cestas & Mimos — requinte para cada ocasião</h1>
     <p>Curadoria de sabores, embalagens elegantes e mimos selecionados. Cada cesta é pensada para surpreender: luxo discreto, apresentação impecável e ingredientes de primeira.</p>
   </header>
@@ -195,9 +153,6 @@
       <input type="search" id="search" placeholder="Procurar por nome ou descrição" aria-label="Pesquisar cestas" />
       <select id="filter-type" aria-label="Filtrar por tipo">
         <option value="">Todos os tipos</option>
-        <option value="gourmet">Gourmet</option>
-        <option value="artesanal">Artesanal</option>
-        <option value="premium">Premium</option>
       </select>
       <select id="sort-by" aria-label="Ordenar por">
         <option value="featured">Destaques</option>
@@ -308,29 +263,39 @@
     <span class="count" id="cart-count">0</span>
   </button>
 
-  <!-- Small cart preview -->
-  <div id="cart-modal" class="cart-modal" aria-hidden="true">
-    <div class="head">
-      <div class="title">Carrinho</div>
-    </div>
-    <div class="items" id="cart-items" role="list"></div>
-    <div class="foot">
-      <button class="btn btn-view" id="go-encomendas">Ir para Encomendas</button>
-      <div class="total" id="cart-total">AKZ 0.00</div>
+  <!-- CART OVERLAY (full-screen) -->
+  <div id="cart-overlay" class="cart-overlay" aria-hidden="true" role="dialog" aria-label="Carrinho de compras">
+    <div class="cart-panel" role="document">
+      <div class="top">
+        <h2 style="margin:0">Carrinho</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="cart-clear" class="btn btn-view">Limpar</button>
+          <button id="cart-close" class="btn btn-view">Fechar</button>
+        </div>
+      </div>
+
+      <div class="items" id="cart-items" role="list" aria-label="Itens do carrinho">
+        <!-- itens preenchidos por JS -->
+      </div>
+
+      <div class="foot" style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="color:var(--muted)">Subtotal</div>
+          <div id="cart-total" class="total">AKZ 0.00</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="go-encomendas" class="btn btn-view">Ir para Encomendas</button>
+          <button id="btn-checkout" class="btn btn-add">FAÇA SUA ENCOMENDA</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Lightbox -->
-  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true" aria-label="Visualizador de mídia">
-    <div class="lightbox-content" role="document">
-      <div class="lightbox-controls" aria-hidden="false">
-        <button class="prev" aria-label="Anterior" title="Anterior">&#10094;</button>
-        <button class="next" aria-label="Próximo" title="Próximo">&#10095;</button>
-      </div>
-      <span class="close" role="button" aria-label="Fechar" title="Fechar">&times;</span>
-      <div id="lightbox-media" class="lightbox-media" tabindex="0"></div>
-      <div id="lightbox-thumbs" class="lightbox-thumbs" aria-hidden="false"></div>
-      <button id="lb-play" class="lb-play-btn" aria-label="Reproduzir">Reproduzir</button>
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Visualizador de imagem">
+    <div class="media" id="lightbox-media" role="document">
+      <img id="lightbox-img" src="" alt="" />
+      <div class="caption" id="lightbox-caption" aria-hidden="false"></div>
     </div>
   </div>
 
@@ -371,7 +336,7 @@
 
     /* Utilities */
     function formatCurrency(v){ return 'AKZ ' + Number(v).toFixed(2); }
-    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); }); }
+    function escapeHtml(s){ return String(s || '').replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); }); }
 
     /* CART: load/save/update */
     function loadCart(){ try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : []; } catch(e){ return []; } }
@@ -383,36 +348,72 @@
       else cart.push({...item, qty:1});
       saveCart(cart);
     }
+    function changeQty(id, delta, gift){
+      const cart = loadCart();
+      const found = cart.find(i => i.id === id && !!i.gift === !!gift);
+      if(!found) return;
+      found.qty = Math.max(1, (found.qty||1) + delta);
+      saveCart(cart);
+    }
+    function removeFromCart(id, gift){
+      let cart = loadCart();
+      cart = cart.filter(i => !(i.id === id && !!i.gift === !!gift));
+      saveCart(cart);
+    }
     function cartTotal(){ const cart = loadCart(); return cart.reduce((s,i)=> s + (Number(i.price) * (i.qty||1)), 0); }
 
-    /* Update cart UI */
+    /* Update cart UI (FAB count and overlay content) */
     function updateCartUI(){
       const cart = loadCart();
       const count = cart.reduce((s,i)=> s + (i.qty||1), 0);
       document.getElementById('cart-count').textContent = count;
       document.getElementById('cart-total').textContent = formatCurrency(cartTotal());
+      // if overlay visible, re-render items
+      if(document.getElementById('cart-overlay').classList.contains('show')){
+        renderCartOverlay();
+      }
+    }
+
+    function renderCartOverlay(){
       const list = document.getElementById('cart-items');
       list.innerHTML = '';
-      if (cart.length === 0){
+      const cart = loadCart();
+      if(cart.length === 0){
         list.innerHTML = '<div style="padding:12px;color:var(--muted)">Carrinho vazio</div>';
         return;
       }
       cart.forEach(it => {
         const el = document.createElement('div');
-        el.className = 'item';
-        el.setAttribute('role','listitem');
-        el.style.display = 'flex';
-        el.style.gap = '8px';
-        el.style.alignItems = 'center';
-        el.style.padding = '6px';
-        el.innerHTML = `<img src="${it.img}" alt="${escapeHtml(it.name)}" style="width:56px;height:44px;object-fit:cover;border-radius:8px" /><div style="flex:1"><div style="font-weight:700">${escapeHtml(it.name)}${it.gift? ' • Embrulho':''}</div><div style="font-size:13px;color:var(--muted)">${it.qty} × ${formatCurrency(it.price)}</div></div><div style="font-weight:800;color:var(--accent)">${formatCurrency(it.price * it.qty)}</div>`;
-        // prevent clicks inside cart items from bubbling to document (so they don't close modal on mobile)
-        el.addEventListener('click', function(ev){ ev.stopPropagation(); });
+        el.className = 'cart-item';
+        el.innerHTML = `
+          <img src="${escapeHtml(it.img || 'imagens/placeholder.jpg')}" alt="${escapeHtml(it.name)}" />
+          <div class="meta">
+            <h4 style="margin:0">${escapeHtml(it.name)}${it.gift? ' • Embrulho':''}</h4>
+            <div class="desc" style="color:var(--muted);font-size:13px">${escapeHtml(it.note || '')}</div>
+            <div class="price" style="margin-top:8px;font-weight:800;color:var(--accent)">${formatCurrency(it.price)}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+            <div class="qty-controls" aria-label="Quantidade">
+              <button class="qty-decr" aria-label="Diminuir">−</button>
+              <div class="qty-value" style="min-width:28px;text-align:center;font-weight:700">${it.qty}</div>
+              <button class="qty-incr" aria-label="Aumentar">+</button>
+            </div>
+            <button class="remove-btn" style="background:transparent;border:0;color:var(--muted);cursor:pointer">Remover</button>
+          </div>
+        `;
+        // stop propagation so clicks inside don't close overlay on mobile
+        el.addEventListener('click', e => e.stopPropagation());
+
+        el.querySelector('.qty-incr').addEventListener('click', (e) => { e.stopPropagation(); changeQty(it.id, 1, it.gift); });
+        el.querySelector('.qty-decr').addEventListener('click', (e) => { e.stopPropagation(); changeQty(it.id, -1, it.gift); });
+        el.querySelector('.remove-btn').addEventListener('click', (e) => { e.stopPropagation(); removeFromCart(it.id, it.gift); });
+
         list.appendChild(el);
       });
+      document.getElementById('cart-total').textContent = formatCurrency(cartTotal());
     }
 
-    /* AI suggestions: dynamic and random */
+    /* AI suggestions */
     const aiTemplates = [
       'Sugestão: combine "{name}" com um cartão manuscrito e um mini-bolo.',
       'Dica: adicione embrulho premium para um efeito surpresa com "{name}".',
@@ -425,20 +426,19 @@
     let aiTimer = null;
     function showAISuggestion(context, message){
       let text = message || '';
-      if (!text) {
+      if(!text){
         const tpl = aiTemplates[Math.floor(Math.random() * aiTemplates.length)];
-        text = tpl.replace('{name}', context.name || '');
+        text = tpl.replace('{name}', context && context.name ? context.name : '');
       }
       aiToastEl.textContent = text;
       aiToastEl.classList.add('show');
-      if (aiTimer) clearTimeout(aiTimer);
+      if(aiTimer) clearTimeout(aiTimer);
       aiTimer = setTimeout(()=> { aiToastEl.classList.remove('show'); aiTimer = null; }, 4000);
     }
     aiToastEl.addEventListener('click', ()=> aiToastEl.classList.remove('show'));
 
-    /* Product actions: add and view; clicking image acts like view */
+    /* Product actions: add and view; clicking image acts like view (uses lightbox) */
     document.addEventListener('click', function(e){
-      // If click inside cart modal, ignore global handlers (cartModal stops propagation)
       const btn = e.target.closest('button');
       if (btn) {
         const action = btn.getAttribute('data-action');
@@ -449,7 +449,6 @@
         }
       }
 
-      // if clicked on image inside .thumb, treat as view
       const thumb = e.target.closest('.thumb');
       if (thumb && thumb.closest('.basket')) {
         const basket = thumb.closest('.basket');
@@ -464,7 +463,7 @@
       const img = basket.getAttribute('data-img');
       const giftCheckbox = basket.querySelector('.gift-opt');
       const gift = !!(giftCheckbox && giftCheckbox.checked);
-      // read gift surcharge from label text if present
+      // gift surcharge parsing
       let giftSurcharge = 0;
       try {
         const label = basket.querySelector('.gift').textContent || '';
@@ -472,101 +471,133 @@
         if (m) giftSurcharge = Number(m[1].replace(',', '.'));
       } catch(e){}
       if (action === 'add'){
-        addToCart({ id, name, price: price + giftSurcharge, img, gift });
+        addToCart({ id, name, price: price + giftSurcharge, img, gift, note: '' });
         showAISuggestion({ name });
       } else if (action === 'view'){
-        openPreview({ id, name, price, img, desc: basket.querySelector('.desc') ? basket.querySelector('.desc').textContent : '' });
+        openPreview({ img, name, price });
       }
     }
 
-    /* Quick preview using lightbox */
+    /* Lightbox preview (adjusted to screen, no browser zoom) */
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+
     function openPreview(item){
-      const lb = document.getElementById('lightbox');
-      const lbMedia = document.getElementById('lightbox-media');
-      lbMedia.innerHTML = '';
-      const img = document.createElement('img');
-      img.src = item.img;
-      img.alt = item.name;
-      img.style.maxHeight = '86vh';
-      img.style.width = 'auto';
-      lbMedia.appendChild(img);
-      const cap = document.createElement('div');
-      cap.style.position = 'absolute';
-      cap.style.bottom = '12px';
-      cap.style.left = '12px';
-      cap.style.padding = '8px 10px';
-      cap.style.background = 'rgba(0,0,0,0.5)';
-      cap.style.color = '#fff';
-      cap.style.borderRadius = '8px';
-      cap.textContent = `${item.name} — ${formatCurrency(item.price)}`;
-      lbMedia.appendChild(cap);
-      lb.setAttribute('aria-hidden','false');
-      lb.style.display = 'flex';
+      lightboxImg.src = item.img || '';
+      lightboxImg.alt = item.name || '';
+      lightboxCaption.textContent = `${item.name || ''} — ${formatCurrency(item.price || 0)}`;
+      lightbox.classList.add('show');
+      lightbox.setAttribute('aria-hidden','false');
       document.body.style.overflow = 'hidden';
     }
-    (function bindLightboxClose(){
-      const lb = document.getElementById('lightbox');
-      const closeBtn = document.querySelector('.lightbox .close');
-      if (!lb) return;
-      lb.addEventListener('click', function(e){ if (e.target === lb) closeLightbox(); });
-      if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-      function closeLightbox(){ lb.setAttribute('aria-hidden','true'); lb.style.display = 'none'; const lbMedia = document.getElementById('lightbox-media'); if (lbMedia) lbMedia.innerHTML = ''; document.body.style.overflow = ''; }
-    })();
 
-    /* Cart FAB and modal behavior */
-    const cartFab = document.getElementById('cart-fab');
-    const cartModal = document.getElementById('cart-modal');
+    // close lightbox on outside click or ESC
+    lightbox.addEventListener('click', function(e){
+      if(e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') {
+        if(lightbox.classList.contains('show')) closeLightbox();
+        if(document.getElementById('cart-overlay').classList.contains('show')) closeCartOverlay();
+      }
+    });
+    function closeLightbox(){
+      lightbox.classList.remove('show');
+      lightbox.setAttribute('aria-hidden','true');
+      lightboxImg.src = '';
+      document.body.style.overflow = '';
+    }
 
-    cartFab.addEventListener('click', function(e){
+    /* CART overlay open/close behavior (full-screen) */
+    const cartFabBtn = document.getElementById('cart-fab');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const cartClose = document.getElementById('cart-close');
+    const cartClear = document.getElementById('cart-clear');
+
+    cartFabBtn.addEventListener('click', function(e){
       e.stopPropagation();
-      cartModal.classList.toggle('show');
-      cartModal.setAttribute('aria-hidden', cartModal.classList.contains('show') ? 'false' : 'true');
+      cartOverlay.classList.add('show');
+      cartOverlay.setAttribute('aria-hidden','false');
+      renderCartOverlay();
+      document.body.style.overflow = 'hidden';
+    });
+
+    cartClose.addEventListener('click', function(){
+      closeCartOverlay();
+    });
+
+    cartClear.addEventListener('click', function(){
+      if(!confirm('Deseja limpar o carrinho?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderCartOverlay();
       updateCartUI();
     });
 
-    // Prevent clicks inside cart modal from bubbling and closing it
-    cartModal.addEventListener('click', function(e){ e.stopPropagation(); });
-
-    // Close cart modal when clicking outside only on small screens
-    document.addEventListener('click', function(e){
-      const isSmall = window.innerWidth <= 700;
-      if (!isSmall) return; // do nothing on desktop
-      if (!cartModal.classList.contains('show')) return;
-      const target = e.target;
-      if (cartModal.contains(target) || cartFab.contains(target)) return;
-      // clicked outside -> close
-      cartModal.classList.remove('show');
-      cartModal.setAttribute('aria-hidden','true');
+    // close overlay when clicking outside panel
+    cartOverlay.addEventListener('click', function(e){
+      if(e.target === cartOverlay) closeCartOverlay();
     });
 
+    function closeCartOverlay(){
+      cartOverlay.classList.remove('show');
+      cartOverlay.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+
+    // go to encomendas
     document.getElementById('go-encomendas').addEventListener('click', function(){
       window.location.href = 'encomendas.html';
     });
 
-    /* Search, filter and sort implementation (search by name and description)
-       - When typing in search, the Type select is rebuilt to include only types present in the current search results.
-       - When a type is selected, only items of that type are shown.
-       - Sorting supports featured, price asc/desc.
-    */
+    /* Checkout -> WhatsApp */
+    document.getElementById('btn-checkout').addEventListener('click', function(){
+      const cart = loadCart();
+      if(!cart || cart.length === 0){ showAISuggestion('Carrinho vazio'); return; }
+      let lines = [];
+      lines.push('🧺 *Nova Encomenda - Esandjo Atelier de Mimos*');
+      lines.push('');
+      lines.push('Itens:');
+      cart.forEach(it => lines.push(`- ${it.name} x${it.qty} — ${formatCurrency(Number(it.price) * (it.qty||1))}`));
+      const subtotal = cart.reduce((s,i)=> s + (Number(i.price) * (i.qty||1)), 0);
+      lines.push('');
+      lines.push(`Subtotal: ${formatCurrency(subtotal)}`);
+      lines.push('');
+      lines.push('Por favor confirmar disponibilidade e prazo de entrega.');
+      const message = encodeURIComponent(lines.join('\n'));
+      const waNumber = '244924015087';
+      window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
+      localStorage.setItem('esandjo_cestas_meta', JSON.stringify({ at: new Date().toISOString() }));
+      localStorage.removeItem(STORAGE_KEY);
+      updateCartUI();
+      closeCartOverlay();
+      showAISuggestion('Pedido enviado para WhatsApp');
+    });
+
+    /* Search, filter and sort */
     const searchInput = document.getElementById('search');
     const filterType = document.getElementById('filter-type');
     const sortBy = document.getElementById('sort-by');
     const productsContainer = document.getElementById('products');
 
-    function getAllProducts(){
-      return Array.from(productsContainer.querySelectorAll('.basket'));
+    function getAllProducts(){ return Array.from(productsContainer.querySelectorAll('.basket')); }
+
+    function updateTypeOptions(filteredItems){
+      const types = new Set(filteredItems.map(p => p.getAttribute('data-type')).filter(Boolean));
+      const current = filterType.value;
+      filterType.innerHTML = '';
+      const optAll = document.createElement('option'); optAll.value=''; optAll.textContent='Todos os tipos'; filterType.appendChild(optAll);
+      const preferredOrder = ['gourmet','artesanal','premium'];
+      const present = Array.from(types);
+      const ordered = preferredOrder.filter(t => types.has(t)).concat(present.filter(t => !preferredOrder.includes(t)).sort());
+      ordered.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t.charAt(0).toUpperCase()+t.slice(1); filterType.appendChild(o); });
+      if(current && Array.from(filterType.options).some(o=>o.value===current)) filterType.value = current; else filterType.value = '';
     }
 
     function applyFilters(){
       const q = (searchInput.value || '').toLowerCase().trim();
-      let type = filterType.value;
-      const sort = sortBy.value;
-
-      // Start from all products
       let items = getAllProducts();
-
-      // If there's a search query, filter by name/description first
-      if (q) {
+      if(q){
         items = items.filter(p => {
           const name = (p.getAttribute('data-name') || '').toLowerCase();
           const descEl = p.querySelector('.desc');
@@ -574,87 +605,29 @@
           return name.includes(q) || desc.includes(q);
         });
       }
-
-      // Update type options to only those present in the current search results
       updateTypeOptions(items);
-
-      // If selected type is not in the available options, reset it
-      const availableTypes = Array.from(filterType.querySelectorAll('option')).map(o => o.value);
-      if (!availableTypes.includes(type)) {
-        type = '';
-        filterType.value = '';
-      }
-
-      // If a type is selected, filter by it
-      if (type) {
-        items = items.filter(p => (p.getAttribute('data-type') || '') === type);
-      }
-
-      // Sort
-      if (sort === 'price-asc') items.sort((a,b)=> Number(a.getAttribute('data-price')) - Number(b.getAttribute('data-price')));
-      else if (sort === 'price-desc') items.sort((a,b)=> Number(b.getAttribute('data-price')) - Number(a.getAttribute('data-price')));
-      else if (sort === 'featured') items.sort((a,b)=> Number(b.getAttribute('data-featured')||0) - Number(a.getAttribute('data-featured')||0));
-
-      // Hide all first, then append only matching items in order
+      const type = filterType.value;
+      if(type) items = items.filter(p => (p.getAttribute('data-type') || '') === type);
+      const sort = sortBy.value;
+      if(sort === 'price-asc') items.sort((a,b)=> Number(a.getAttribute('data-price')) - Number(b.getAttribute('data-price')));
+      else if(sort === 'price-desc') items.sort((a,b)=> Number(b.getAttribute('data-price')) - Number(a.getAttribute('data-price')));
+      else if(sort === 'featured') items.sort((a,b)=> Number(b.getAttribute('data-featured')||0) - Number(a.getAttribute('data-featured')||0));
+      // hide all then show matched (keeps card size consistent)
       const all = getAllProducts();
       all.forEach(n => n.style.display = 'none');
-      items.forEach(n => {
-        n.style.display = '';
-        productsContainer.appendChild(n); // re-append to preserve order
-      });
-    }
-
-    function updateTypeOptions(filteredItems){
-      const types = new Set();
-      filteredItems.forEach(p => {
-        const t = p.getAttribute('data-type') || '';
-        if (t) types.add(t);
-      });
-
-      const current = filterType.value;
-      filterType.innerHTML = '';
-      const optAll = document.createElement('option');
-      optAll.value = '';
-      optAll.textContent = 'Todos os tipos';
-      filterType.appendChild(optAll);
-
-      const preferredOrder = ['gourmet','artesanal','premium'];
-      const present = Array.from(types);
-      const ordered = preferredOrder.filter(t => types.has(t)).concat(present.filter(t => !preferredOrder.includes(t)).sort());
-      ordered.forEach(t => {
-        const o = document.createElement('option');
-        o.value = t;
-        o.textContent = t.charAt(0).toUpperCase() + t.slice(1);
-        filterType.appendChild(o);
-      });
-
-      if (current && Array.from(filterType.options).some(o => o.value === current)) {
-        filterType.value = current;
-      } else {
-        filterType.value = '';
-      }
+      items.forEach(n => { n.style.display = ''; productsContainer.appendChild(n); });
     }
 
     searchInput.addEventListener('input', applyFilters);
     filterType.addEventListener('change', applyFilters);
     sortBy.addEventListener('change', applyFilters);
 
-    /* Mini gallery click to preview (same as view) */
+    /* Mini gallery click to preview */
     document.querySelectorAll('.mini-gallery img').forEach(img => {
       img.addEventListener('click', () => {
         openPreview({ img: img.getAttribute('data-full') || img.src, name: img.alt, price: 0 });
       });
     });
-
-    /* "Falar com consultor" behavior: open WhatsApp with prefilled message */
-    const contactBtn = document.getElementById('contact-sales');
-    if (contactBtn) {
-      contactBtn.addEventListener('click', function(){
-        const waNumber = '244924015087';
-        const message = encodeURIComponent('Olá, gostaria de falar com um consultor sobre as cestas e mimos. Obrigado.');
-        window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
-      });
-    }
 
     /* Initialize on load */
     window.addEventListener('load', function(){
