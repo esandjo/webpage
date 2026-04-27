@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>Contactos — Esandjo Atelier de Mimos</title>
+  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg" />
+  <link rel="stylesheet" href="base.css" />
+  <style>
+    :root{
+      --nav-h:72px;
+      --accent:#c85a78;
+      --muted:#7a7a7a;
+      --bg:#fffafc;
+      --card:#fff;
+      --radius:12px;
+      --shadow: 0 12px 36px rgba(0,0,0,0.08);
+      --menu-width:240px;
+    }
+
+    html,body{height:100%;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;background:var(--bg);color:#222;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+    body { padding-top: calc(var(--nav-h) + 8px); }
+
+    /* NAVBAR */
+    .navbar { position:fixed; top:0; left:0; right:0; height:var(--nav-h); display:flex; align-items:center; justify-content:space-between; padding:10px 20px; background:rgba(255,255,255,0.94); box-shadow:0 6px 20px rgba(0,0,0,0.06); z-index:12000; backdrop-filter: blur(6px); }
+    .logo { height:48px; object-fit:contain; display:block; border-radius:8px; }
+
+    .menu-toggle { display:none; width:44px; height:44px; border-radius:50%; background:transparent; border:0; padding:6px; cursor:pointer; align-items:center; justify-content:center; }
+    .menu-toggle svg { width:28px; height:28px; }
+    .nav-links { display:flex; gap:14px; align-items:center; }
+    .nav-link { color:#222; text-decoration:none; font-weight:700; padding:8px 12px; border-radius:10px; }
+
+    @media (max-width:920px){
+      .menu-toggle { display:flex; }
+      .nav-links {
+        position:fixed; top:0; right:calc(-1 * var(--menu-width)); width:var(--menu-width); height:100vh;
+        background:linear-gradient(180deg,#fff,#fffafc);
+        flex-direction:column; padding:18px; gap:12px;
+        box-shadow:-12px 0 36px rgba(0,0,0,0.12);
+        transition:right .28s cubic-bezier(.2,.9,.2,1);
+        z-index:14000;
+      }
+      .nav-links.show { right:0; }
+      body.menu-open { overflow:hidden; }
+    }
+
+    /* Page header */
+    .hero { max-width:1200px; margin: 18px auto 8px; padding: 24px; border-radius:12px; background: linear-gradient(180deg, rgba(248,232,238,0.6), rgba(255,255,255,0.6)); box-shadow:var(--shadow); display:flex; gap:18px; align-items:center; justify-content:space-between; }
+    .hero .text { flex:1; }
+    .hero h1 { margin:0; font-size:28px; color:#3b2b2b; }
+    .hero p { margin:8px 0 0; color:var(--muted); max-width:760px; }
+
+    /* Main layout */
+    .container { max-width:1200px; margin: 18px auto 80px; padding: 0 20px; display:grid; grid-template-columns: 1fr 360px; gap:24px; align-items:start; }
+    @media (max-width:980px){ .container { grid-template-columns: 1fr; } }
+
+    /* Card */
+    .card { background:var(--card); border-radius:14px; padding:18px; box-shadow:var(--shadow); }
+    .contact-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    @media (max-width:720px){ .contact-grid { grid-template-columns: 1fr; } }
+
+    .contact-item { display:flex; gap:12px; align-items:flex-start; }
+    .contact-icon { width:48px; height:48px; border-radius:12px; background:linear-gradient(180deg,#fff0f4,#fff); display:flex; align-items:center; justify-content:center; font-weight:800; color:var(--accent); box-shadow:0 8px 20px rgba(200,90,120,0.06); font-size:20px; }
+    .contact-body { display:flex; flex-direction:column; gap:4px; }
+    .contact-body .label { font-weight:800; font-size:14px; color:#3b2b2b; }
+    .contact-body .value { color:var(--muted); font-size:14px; }
+
+    /* Synthesized info block */
+    .info-synth { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+    .info-row { display:flex; gap:12px; align-items:center; }
+    .info-row .tag { font-weight:800; color:var(--accent); min-width:110px; }
+    .info-row .text { color:var(--muted); }
+
+    /* Form */
+    form.contact-form { display:flex; flex-direction:column; gap:12px; margin-top:8px; }
+    .field { display:flex; flex-direction:column; gap:6px; }
+    input[type="text"], input[type="email"], input[type="tel"], textarea {
+      padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); font-size:14px; background:#fff;
+    }
+    textarea { min-height:120px; resize:vertical; }
+    .form-actions { display:flex; gap:8px; align-items:center; justify-content:flex-start; flex-wrap:wrap; }
+    .btn-primary { background:var(--accent); color:#fff; border:0; padding:10px 14px; border-radius:12px; font-weight:800; cursor:pointer; box-shadow:0 10px 30px rgba(200,90,120,0.12); }
+    .btn-ghost { background:transparent; border:1px solid rgba(0,0,0,0.06); padding:10px 12px; border-radius:10px; cursor:pointer; }
+
+    /* Map placeholder */
+    .map { width:100%; height:260px; border-radius:12px; overflow:hidden; background:linear-gradient(180deg,#f6f0f3,#fff); display:flex; align-items:center; justify-content:center; color:var(--muted); font-weight:700; }
+
+    /* Social strip */
+    .social { display:flex; gap:10px; margin-top:12px; }
+    .social a { display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; background:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.04); text-decoration:none; color:#222; font-weight:700; }
+
+    footer { padding:28px 20px; text-align:center; color:var(--muted); font-size:14px; }
+
+    /* Mobile tweaks */
+    @media (max-width:480px) {
+      .contact-icon { width:40px; height:40px; font-size:18px; }
+      .info-row .tag { min-width:90px; font-size:13px; }
+      .info-row .text { font-size:13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <a href="index.html" aria-label="Início"><img src="imagens/esandjo.logo.jpg" alt="Esandjo" class="logo" /></a>
+
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="nav-links" id="nav-links" aria-hidden="true">
+        <a href="index.html" class="nav-link">Início</a>
+        <a href="cestas.html" class="nav-link">Cestas & Mimos</a>
+        <a href="pedidos.html" class="nav-link">Pedidos</a>
+        <a href="encomendas.html" class="nav-link">Encomenda</a>
+        <a href="contactos.html" class="nav-link" aria-current="page">Contactos</a>
+      </div>
+
+      <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-label="Abrir menu" onclick="toggleMenu()">
+        <svg viewBox="0 0 44 44" aria-hidden="true" focusable="false" role="img">
+          <rect class="line l1" x="12" y="16" width="20" height="2" rx="1"></rect>
+          <rect class="line l2" x="12" y="21" width="20" height="2" rx="1"></rect>
+          <rect class="line l3" x="12" y="26" width="20" height="2" rx="1"></rect>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" role="banner" aria-label="Contactos">
+    <div class="text">
+      <h1>Contactos</h1>
+      <p>Fala connosco — atendimento caloroso, entrega cuidada e embalagens com carinho.</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a href="pedidos.html" class="btn-ghost" style="text-decoration:none">Explorar produtos</a>
+      <a href="encomendas.html" class="btn-primary" style="text-decoration:none">Fazer Encomenda</a>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="container" role="main" aria-label="Contactos e formulário">
+    <!-- Left: contact info + form -->
+    <section>
+      <div class="card" aria-labelledby="contactos-title">
+        <h2 id="contactos-title" style="margin:0 0 8px 0">Como nos contactar</h2>
+
+        <!-- Principal contacto (telefone e email aparecem apenas aqui) -->
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">
+          <div class="contact-icon" aria-hidden="true">📞</div>
+          <div style="display:flex;flex-direction:column;">
+            <div style="font-weight:900;font-size:16px;color:#3b2b2b">Linha direta</div>
+            <div style="color:var(--muted);font-size:15px">+244 924 015 087 • <a href="mailto:esandjoatelierdemimos@gmail.com" style="color:var(--accent);text-decoration:none;font-weight:800">esandjoatelierdemimos@gmail.com</a></div>
+          </div>
+        </div>
+
+        <!-- Sintetizado: Horário, Atendimento, Sustentabilidade -->
+        <div class="info-synth" aria-hidden="false">
+          <div class="info-row">
+            <div class="tag">Horário</div>
+            <div class="text">Todos os dias • 08:00 — 22:00</div>
+          </div>
+
+          <div class="info-row">
+            <div class="tag">Atendimento</div>
+            <div class="text">Resposta rápida via WhatsApp e email; apoio personalizado para encomendas e embalagens.</div>
+          </div>
+
+          <div class="info-row">
+            <div class="tag">Sustentabilidade</div>
+            <div class="text">Embalagens eco‑friendly; fornecedores locais; opções de embrulho reciclável.</div>
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(0,0,0,0.04);margin:14px 0;" />
+
+        <h3 style="margin:0 0 8px 0">Envie-nos uma mensagem</h3>
+        <form id="contact-form" class="contact-form" novalidate>
+          <div class="field">
+            <label for="name">Nome</label>
+            <input id="name" name="name" type="text" placeholder="Seu nome" />
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="seu@exemplo.com" required />
+          </div>
+
+          <div class="field">
+            <label for="phone">Telefone (opcional)</label>
+            <input id="phone" name="phone" type="tel" placeholder="+244 9xx xxx xxx" />
+          </div>
+
+          <div class="field">
+            <label for="message">Mensagem</label>
+            <textarea id="message" name="message" placeholder="Como podemos ajudar?" required></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Enviar mensagem</button>
+            <button type="button" id="contact-clear" class="btn-ghost">Limpar</button>
+            <div id="form-status" style="margin-left:8px;color:var(--muted);font-weight:700"></div>
+          </div>
+        </form>
+
+        <div class="social" aria-hidden="false" style="margin-top:14px;">
+          <a href="https://www.instagram.com/esandjo_atelierdemimos/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://wa.me/244924015087" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: map + quick contact card (sintetizado, sem repetir telefone) -->
+    <aside>
+      <div class="card" aria-labelledby="map-title" style="margin-bottom:16px;">
+        <h3 id="map-title" style="margin:0 0 8px 0">Onde estamos</h3>
+        <div class="map" id="map-placeholder">Mapa (substituir por iframe do Google Maps)</div>
+        <p style="margin:12px 0 0 0;color:var(--muted);font-size:14px">Entrega local e recolha no atelier mediante agendamento.</p>
+      </div>
+
+      <div class="card" aria-labelledby="quick-title">
+        <h3 id="quick-title" style="margin:0 0 8px 0">Contacto rápido</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(180deg,#fff0f4,#fff);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--accent)">⏰</div>
+            <div>
+              <div style="font-weight:800">Horário</div>
+              <div style="color:var(--muted)">08:00 — 22:00</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(180deg,#fff0f4,#fff);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--accent)">💬</div>
+            <div>
+              <div style="font-weight:800">Atendimento</div>
+              <div style="color:var(--muted)">WhatsApp & Email — apoio personalizado</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(180deg,#fff0f4,#fff);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--accent)">🌿</div>
+            <div>
+              <div style="font-weight:800">Sustentabilidade</div>
+              <div style="color:var(--muted)">Embalagens eco‑friendly; fornecedores locais</div>
+            </div>
+          </div>
+
+          <div style="margin-top:8px;">
+            <a href="tel:+244924015087" class="btn-primary" style="display:inline-block;text-decoration:none">Ligar agora</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <p id="contacts">📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
+    <p>
+      <a href="https://www.instagram.com/esandjo_atelierdemimos/" target="_blank" rel="noopener">Instagram</a> |
+      <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank" rel="noopener">Facebook</a>
+    </p>
+    <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
+  </footer>
+
+  <script>
+    /* Menu toggle (paridade com outras páginas) */
+    function toggleMenu(){
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("menu-toggle");
+      const isOpen = btn.classList.toggle('open');
+      nav.classList.toggle("show");
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
+      document.body.classList.toggle('menu-open', isOpen);
+    }
+    document.addEventListener("click", function(e){
+      const nav = document.getElementById("nav-links");
+      const btn = document.getElementById("menu-toggle");
+      if (!nav || !btn) return;
+      if (!nav.contains(e.target) && !btn.contains(e.target)) {
+        nav.classList.remove("show");
+        btn.classList.remove("open");
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Abrir menu');
+        document.body.classList.remove('menu-open');
+      }
+    });
+
+    /* Contact form handling: validate, store to localStorage and open mailto as fallback */
+    (function(){
+      const form = document.getElementById('contact-form');
+      const status = document.getElementById('form-status');
+      const clearBtn = document.getElementById('contact-clear');
+
+      function validateEmail(email){
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        status.textContent = '';
+        const name = (document.getElementById('name').value || '').trim();
+        const email = (document.getElementById('email').value || '').trim();
+        const phone = (document.getElementById('phone').value || '').trim();
+        const message = (document.getElementById('message').value || '').trim();
+
+        if (!email || !validateEmail(email)) {
+          status.style.color = '';
+          status.textContent = 'Por favor insira um email válido.';
+          return;
+        }
+        if (!message) {
+          status.style.color = '';
+          status.textContent = 'Por favor escreva a sua mensagem.';
+          return;
+        }
+
+        // Save to localStorage as a simple queue for backoffice
+        try {
+          const key = 'esandjo_contact_messages';
+          const existing = JSON.parse(localStorage.getItem(key) || '[]');
+          existing.push({ name, email, phone, message, at: new Date().toISOString() });
+          localStorage.setItem(key, JSON.stringify(existing));
+        } catch (err) {
+          // ignore storage errors
+        }
+
+        // Open mail client as fallback with prefilled content
+        const subject = encodeURIComponent('Contacto via site — ' + (name || 'Cliente'));
+        const bodyLines = [
+          `Nome: ${name}`,
+          `Email: ${email}`,
+          `Telefone: ${phone}`,
+          '',
+          'Mensagem:',
+          message
+        ];
+        const body = encodeURIComponent(bodyLines.join('\n'));
+        window.open(`mailto:esandjoatelierdemimos@gmail.com?subject=${subject}&body=${body}`, '_blank');
+
+        // show success and clear form
+        status.style.color = 'green';
+        status.textContent = 'Mensagem enviada. Obrigado — responderemos em breve.';
+        form.reset();
+        setTimeout(()=> { status.textContent = ''; status.style.color = ''; }, 6000);
+      });
+
+      clearBtn.addEventListener('click', function(){
+        form.reset();
+        status.textContent = '';
+      });
+    })();
+
+    /* Map placeholder: replace with iframe if available */
+    (function(){
+      const map = document.getElementById('map-placeholder');
+      // map.innerHTML = '<iframe src="YOUR_GOOGLE_MAPS_EMBED_URL" style="border:0;width:100%;height:100%;" allowfullscreen="" loading="lazy"></iframe>';
+    })();
+
+    /* Accessibility: focus first input on load */
+    window.addEventListener('load', function(){ const el = document.getElementById('name'); if(el) el.focus(); });
+  </script>
+</body>
+</html>
