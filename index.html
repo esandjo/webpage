@@ -1,17 +1,95 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Esandjo Atelier de Mimos</title>
-  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg">
-  <link rel="stylesheet" href="base.css">
+  <link rel="icon" type="image/png" href="imagens/esandjo.logo.jpg" />
+  <style>
+    :root{
+      --bg:#ffffff; --card-bg:#ffffff; --accent:#c94f6d; --muted:#666666;
+      --fill:#f7f3ee; --shadow:0 6px 18px rgba(0,0,0,0.06); --max-card-width:420px;
+      --lightbox-z:9999;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:#222;background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+
+    /* Navbar */
+    .navbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:var(--bg);border-bottom:1px solid rgba(0,0,0,0.06);position:sticky;top:0;z-index:60}
+    .logo{height:44px;object-fit:contain}
+    .menu-toggle{display:none;cursor:pointer;width:36px;height:28px;align-items:center;justify-content:center}
+    .menu-toggle span{display:block;height:3px;background:#333;margin:4px 0;border-radius:2px}
+    .nav-links{display:flex;gap:14px;align-items:center}
+    .nav-link{color:#333;padding:8px 10px;border-radius:6px;font-weight:600}
+    .nav-link:hover{background:rgba(0,0,0,0.04)}
+    .lang-selector button{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 8px;margin-left:6px;border-radius:6px;cursor:pointer}
+    .lang-selector button:hover{background:rgba(0,0,0,0.04)}
+
+    /* Hero */
+    .hero{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 16px;background:linear-gradient(180deg,#fff,#fff)}
+    .hero h1{font-size:28px;margin-bottom:8px;color:#2b2b2b}
+    .hero p{color:var(--muted);margin-bottom:16px}
+    .cta-btn{display:inline-block;background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-weight:700}
+    .cta-btn:hover{opacity:.95;transform:translateY(-1px);transition:all .18s ease}
+
+    /* Cards / Galerias */
+    .destaques{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;padding:20px}
+    .card{width:100%;max-width:var(--max-card-width);background:var(--card-bg);border-radius:10px;box-shadow:var(--shadow);padding:12px;text-align:center}
+    .card h3{margin-top:8px;font-size:18px;color:#222}
+    .card p{color:var(--muted);font-size:14px;margin-top:6px}
+
+    /* Contêiner de mídia uniforme */
+    .media{width:100%;max-width:var(--max-card-width);aspect-ratio:4/3;background-color:var(--fill);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px;margin:0 auto 12px;position:relative}
+    .media img,.media video{width:100%;height:100%;object-fit:contain;display:block;background-color:transparent;cursor:pointer;border-radius:4px}
+
+    /* Play overlay for video thumbnails */
+    .play-overlay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;pointer-events:none;transition:transform .12s ease,background .12s ease}
+    .play-overlay svg{width:28px;height:28px;fill:#fff}
+    .media:hover .play-overlay{transform:translate(-50%,-50%) scale(1.05);background:rgba(0,0,0,0.55)}
+
+    /* Lightbox */
+    .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;z-index:var(--lightbox-z);transition:opacity .18s ease}
+    .lightbox[aria-hidden="false"]{display:flex;opacity:1}
+    .lightbox-content{position:relative;width:90%;max-width:1000px;display:flex;align-items:center;justify-content:center}
+    .lightbox-media{width:100%;display:flex;align-items:center;justify-content:center;outline:none;min-height:120px}
+    .lightbox-media img,.lightbox-media video{width:100%;height:auto;max-height:80vh;object-fit:contain;border-radius:6px;background-color:var(--fill)}
+
+    .lightbox .close{position:absolute;top:12px;right:18px;font-size:32px;color:#fff;cursor:pointer;z-index:10000;padding:6px;background:transparent;border-radius:6px}
+    .lightbox-controls{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
+    .lightbox-controls button{pointer-events:auto;border:0;background:rgba(0,0,0,0.25);color:#fff;font-size:28px;padding:8px 12px;border-radius:6px;cursor:pointer}
+    .lightbox-controls button:active{transform:scale(.98)}
+    .lightbox-controls button[disabled]{opacity:.35;cursor:not-allowed}
+
+    /* Focus and accessibility */
+    .lightbox-media:focus{outline:3px solid rgba(201,79,109,0.18);outline-offset:6px;border-radius:6px}
+    button:focus,a:focus{outline:3px solid rgba(201,79,109,0.18);outline-offset:2px;border-radius:6px}
+
+    /* Footer */
+    footer{padding:18px 12px;text-align:center;background:var(--bg);border-top:1px solid rgba(0,0,0,0.04);color:#444}
+    footer a{color:var(--accent);text-decoration:none;font-weight:600}
+    footer a:hover{text-decoration:underline}
+
+    /* Responsive */
+    @media (max-width:900px){ .card{max-width:360px} .media{max-width:360px} .hero h1{font-size:24px} }
+    @media (max-width:700px){
+      .menu-toggle{display:flex}
+      .nav-links{position:fixed;top:64px;right:12px;background:var(--bg);flex-direction:column;padding:12px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:none}
+      .nav-links.show{display:flex}
+      .destaques{padding:12px;gap:12px}
+      .media{max-width:320px;aspect-ratio:4/3}
+      .lightbox-controls button{font-size:26px;padding:10px}
+    }
+
+    .hidden{display:none!important}
+    .center{display:flex;align-items:center;justify-content:center}
+  </style>
 </head>
 <body>
 
   <!-- Navbar -->
   <nav class="navbar">
-    <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo">
+    <img src="imagens/esandjo.logo.jpg" alt="Logo Esandjo" class="logo" />
     <div class="menu-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></div>
     <div class="lang-selector">
       <button onclick="setLang('pt')">PT</button>
@@ -35,32 +113,40 @@
     <a href="cestas.html" class="cta-btn" id="cta">Explorar Cestas</a>
   </header>
 
-  <!-- Galeria com Lightbox -->
-  <section class="destaques">
+  <!-- Galeria: cada card referencia um set via data-set e lista de itens em data-items (CSV) -->
+  <section class="destaques" aria-label="Galeria de Cestas">
+    <!-- Exemplo set com 3 itens: imagem principal, imagem detalhe, vídeo -->
     <div class="card">
-      <img src="imagens/cesta1.jpg" alt="Cesta Gourmet" onclick="openLightbox(0)">
-      <h3 class="item-name" data-key="gourmet">Cesta Gourmet</h3>
-      <p class="item-desc" data-key="descGourmet">Perfeita para ocasiões especiais.</p>
+      <div class="media" data-set="set-cesta1" data-items="imagens/cesta1.jpg,imagens/cesta1a.jpg,videos/cesta1b.mp4">
+        <!-- thumbnail: pode ser imagem ou vídeo; script usa data-items para montar o set -->
+        <img src="imagens/cesta1.jpg" alt="Cesta 1" />
+        <!-- play overlay será injetado automaticamente se houver vídeo no set -->
+      </div>
+      <h3 class="item-name">Cesta Gourmet</h3>
+      <p class="item-desc">Perfeita para ocasiões especiais.</p>
     </div>
+
     <div class="card">
-      <img src="imagens/cesta2.jpg" alt="Cesta Artesanal" onclick="openLightbox(1)">
-      <h3 class="item-name" data-key="artesanal">Cesta Artesanal</h3>
-      <p class="item-desc" data-key="descArtesanal">Feita com carinho e tradição.</p>
+      <div class="media" data-set="set-cesta2" data-items="imagens/cesta2.jpg,imagens/cesta2a.jpg,videos/cesta2b.mp4">
+        <img src="imagens/cesta2.jpg" alt="Cesta 2" />
+      </div>
+      <h3 class="item-name">Cesta Artesanal</h3>
+      <p class="item-desc">Feita com carinho e tradição.</p>
     </div>
-    <div class="card">
-      <video src="videos/apresentacao.mp4" onclick="openLightbox(2)" muted></video>
-      <h3 class="item-name" data-key="premium">Vídeo Institucional</h3>
-      <p class="item-desc" data-key="descPremium">Conheça o nosso trabalho.</p>
-    </div>
+
+    <!-- Adicione quantos cards quiser seguindo o mesmo padrão:
+         data-set="unique-id" data-items="url1,url2,url3" -->
   </section>
 
   <!-- Lightbox -->
-  <div id="lightbox" class="lightbox">
-    <span class="close" onclick="closeLightbox()">&times;</span>
-    <div class="lightbox-content">
-      <span class="prev" onclick="changeSlide(-1)">&#10094;</span>
-      <div id="lightbox-media"></div>
-      <span class="next" onclick="changeSlide(1)">&#10095;</span>
+  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true" aria-label="Visualizador de mídia">
+    <div class="lightbox-content" role="document">
+      <div class="lightbox-controls" aria-hidden="false">
+        <button class="prev" aria-label="Anterior" title="Anterior">&#10094;</button>
+        <button class="next" aria-label="Próximo" title="Próximo">&#10095;</button>
+      </div>
+      <span class="close" role="button" aria-label="Fechar" title="Fechar">&times;</span>
+      <div id="lightbox-media" class="lightbox-media" tabindex="0"></div>
     </div>
   </div>
 
@@ -68,124 +154,236 @@
   <footer>
     <p id="contacts">📞 +244 924 015 087 | 📧 esandjoatelierdemimos@gmail.com</p>
     <p>
-      <a href="https://www.instagram.com/esandjoatelierdemimos/" target="_blank" id="insta">Instagram</a> | 
+      <a href="https://www.instagram.com/esandjoatelierdemimos/" target="_blank" id="insta">Instagram</a> |
       <a href="https://www.facebook.com/esandjoatelierdemimos/" target="_blank" id="fb">Facebook</a>
     </p>
     <p id="open-hours">Aberto todos os dias das 8h às 22h</p>
   </footer>
 
-<script>
-  // Menu hamburguer
-  function toggleMenu() {
-    document.getElementById("nav-links").classList.toggle("show");
-  }
-  document.addEventListener("click", function(e){
-    const nav = document.getElementById("nav-links");
-    const toggle = document.querySelector(".menu-toggle");
-    if(!nav.contains(e.target) && !toggle.contains(e.target)){
-      nav.classList.remove("show");
+  <script>
+    // Menu hamburguer
+    function toggleMenu() { document.getElementById("nav-links").classList.toggle("show"); }
+    document.addEventListener("click", function(e){
+      const nav = document.getElementById("nav-links");
+      const toggle = document.querySelector(".menu-toggle");
+      if(!nav.contains(e.target) && toggle && !toggle.contains(e.target)) nav.classList.remove("show");
+    });
+
+    // Multilanguage (mantido)
+    const translations = {
+      pt:{pageTitle:"Bem-vindo ao Esandjo Atelier de Mimos",subtitle:"Doces, cestas e momentos especiais",cta:"Explorar Cestas",openHours:"Aberto todos os dias das 8h às 22h",insta:"Instagram",fb:"Facebook",
+          navbar:{home:"Início",cestas:"Cestas & Mimos",pedidos:"Pedidos",encomenda:"Encomenda",catering:"Catering Infantil",contactos:"Contactos"},
+          items:{}, desc:{}},
+      en:{pageTitle:"Welcome to Esandjo Atelier de Mimos",subtitle:"Sweets, baskets and special moments",cta:"Explore Baskets",openHours:"Open daily from 8am to 10pm",insta:"Instagram",fb:"Facebook",navbar:{},items:{},desc:{}},
+      zh:{pageTitle:"欢迎来到 Esandjo Atelier de Mimos",subtitle:"甜点、礼篮和特别时刻",cta:"探索礼篮",openHours:"每天营业，早上8点到晚上10点",insta:"Instagram",fb:"Facebook",navbar:{},items:{},desc:{}}
+    };
+    function setLang(lang){ localStorage.setItem("siteLang", lang); applyLang(lang); }
+    function applyLang(lang){
+      if(document.getElementById('page-title')) document.getElementById('page-title').textContent = translations[lang].pageTitle || document.getElementById('page-title').textContent;
+      if(document.getElementById('subtitle')) document.getElementById('subtitle').textContent = translations[lang].subtitle || document.getElementById('subtitle').textContent;
+      if(document.getElementById('cta')) document.getElementById('cta').textContent = translations[lang].cta || document.getElementById('cta').textContent;
+      if(document.getElementById('open-hours')) document.getElementById('open-hours').textContent = translations[lang].openHours || document.getElementById('open-hours').textContent;
+      if(document.getElementById('insta')) document.getElementById('insta').textContent = translations[lang].insta || document.getElementById('insta').textContent;
+      if(document.getElementById('fb')) document.getElementById('fb').textContent = translations[lang].fb || document.getElementById('fb').textContent;
+      document.querySelectorAll('.nav-link').forEach(link => {
+        const key = link.getAttribute("data-key");
+        if(translations[lang].navbar && translations[lang].navbar[key]) link.textContent = translations[lang].navbar[key];
+      });
     }
-  });
 
-  // Lightbox
-  const mediaItems = [
-    {type: "img", src: "imagens/cesta1.jpg"},
-    {type: "img", src: "imagens/cesta2.jpg"},
-    {type: "video", src: "videos/apresentacao.mp4"}
-  ];
-  let currentIndex = 0;
+    window.addEventListener("load", function(){
+      const lang = localStorage.getItem("siteLang") || "pt";
+      applyLang(lang);
+      initGallery();
+    });
 
-  function openLightbox(index) {
-    currentIndex = index;
-    document.getElementById("lightbox").style.display = "flex";
-    showMedia();
-  }
-  function closeLightbox() {
-    document.getElementById("lightbox").style.display = "none";
-  }
-  function changeSlide(direction) {
-    currentIndex = (currentIndex + direction + mediaItems.length) % mediaItems.length;
-    showMedia();
-  }
-  function showMedia() {
-    const container = document.getElementById("lightbox-media");
-    const item = mediaItems[currentIndex];
-    if(item.type === "img") {
-      container.innerHTML = `<img src="${item.src}" alt="">`;
-    } else {
-      container.innerHTML = `<video src="${item.src}" controls autoplay></video>`;
+    /* -------------------------
+       Gallery / Lightbox logic
+       - Each .media element must have:
+         data-set="unique-id"
+         data-items="url1,url2,url3"  (CSV, order preserved)
+       - The script builds galleries from data-items automatically.
+       - Works for any number of cards and supports images and videos.
+       ------------------------- */
+
+    const lb = document.getElementById("lightbox");
+    const lbMedia = document.getElementById("lightbox-media");
+    const prevBtn = document.querySelector(".prev");
+    const nextBtn = document.querySelector(".next");
+    const closeBtn = document.querySelector(".close");
+
+    const galleries = {}; // populated at init
+    let currentSet = null;
+    let currentIndex = 0;
+
+    function initGallery(){
+      // Find all .media elements with data-items
+      const mediaEls = document.querySelectorAll('.media[data-items][data-set]');
+      mediaEls.forEach(el => {
+        const setName = el.getAttribute('data-set');
+        const raw = el.getAttribute('data-items') || '';
+        // parse CSV, trim spaces
+        const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
+        // build items array with type detection by extension
+        const items = parts.map(src => {
+          const lower = src.toLowerCase();
+          const isVideo = lower.endsWith('.mp4') || lower.endsWith('.webm') || lower.endsWith('.ogg');
+          return { type: isVideo ? 'video' : 'img', src: src };
+        });
+        galleries[setName] = items;
+
+        // set thumbnail click handler (open its set)
+        el.addEventListener('click', () => openLightbox(0, setName));
+
+        // inject play overlay if set contains any video
+        const hasVideo = items.some(i => i.type === 'video');
+        if (hasVideo) injectPlayOverlay(el);
+      });
+
+      // Controls
+      prevBtn.addEventListener('click', () => changeSlide(-1));
+      nextBtn.addEventListener('click', () => changeSlide(1));
+      closeBtn.addEventListener('click', closeLightbox);
+
+      // Keyboard
+      document.addEventListener('keydown', function(e){
+        if (lb.getAttribute('aria-hidden') === 'true') return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') changeSlide(-1);
+        if (e.key === 'ArrowRight') changeSlide(1);
+      });
+
+      // Click outside closes
+      lb.addEventListener('click', function(e){
+        if (e.target === lb) closeLightbox();
+      });
+
+      // Swipe support
+      addSwipeSupport();
     }
-  }
-  document.addEventListener("keydown", function(e) {
-    if(e.key === "Escape") closeLightbox();
-    if(e.key === "ArrowLeft") changeSlide(-1);
-    if(e.key === "ArrowRight") changeSlide(1);
-  });
-  document.getElementById("lightbox").addEventListener("click", function(e) {
-    if(e.target.id === "lightbox") closeLightbox();
-  });
 
-  // Traduções multilíngues
-  const translations = {
-    pt:{pageTitle:"Bem-vindo ao Esandjo Atelier de Mimos",subtitle:"Doces, cestas e momentos especiais",cta:"Explorar Cestas",
-        openHours:"Aberto todos os dias das 8h às 22h",
-        navbar:{home:"Início",cestas:"Cestas & Mimos",pedidos:"Pedidos",encomenda:"Encomenda",catering:"Catering Infantil",contactos:"Contactos"},
-        items:{gourmet:"Cesta Gourmet",artesanal:"Cesta Artesanal",premium:"Cesta Premium"},
-        desc:{descGourmet:"Perfeita para ocasiões especiais.",descArtesanal:"Feita com carinho e tradição.",descPremium:"Um toque de requinte e exclusividade."},
-        insta:"Instagram",fb:"Facebook"},
-    en:{pageTitle:"Welcome to Esandjo Atelier de Mimos",subtitle:"Sweets, baskets and special moments",cta:"Explore Baskets",
-        openHours:"Open daily from 8am to 10pm",
-        navbar:{home:"Home",cestas:"Baskets & Gifts",pedidos:"Orders",encomenda:"Checkout",catering:"Kids Catering",contactos:"Contacts"},
-        items:{gourmet:"Gourmet Basket",artesanal:"Handmade Basket",premium:"Premium Basket"},
-        desc:{descGourmet:"Perfect for special occasions.",descArtesanal:"Made with care and tradition.",descPremium:"A touch of refinement and exclusivity."},
-        insta:"Instagram",fb:"Facebook"},
-    zh:{pageTitle:"欢迎来到 Esandjo Atelier de Mimos",subtitle:"甜点、礼篮和特别时刻",cta:"探索礼篮",
-        openHours:"每天营业，早上8点到晚上10点",
-        navbar:{home:"首页",cestas:"礼篮与礼品",pedidos:"订单",encomenda:"结账",catering:"儿童餐饮",contactos:"联系方式"},
-        items:{gourmet:"美食篮",artesanal:"手工篮",premium:"高级篮"},
-        desc:{descGourmet:"适合特别场合。",descArtesanal:"用心和传统制作。",descPremium:"精致和独特的触感。"},
-        insta:"Instagram",fb:"Facebook"}
-  };
+    function injectPlayOverlay(mediaEl){
+      if (mediaEl.querySelector('.play-overlay')) return;
+      const overlay = document.createElement('div');
+      overlay.className = 'play-overlay';
+      overlay.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+      mediaEl.appendChild(overlay);
+    }
 
-  function setLang(lang) {
-    localStorage.setItem("siteLang", lang);
-    applyLang(lang);
-  }
+    function openLightbox(index, setName){
+      const set = galleries[setName];
+      if (!set || set.length === 0) return;
+      currentSet = setName;
+      currentIndex = index || 0;
+      showMedia();
+      lb.setAttribute('aria-hidden','false');
+      lb.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      setTimeout(()=> lbMedia.focus(), 60);
+    }
 
-    function applyLang(lang) {
-    // Hero
-    if(document.getElementById('page-title')) document.getElementById('page-title').textContent = translations[lang].pageTitle;
-    if(document.getElementById('subtitle')) document.getElementById('subtitle').textContent = translations[lang].subtitle;
-    if(document.getElementById('cta')) document.getElementById('cta').textContent = translations[lang].cta;
+    function closeLightbox(){
+      const v = lbMedia.querySelector('video');
+      if (v) { try { v.pause(); v.currentTime = 0; } catch(e){} }
+      lb.setAttribute('aria-hidden','true');
+      lb.style.display = 'none';
+      lbMedia.innerHTML = '';
+      currentSet = null;
+      document.body.style.overflow = '';
+    }
 
-    // Footer
-    if(document.getElementById('open-hours')) document.getElementById('open-hours').textContent = translations[lang].openHours;
-    if(document.getElementById('insta')) document.getElementById('insta').textContent = translations[lang].insta;
-    if(document.getElementById('fb')) document.getElementById('fb').textContent = translations[lang].fb;
+    function changeSlide(direction){
+      if (!currentSet) return;
+      const items = galleries[currentSet];
+      if (!items || items.length === 0) return;
+      currentIndex = (currentIndex + direction + items.length) % items.length;
+      showMedia();
+    }
 
-    // Navbar
-    document.querySelectorAll('.nav-link').forEach(link => {
-      const key = link.getAttribute("data-key");
-      if(translations[lang].navbar[key]) link.textContent = translations[lang].navbar[key];
-    });
+    function showMedia(){
+      const items = galleries[currentSet];
+      if (!items || !items[currentIndex]) return;
+      const item = items[currentIndex];
+      lbMedia.innerHTML = '';
 
-    // Itens
-    document.querySelectorAll('.item-name').forEach(span => {
-      const key = span.getAttribute("data-key");
-      if(translations[lang].items[key]) span.textContent = translations[lang].items[key];
-    });
+      if (item.type === 'img'){
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.alt = '';
+        img.loading = 'eager';
+        lbMedia.appendChild(img);
+      } else if (item.type === 'video'){
+        const video = document.createElement('video');
+        video.src = item.src;
+        video.controls = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        video.style.maxHeight = '80vh';
+        video.setAttribute('aria-label','Vídeo');
+        // Start muted to maximize autoplay compatibility; user can unmute via controls
+        video.muted = true;
+        lbMedia.appendChild(video);
 
-    document.querySelectorAll('.item-desc').forEach(p => {
-      const key = p.getAttribute("data-key");
-      if(translations[lang].desc[key]) p.textContent = translations[lang].desc[key];
-    });
-  }
+        // Try to play; if blocked, user will use controls
+        const playPromise = video.play();
+        if (playPromise !== undefined){
+          playPromise.then(()=>{}).catch(err => {
+            console.warn('Autoplay bloqueado:', err);
+          });
+        }
 
-  // Aplica idioma guardado ao carregar a página
-  window.onload = function() {
-    const lang = localStorage.getItem("siteLang") || "pt";
-    applyLang(lang);
-  };
-</script>
+        // On interaction, try to play (useful when autoplay blocked)
+        const tryPlayOnInteraction = () => {
+          if (video.paused) video.play().catch(()=>{});
+        };
+        lbMedia.addEventListener('click', tryPlayOnInteraction, { once: true });
+      } else {
+        const fallback = document.createElement('img');
+        fallback.src = item.src;
+        lbMedia.appendChild(fallback);
+      }
+
+      // disable prev/next if single item
+      const len = items.length;
+      prevBtn.disabled = len <= 1;
+      nextBtn.disabled = len <= 1;
+    }
+
+    function addSwipeSupport(){
+      let startX = 0;
+      let endX = 0;
+      const THRESHOLD = 40;
+      lbMedia.addEventListener('touchstart', function(e){ startX = e.changedTouches[0].screenX; }, {passive:true});
+      lbMedia.addEventListener('touchend', function(e){
+        endX = e.changedTouches[0].screenX;
+        const diff = endX - startX;
+        if (Math.abs(diff) > THRESHOLD){
+          if (diff > 0) changeSlide(-1); else changeSlide(1);
+        }
+      }, {passive:true});
+    }
+
+    // Utility: allow adding new cards dynamically and re-initializing bindings
+    function refreshGalleryBindings(){
+      // clear existing galleries and re-init
+      for (const k in galleries) delete galleries[k];
+      lbMedia.innerHTML = '';
+      initGallery();
+    }
+
+    // Expose refresh function for dynamic content
+    window.refreshGalleryBindings = refreshGalleryBindings;
+
+    /* Usage notes:
+       - To add a new card, include a .media element with:
+         data-set="unique-id" data-items="url1,url2,url3"
+       - The script auto-detects file type by extension (.mp4/.webm/.ogg => video; otherwise image).
+       - Example:
+         <div class="media" data-set="set-xyz" data-items="imagens/xyz.jpg,imagens/xyz-a.jpg,videos/xyz-b.mp4">
+           <img src="imagens/xyz.jpg" alt="..." />
+         </div>
+    */
+  </script>
 </body>
 </html>
